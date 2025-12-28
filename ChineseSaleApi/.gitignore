@@ -1,0 +1,75 @@
+# Visual Studio / .NET
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.pidb
+
+# Build outputs
+bin/
+obj/
+out/
+publish/
+PublishProfiles/
+
+# Rider / ReSharper
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper*
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# ASP.NET Core / app settings / secrets
+secrets.json
+appsettings.*.Local.json
+appsettings.*.Secret*.json
+
+# Database files
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Logs, diagnostics, coverage, test results
+*.log
+logs/
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+.angular-cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.pnp.js
+
+# Environment files
+.env
+.env.*
+.local
+.local.*
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+*.vsix
+*.bak
+*.tmp
+*.cache
+*.class

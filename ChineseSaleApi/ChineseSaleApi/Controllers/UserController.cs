@@ -1,0 +1,43 @@
+using Microsoft.AspNetCore.Mvc;
+using ChineseSaleApi.ServiceInterfaces;
+using ChineseSaleApi.Dto;
+
+namespace ChineseSaleApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+        private readonly IUserService _service;
+
+        public UserController(IUserService service)
+        {
+            _service = service;
+        }
+        //read
+        [HttpGet]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _service.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+        //create
+        [HttpPost]
+        public async Task<IActionResult> AddUser([FromBody] CreateUserDto createUserDto)
+        {
+            await _service.AddUser(createUserDto);
+            return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
+        }
+        //update
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto)
+        {
+            await _service.UpdateUser(userDto);
+            return NoContent();
+        }
+    }
+}
