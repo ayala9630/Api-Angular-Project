@@ -77,7 +77,7 @@ namespace ChineseSaleApi.Services
             var lottery = await _repository.GetLotteryById(lotteryDto.Id);
             if (lottery == null)
             {
-                throw new Exception("Lottery not found.");
+                ///////////////////return null;
             }
             if (lottery.StartDate <= DateTime.Now)
             {

@@ -1,6 +1,7 @@
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
+using ChineseSaleApi.ServiceInterfaces;
 
 namespace ChineseSaleApi.Services
 {
@@ -30,26 +31,26 @@ namespace ChineseSaleApi.Services
                         {
                             GiftId = g.Key.Id,
                             GiftName = g.Key.Name,
-                            ImageUrl = g.Key.ImageUrl,
+                            ImageUrl = g.Key?.ImageUrl??"",
                             Quantity = g.Count()
                         }).ToList();
         }
 
         public async Task<CardDto?> GetCardByGiftId(int id)
         {
-           var cards = await _repository.GetCardByGiftId(id);
-           if (cards == null) return null;
-           var groupCards= cards.GroupBy(x => new { x.UserId, x.GiftId, x.Gift.Name, x.User.FirstName, x.User.LastName })
-                           .Select(g => new 
-                           {
-                               UserFirstName=g.Key.FirstName,
-                               UserLastName=g.Key.LastName,
-                               GiftId = g.Key.GiftId,
-                               GiftName = g.Key.Name,
-                               Count=g.Count()
-                           }).ToList();
+            var cards = await _repository.GetCardByGiftId(id);
+            if (cards == null) return null;
+            var groupCards = cards.GroupBy(x => new { x.UserId, x.GiftId, x.Gift?.Name, x.User?.FirstName, x.User?.LastName })
+                            .Select(g => new
+                            {
+                                UserFirstName = g.Key.FirstName,
+                                UserLastName = g.Key.LastName,
+                                GiftId = g.Key.GiftId,
+                                GiftName = g.Key.Name,
+                                Count = g.Count()
+                            }).ToList();
             Dictionary<string, int> dict = new();
-            
+
             foreach (var item in groupCards)
             {
                 dict.Add(item.UserFirstName + " " + item.UserLastName, item.Count);

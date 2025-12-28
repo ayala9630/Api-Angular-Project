@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using ChineseSaleApi.Services;
+using ChineseSaleApi.ServiceInterfaces;
+using ChineseSaleApi.Dto;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -31,5 +32,13 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(card);
         }
+        //create
+        [HttpPost]
+        public async Task<IActionResult> CreateCard(CreateCardDto createCardDto)
+        {
+            var id = await _service.AddCard(createCardDto);
+            return CreatedAtAction(nameof(CreateCard), new { id = id }, id);
+        }
+
     }
 }

@@ -13,7 +13,7 @@ namespace ChineseSaleApi.Services
             _repository = repository;
         }
         //create
-        public async Task<int> CreateCardCar(CardCartDto cardCartDto)
+        public async Task<int> CreateCardCar(CreateCardCartDto cardCartDto)
         {
             CardCart cardCart = new CardCart
             {
