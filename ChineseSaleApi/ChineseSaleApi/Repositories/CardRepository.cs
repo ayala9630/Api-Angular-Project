@@ -22,7 +22,7 @@ namespace ChineseSaleApi.Repositories
         //read
         public async Task<IEnumerable<Card>> GetAllCards()
         {
-            return await _context.Cards.Include(p => p.Gift).ToListAsync();//.GroupBy(x => new {x.GiftId, x.Gift.Name, x.Gift.ImageUrl}).ToListAsync();//.GroupBy(x => x.GiftId).ToListAsync();
+            return await _context.Cards.Include(p => p.Gift).ToListAsync();
         }
         public async Task<IEnumerable<Card?>> GetCardByGiftId(int id)
         {

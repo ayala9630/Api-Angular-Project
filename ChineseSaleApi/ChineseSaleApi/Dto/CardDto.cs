@@ -26,4 +26,5 @@ namespace ChineseSaleApi.Dto
         public int Id { get; set; }
         public bool IsWin { get; set; }
     }
+
 }

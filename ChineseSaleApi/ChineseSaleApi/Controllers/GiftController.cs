@@ -18,7 +18,12 @@ namespace ChineseSaleApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGiftById(int id)
         {
-            return Ok();
+            var gift = await _service.GetGiftById(id);
+            if (gift == null)
+            {
+                return NotFound();
+            }
+            return Ok(gift);
         }
         //create
         [HttpPost]

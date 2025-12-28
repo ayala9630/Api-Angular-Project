@@ -26,7 +26,7 @@ namespace ChineseSaleApi.Repositories
         }
         public async Task<Gift?> GetGiftById(int id)
         {
-            return await _context.Gifts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Gifts.Include(x=>x.Donor).Include(x=>x.Category).Include(x=>x.Lottery).FirstOrDefaultAsync(x => x.Id == id);
         }
         //update
         public async Task UpdateGift(Gift gift)
