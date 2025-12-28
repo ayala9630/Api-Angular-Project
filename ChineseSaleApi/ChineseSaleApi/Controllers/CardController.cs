@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ChineseSaleApi.Services;
+using ChineseSaleApi.ServiceInterfaces;
 
 namespace ChineseSaleApi.Controllers
 {

@@ -24,6 +24,12 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.PackageCarts.ToListAsync();
         }
+        public async Task<IEnumerable<PackageCart>> GetPackagesByUserId(int userId)
+        {
+            return await _context.PackageCarts
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+        }
         public async Task<PackageCart?> GetPackageCartById(int id)
         {
             return await _context.PackageCarts.FirstOrDefaultAsync(x => x.Id == id);

@@ -320,7 +320,7 @@ namespace ChineseSaleApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -355,8 +355,7 @@ namespace ChineseSaleApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -492,7 +491,8 @@ namespace ChineseSaleApi.Migrations
                     b.HasOne("ChineseSaleApi.Models.Address", "Address")
                         .WithOne("User")
                         .HasForeignKey("ChineseSaleApi.Models.User", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Address");
                 });

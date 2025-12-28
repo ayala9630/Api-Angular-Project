@@ -1,4 +1,5 @@
 ﻿using ChineseSaleApi.Data;
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +25,16 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Donors.ToListAsync();
         }
-        public async Task<Donor?> GetDonor(int id)
+        public async Task<IEnumerable<Donor>> GetDonorByLotteryId(int lottery)
         {
-            return await _context.Donors.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Donors
+                .Where(d => d.Lotteries.Any(l => l.Id == lottery))
+                .ToListAsync();
+        }
+        public async Task<Donor?> GetDonorById(int id)
+        {
+            return await _context.Donors.Include(g => g.Gifts)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         //update
         public async Task UpdateDonor(Donor donor)
@@ -37,10 +45,10 @@ namespace ChineseSaleApi.Repositories
         //delete
         public async Task DeleteDonor(int id)
         {
-            var gift = await _context.Donors.FirstOrDefaultAsync(x => x.Id == id);
-            if (gift != null)
+            var donor = await _context.Donors.FirstOrDefaultAsync(x => x.Id == id);
+            if (donor != null)
             {
-                _context.Donors.Remove(gift);
+                _context.Donors.Remove(donor);
                 await _context.SaveChangesAsync();
             }
         }

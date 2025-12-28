@@ -1,6 +1,6 @@
 ﻿using ChineseSaleApi.Dto;
 
-namespace ChineseSaleApi.Services
+namespace ChineseSaleApi.ServiceInterfaces
 {
     public interface ICardService
     {

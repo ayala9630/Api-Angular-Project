@@ -19,10 +19,10 @@ namespace ChineseSaleApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Number = table.Column<int>(type: "int", nullable: false),
-                    ZipCode = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    DonorId = table.Column<int>(type: "int", nullable: false)
+                    Number = table.Column<int>(type: "int", nullable: true),
+                    ZipCode = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    DonorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,8 +51,8 @@ namespace ChineseSaleApi.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalCards = table.Column<int>(type: "int", nullable: false),
-                    TotalSum = table.Column<int>(type: "int", nullable: false),
+                    TotalCards = table.Column<int>(type: "int", nullable: true),
+                    TotalSum = table.Column<int>(type: "int", nullable: true),
                     IsDone = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -66,12 +66,12 @@ namespace ChineseSaleApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     CompanyName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CompanyEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CompanyPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyIcon = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    CompanyIcon = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     CompanyAddressId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -96,7 +96,7 @@ namespace ChineseSaleApi.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -118,7 +118,7 @@ namespace ChineseSaleApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     NumOfCards = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     LoterryId = table.Column<int>(type: "int", nullable: false)
@@ -166,10 +166,10 @@ namespace ChineseSaleApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    GiftValue = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: true),
+                    GiftValue = table.Column<int>(type: "int", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    IsPackageAble = table.Column<bool>(type: "bit", nullable: false),
+                    IsPackageAble = table.Column<bool>(type: "bit", nullable: true),
                     DonorId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
                     LotteryId = table.Column<int>(type: "int", nullable: false)
@@ -256,7 +256,7 @@ namespace ChineseSaleApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IsWin = table.Column<bool>(type: "bit", nullable: false),
+                    IsWin = table.Column<bool>(type: "bit", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     GiftId = table.Column<int>(type: "int", nullable: false)
                 },

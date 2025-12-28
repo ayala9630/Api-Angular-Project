@@ -7,7 +7,8 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task<int> AddDonor(Donor donor);
         Task DeleteDonor(int id);
         Task<IEnumerable<Donor>> GetAllDonors();
-        Task<Donor?> GetDonor(int id);
+        Task<Donor?> GetDonorById(int id);
         Task UpdateDonor(Donor donor);
+        Task<IEnumerable<Donor>> GetDonorByLotteryId(int lottery);
     }
 }

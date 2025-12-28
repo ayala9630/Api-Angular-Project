@@ -8,6 +8,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task DeletePackageCart(int id);
         Task<IEnumerable<PackageCart>> GetAllPackageCarts();
         Task<PackageCart?> GetPackageCartById(int id);
+        Task<IEnumerable<PackageCart>> GetPackagesByUserId(int userId);
         Task UpdatePackageCart(PackageCart packageCart);
     }
 }
