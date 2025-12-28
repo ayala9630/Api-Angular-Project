@@ -25,7 +25,7 @@ namespace ChineseSaleApi.Controllers
         }
         //create
         [HttpPost]
-        public async Task<IActionResult> CreatePackageCart([FromBody] PackageCartDto packageCartDto)
+        public async Task<IActionResult> CreatePackageCart([FromBody] CreatePackageCartDto packageCartDto)
         {
             var id = await _service.CreatePackageCart(packageCartDto);
             return CreatedAtAction(nameof(CreatePackageCart), new { id = id }, id);

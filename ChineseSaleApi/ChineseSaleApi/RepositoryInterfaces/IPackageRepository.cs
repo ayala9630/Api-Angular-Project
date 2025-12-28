@@ -7,7 +7,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task<int> AddPackage(Package package);
         Task DeletePackage(int id);
         Task<IEnumerable<Package>> GetAllPackages();
-        Task<Package?> GetPackage(int id);
+        Task<Package?> GetPackageById(int id);
         Task UpdatePackage(Package package);
     }
 }

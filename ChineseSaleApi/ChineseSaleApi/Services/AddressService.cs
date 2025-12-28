@@ -1,6 +1,7 @@
 ﻿using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
+using ChineseSaleApi.ServiceInterfaces;
 
 namespace ChineseSaleApi.Services
 {

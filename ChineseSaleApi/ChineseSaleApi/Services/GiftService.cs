@@ -8,13 +8,18 @@ namespace ChineseSaleApi.Services
     public class GiftService : IGiftService
     {
         private readonly IGiftRepository _repository;
-        public GiftService(IGiftRepository repository)
+        private readonly ILotteryRepository _lotteryRepository;
+        public GiftService(IGiftRepository repository, ILotteryRepository lotteryRepository)
         {
             _repository = repository;
+            _lotteryRepository = lotteryRepository;
         }
         //create
         public async Task<int> AddGift(CreateGiftDto createGiftDto)
         {
+            Lottery? lottery = await _lotteryRepository.GetLotteryById(createGiftDto.LotteryId);
+            if (lottery?.StartDate < DateTime.Now)
+                throw new Exception("Gifts cannot be added after the raffle has started.");
             Gift gift = new Gift
             {
                 Name = createGiftDto.Name,
@@ -30,28 +35,56 @@ namespace ChineseSaleApi.Services
             return await _repository.AddGift(gift);
         }
         //read
+        public async Task<GiftDto?> GetGiftById(int id)
+        {
+            var gift = await _repository.GetGiftById(id);
+            if (gift == null)
+            {
+                return null;
+            }
+            return new GiftDto
+            {
+                Id = gift.Id,
+                Name = gift.Name,
+                Description = gift.Description,
+                Price = gift.Price,
+                GiftValue = gift.GiftValue,
+                ImageUrl = gift.ImageUrl,
+                IsPackageAble = gift.IsPackageAble,
+                DonorName = gift.Donor?.FirstName + " " + gift.Donor?.LastName ?? "",
+                CategoryName = gift.Category?.Name ?? "",
+                LotteryId = gift.LotteryId,
+            };
+        }
         //update
         public async Task UpdateGift(UpdateGiftDto updateGiftDto)
         {
-            var existingGift = await _repository.GetGiftById(updateGiftDto.Id);
-            if (existingGift != null)
+            Lottery? lottery = await _lotteryRepository.GetLotteryById(updateGiftDto.LotteryId);
+            if (lottery?.StartDate < DateTime.Now)
+                throw new Exception("Gifts cannot be updated after the raffle has started.");
+            var gift = await _repository.GetGiftById(updateGiftDto.Id);
+            if (gift != null)
             {
 
-                existingGift.Name = updateGiftDto.Name;
-                existingGift.Description = updateGiftDto.Description;
-                existingGift.Price = updateGiftDto.Price;
-                existingGift.GiftValue = updateGiftDto.GiftValue;
-                existingGift.ImageUrl = updateGiftDto.ImageUrl;
-                existingGift.IsPackageAble = updateGiftDto.IsPackageAble;
-                existingGift.DonorId = updateGiftDto.DonorId;
-                existingGift.CategoryId = updateGiftDto.CategoryId;
-                existingGift.LotteryId = updateGiftDto.LotteryId;
-                await _repository.UpdateGift(existingGift);
+                gift.Name = updateGiftDto.Name;
+                gift.Description = updateGiftDto.Description;
+                gift.Price = updateGiftDto.Price;
+                gift.GiftValue = updateGiftDto.GiftValue;
+                gift.ImageUrl = updateGiftDto.ImageUrl;
+                gift.IsPackageAble = updateGiftDto.IsPackageAble;
+                gift.DonorId = updateGiftDto.DonorId;
+                gift.CategoryId = updateGiftDto.CategoryId;
+                //gift.LotteryId = updateGiftDto.LotteryId;
+                await _repository.UpdateGift(gift);
             }
         }
         //delete
         public async Task DeleteGift(int id)
         {
+            Gift? gift = await _repository.GetGiftById(id);
+            Lottery? lottery = await _lotteryRepository.GetLotteryById(gift?.LotteryId??0);
+            if (lottery?.StartDate < DateTime.Now)
+                throw new Exception("Gifts cannot be deleted after the raffle has started.");
             await _repository.DeleteGift(id);
         }
     }

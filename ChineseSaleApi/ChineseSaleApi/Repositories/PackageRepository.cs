@@ -24,7 +24,7 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Packages.ToListAsync();
         }
-        public async Task<Package?> GetPackage(int id)
+        public async Task<Package?> GetPackageById(int id)
         {
             return await _context.Packages.FirstOrDefaultAsync(x => x.Id == id);
         }

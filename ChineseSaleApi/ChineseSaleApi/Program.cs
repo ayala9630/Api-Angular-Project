@@ -38,6 +38,8 @@ builder.Services.AddScoped<IGiftService, GiftService>();
 builder.Services.AddScoped<ICardCartService, CardCartService>();
 builder.Services.AddScoped<IPackageCartService, PackageCartService>();
 builder.Services.AddScoped<IDonorService, DonorService>();
+builder.Services.AddScoped<IPackageService, PackageService>();
+
 
 
 var app = builder.Build();
