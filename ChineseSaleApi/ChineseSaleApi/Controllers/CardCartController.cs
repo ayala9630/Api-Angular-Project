@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using System.Threading.Tasks;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -15,6 +16,14 @@ namespace ChineseSaleApi.Controllers
             _service = service;
         }
         //read
+        [HttpGet]
+        public async Task<IActionResult> GetCardCartsByUserId(int userId)
+        {
+            var cards = await _service.GetCardCartsByUserId(userId);
+            if (cards == null)
+                return NotFound();
+            return Ok(cards);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> CreateCardCart([FromBody] CreateCardCartDto cardCartDto)

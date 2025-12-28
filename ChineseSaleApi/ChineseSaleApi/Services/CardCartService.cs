@@ -24,6 +24,17 @@ namespace ChineseSaleApi.Services
             return await _repository.AddCardCart(cardCart);
         }
         //read
+        public async Task<IEnumerable<CardCartDto>> GetCardCartsByUserId(int userId)
+        {
+            var cardCarts = await _repository.GetCardCartsByUserId(userId);
+            return cardCarts.Select(cc => new CardCartDto
+            {
+                Id = cc.Id,
+                Quantity = cc.Quantity,
+                UserId = cc.UserId,
+                GiftId = cc.GiftId
+            });
+        }
         //update
         public async Task UpdateCardCart(CardCartDto cardCartDto)
         {

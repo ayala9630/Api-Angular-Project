@@ -15,6 +15,14 @@ namespace ChineseSaleApi.Controllers
             _service = service;
         }
         //read
+        [HttpGet]
+        public IActionResult GetPackageCartByUserId(int userId)
+        {
+            var packages =  _service.GetPackagesByUserId(userId);
+            if (packages == null)
+                return NotFound();
+            return Ok(packages);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> CreatePackageCart([FromBody] CreatePackageCartDto packageCartDto)

@@ -24,6 +24,17 @@ namespace ChineseSaleApi.Services
             return await _repository.AddPackageCart(packageCart);
         }
         //read
+        public async Task<IEnumerable<PackageCartDto>> GetPackagesByUserId(int userId)
+        {
+            var packageCarts = await _repository.GetPackagesByUserId(userId);
+            return packageCarts.Select(pc => new PackageCartDto
+            {
+                Id = pc.Id,
+                Quantity = pc.Quantity,
+                UserId = pc.UserId,
+                PackageId = pc.PackageId
+            });
+        }
         //update
         public async Task UpdatePackageCart(PackageCartDto packageCartDto)
         {

@@ -28,6 +28,13 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.CardCarts.FirstOrDefaultAsync(x => x.Id == id);
         }
+        //by user id
+        public async Task<IEnumerable<CardCart>> GetCardCartsByUserId(int userId)
+        {
+            return await _context.CardCarts
+                .Where(cc => cc.UserId == userId)
+                .ToListAsync();
+        }
         //update
         public async Task UpdateCardCart(CardCart cardCart)
         {
