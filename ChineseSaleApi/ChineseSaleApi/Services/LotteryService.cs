@@ -84,7 +84,7 @@ namespace ChineseSaleApi.Services
                 throw new ArgumentException("Cannot update a lottery that already started.");
             }
 
-            lottery.Name = lotteryDto.Name;
+            lottery.Name = lotteryDto.Name??lottery.Name;
             lottery.StartDate = lotteryDto.StartDate;
             lottery.EndDate = lotteryDto.EndDate;
             lottery.TotalCards = lotteryDto.TotalCards;
