@@ -33,7 +33,7 @@ namespace ChineseSaleApi.Controllers
         }
         //update
         [HttpPut]
-        public async Task<IActionResult> UpdateCardCart([FromBody]CardCartDto cardCartDto)
+        public async Task<IActionResult> UpdateCardCart([FromBody] UpdateQuantityDto cardCartDto)
         {
             await _service.UpdateCardCart(cardCartDto);
             return NoContent();

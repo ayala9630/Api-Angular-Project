@@ -20,9 +20,9 @@ namespace ChineseSaleApi.Repositories
             return gift.Id;
         }
         //read
-        public async Task<IEnumerable<Gift>> GetAllGifts()
+        public async Task<IEnumerable<Gift>> GetAllGifts(int lotteryId)
         {
-            return await _context.Gifts.ToListAsync();
+            return await _context.Gifts.Where(l=>l.LotteryId==lotteryId).ToListAsync();
         }
         public async Task<Gift?> GetGiftById(int id)
         {

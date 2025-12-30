@@ -33,7 +33,7 @@ namespace ChineseSaleApi.Services
             return await _repository.AddDonor(donor);
         }
         //read
-        public async Task<SingelDonorDto?> GetDonorById(int id)
+        public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId)
         {
             Dictionary<string,int> dict = new();
 
@@ -42,7 +42,7 @@ namespace ChineseSaleApi.Services
             {
                 return null;
             }
-            var cards = await _cardRepository.GetAllCards();
+            var cards = await _cardRepository.GetAllCards(lotteryId);
             var donorGifts = cards.Where(x=>x.Gift.DonorId==id).GroupBy(g => new {  g.GiftId,g.Gift.Name})
                              .Select(x => new
                              {
@@ -106,7 +106,7 @@ namespace ChineseSaleApi.Services
             Donor donor1 = new Donor
             {
                 Id = donor.Id,
-                FirstName = donor.FirstName,
+                FirstName = donor.FirstName ,
                 LastName = donor.LastName,
                 CompanyName = donor.CompanyName,
                 CompanyEmail = donor.CompanyEmail,

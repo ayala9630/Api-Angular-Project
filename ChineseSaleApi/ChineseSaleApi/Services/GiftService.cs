@@ -59,22 +59,25 @@ namespace ChineseSaleApi.Services
         //update
         public async Task UpdateGift(UpdateGiftDto updateGiftDto)
         {
-            Lottery? lottery = await _lotteryRepository.GetLotteryById(updateGiftDto.LotteryId);
-            if (lottery?.StartDate < DateTime.Now)
-                throw new Exception("Gifts cannot be updated after the raffle has started.");
+            if (updateGiftDto.LotteryId != 0)
+            {
+                Lottery? lottery = await _lotteryRepository.GetLotteryById(updateGiftDto.LotteryId);
+                if (lottery?.StartDate < DateTime.Now)
+                    throw new Exception("Gifts cannot be updated after the raffle has started.");
+            }
             var gift = await _repository.GetGiftById(updateGiftDto.Id);
             if (gift != null)
             {
 
-                gift.Name = updateGiftDto.Name;
-                gift.Description = updateGiftDto.Description;
-                gift.Price = updateGiftDto.Price;
-                gift.GiftValue = updateGiftDto.GiftValue;
-                gift.ImageUrl = updateGiftDto.ImageUrl;
-                gift.IsPackageAble = updateGiftDto.IsPackageAble;
-                gift.DonorId = updateGiftDto.DonorId;
-                gift.CategoryId = updateGiftDto.CategoryId;
-                //gift.LotteryId = updateGiftDto.LotteryId;
+                gift.Name = updateGiftDto.Name ?? gift.Name;
+                gift.Description = updateGiftDto.Description??gift.Description;
+                gift.Price = updateGiftDto.Price ?? gift.Price;
+                gift.GiftValue = updateGiftDto.GiftValue ?? gift.GiftValue;
+                gift.ImageUrl = updateGiftDto.ImageUrl ?? gift.ImageUrl;
+                gift.IsPackageAble = updateGiftDto.IsPackageAble ?? gift.IsPackageAble;
+                gift.DonorId = updateGiftDto.DonorId ?? gift.DonorId;
+                gift.CategoryId = updateGiftDto.CategoryId ?? gift.CategoryId;
+                gift.LotteryId = updateGiftDto.LotteryId!=0?updateGiftDto.LotteryId: gift.LotteryId;
                 await _repository.UpdateGift(gift);
             }
         }

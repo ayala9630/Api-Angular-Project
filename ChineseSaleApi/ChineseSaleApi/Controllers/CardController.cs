@@ -15,10 +15,10 @@ namespace ChineseSaleApi.Controllers
             _service = service;
         }
         //read
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("lottery/{lotteryId}")]
+        public async Task<IActionResult> Get(int lotteryId)
         {
-            var cards = await _service.GetAllCarsds();
+            var cards = await _service.GetAllCarsds(lotteryId);
             return Ok(cards);
 
         }

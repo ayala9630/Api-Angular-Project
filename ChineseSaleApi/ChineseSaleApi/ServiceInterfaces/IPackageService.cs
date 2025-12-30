@@ -1,4 +1,5 @@
 ﻿using ChineseSaleApi.Dto;
+using ChineseSaleApi.Models;
 
 namespace ChineseSaleApi.ServiceInterfaces
 {
@@ -6,7 +7,7 @@ namespace ChineseSaleApi.ServiceInterfaces
     {
         Task<int> AddPackage(CreatePackageDto createPackageDto);
         Task DeletePackage(int id);
-        Task<List<PackageDto>> GetAllPackages();
+        Task<List<PackageDto>> GetAllPackages(int lotteryId);
         Task<PackageDto?> GetPackageById(int id);
         Task UpdatePackage(PackageDto packageDto);
     }

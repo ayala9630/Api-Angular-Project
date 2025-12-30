@@ -43,9 +43,9 @@ namespace ChineseSaleApi.Services
                 LoterryId = package.LoterryId
             };
         }
-        public async Task<List<PackageDto>> GetAllPackages()
+        public async Task<List<PackageDto>> GetAllPackages(int lotteryId)
         {
-            var packages = await _repository.GetAllPackages();
+            var packages = await _repository.GetAllPackages(lotteryId);
             return packages.Select(package => new PackageDto
             {
                 Id = package.Id,
@@ -62,9 +62,9 @@ namespace ChineseSaleApi.Services
             var package = await _repository.GetPackageById(packageDto.Id);
             if (package != null)
             {
-                package.Name = packageDto.Name;
-                package.Description = packageDto.Description;
-                package.NumOfCards = packageDto.NumOfCards;
+                package.Name = packageDto.Name??package.Name;
+                package.Description = packageDto.Description??package.Description;
+                package.NumOfCards = packageDto.NumOfCards!=0? packageDto.NumOfCards:package.NumOfCards;
                 package.Price = packageDto.Price;
                 package.LoterryId = packageDto.LoterryId;
                 await _repository.UpdatePackage(package);
