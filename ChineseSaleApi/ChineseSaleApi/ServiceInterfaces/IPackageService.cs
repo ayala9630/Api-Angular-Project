@@ -9,6 +9,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task DeletePackage(int id);
         Task<List<PackageDto>> GetAllPackages(int lotteryId);
         Task<PackageDto?> GetPackageById(int id);
-        Task UpdatePackage(PackageDto packageDto);
+        Task<bool?> UpdatePackage(UpdatePackageDtos packageDto);
     }
 }

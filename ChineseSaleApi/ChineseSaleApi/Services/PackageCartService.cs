@@ -36,14 +36,16 @@ namespace ChineseSaleApi.Services
             });
         }
         //update
-        public async Task UpdatePackageCart(PackageCartDto packageCartDto)
+        public async Task<bool?> UpdatePackageCart(PackageCartDto packageCartDto)
         {
             PackageCart? packageCart = await _repository.GetPackageCartById(packageCartDto.Id);
             if (packageCart != null)
             {
                 packageCart.Quantity = packageCartDto.Quantity;
                 await _repository.UpdatePackageCart(packageCart);
+                return true;
             }
+            return null;
         }
         //delete
         public async Task DeletePackageCart(int id)

@@ -36,7 +36,9 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateGift([FromBody] UpdateGiftDto gift)
         {
-            await _service.UpdateGift(gift);
+            var success = await _service.UpdateGift(gift);
+            if(success==null)
+                return NotFound();
             return NoContent();
         }
         //delete

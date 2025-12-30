@@ -68,7 +68,7 @@ namespace ChineseSaleApi.Services
             };
         }
         //update
-        public async Task UpdateLottery(LotteryDto lotteryDto)
+        public async Task<bool?> UpdateLottery(UpdateLotteryDto lotteryDto)
         {
             if (lotteryDto.EndDate <= lotteryDto.StartDate)
             {
@@ -77,20 +77,21 @@ namespace ChineseSaleApi.Services
             var lottery = await _repository.GetLotteryById(lotteryDto.Id);
             if (lottery == null)
             {
-                ///////////////////return null;
+                return null;
             }
             if (lottery.StartDate <= DateTime.Now)
             {
                 throw new ArgumentException("Cannot update a lottery that already started.");
             }
 
-            lottery.Name = lotteryDto.Name??lottery.Name;
-            lottery.StartDate = lotteryDto.StartDate;
-            lottery.EndDate = lotteryDto.EndDate;
-            lottery.TotalCards = lotteryDto.TotalCards;
-            lottery.TotalSum = lotteryDto.TotalSum;
-            lottery.IsDone = lotteryDto.IsDone;
+            lottery.Name = lotteryDto.Name ?? lottery.Name;
+            lottery.StartDate = lotteryDto.StartDate ?? lottery.StartDate;
+            lottery.EndDate = lotteryDto.EndDate ?? lottery.EndDate;
+            lottery.TotalCards = lotteryDto.TotalCards ?? lottery.TotalCards;
+            lottery.TotalSum = lotteryDto.TotalSum ?? lottery.TotalSum;
+            lottery.IsDone = lotteryDto.IsDone ?? lottery.IsDone;
             await _repository.UpdateLottery(lottery);
+            return true;
         }
 
         //delete

@@ -6,7 +6,7 @@ namespace ChineseSaleApi.ServiceInterfaces
     {
         Task<int> CreatePackageCart(CreatePackageCartDto packageCartDto);
         Task<IEnumerable<PackageCartDto>> GetPackagesByUserId(int userId);
-        Task UpdatePackageCart(PackageCartDto packageCartDto);
+        Task<bool?> UpdatePackageCart(PackageCartDto packageCartDto);
         Task DeletePackageCart(int id);
     }
 }

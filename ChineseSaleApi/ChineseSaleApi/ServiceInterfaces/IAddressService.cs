@@ -7,6 +7,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<int> AddAddressForDonor(CreateAddressForDonorDto address);
         Task<int> AddAddressForUser(CreateAddressForUserDto address);
         Task<AddressDto?> GetAddressById(int id);
-        Task UpdateAddress(AddressDto addressDto);
+        Task<bool?> UpdateAddress(AddressDto addressDto);
     }
 }

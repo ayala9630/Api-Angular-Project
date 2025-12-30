@@ -57,7 +57,7 @@ namespace ChineseSaleApi.Services
             };
         }
         //update
-        public async Task UpdateGift(UpdateGiftDto updateGiftDto)
+        public async Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto)
         {
             if (updateGiftDto.LotteryId != 0)
             {
@@ -79,7 +79,9 @@ namespace ChineseSaleApi.Services
                 gift.CategoryId = updateGiftDto.CategoryId ?? gift.CategoryId;
                 gift.LotteryId = updateGiftDto.LotteryId!=0?updateGiftDto.LotteryId: gift.LotteryId;
                 await _repository.UpdateGift(gift);
+                return true;
             }
+            return null;
         }
         //delete
         public async Task DeleteGift(int id)

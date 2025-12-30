@@ -36,7 +36,9 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto)
         {
-            await _service.UpdateUser(userDto);
+            var success =await _service.UpdateUser(userDto);
+            if (success == null)
+                return NotFound();
             return NoContent();
         }
     }
