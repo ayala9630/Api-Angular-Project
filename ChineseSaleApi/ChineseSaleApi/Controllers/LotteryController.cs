@@ -41,7 +41,9 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateLottery([FromBody] LotteryDto lottery)
         {
-            await _service.UpdateLottery(lottery);
+            var success =await _service.UpdateLottery(lottery);
+            if (success == null)
+                return NotFound();
             return NoContent();
         }
         //delete

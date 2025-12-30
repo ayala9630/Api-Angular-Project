@@ -34,7 +34,9 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdatePackageCart([FromBody]PackageCartDto packageCartDto)
         {
-            await _service.UpdatePackageCart(packageCartDto);
+            var success = await _service.UpdatePackageCart(packageCartDto);
+            if (success == null)
+                return NotFound();
             return NoContent();
         }
         //delete

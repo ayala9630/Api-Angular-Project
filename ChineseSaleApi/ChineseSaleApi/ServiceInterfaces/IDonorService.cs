@@ -10,6 +10,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<IEnumerable<DonorDto>> GetAllDonors();
         Task<IEnumerable<DonorDto?>> GetDonorByLotteryId(int lottery);
         Task<SingelDonorDto?> GetDonorById(int id);
-        Task UpdateDonor(DonorDto donor);
+        Task<bool?> UpdateDonor(UpdateDonorDto donor);
     }
 }

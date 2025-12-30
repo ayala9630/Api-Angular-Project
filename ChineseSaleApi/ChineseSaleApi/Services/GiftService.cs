@@ -57,7 +57,7 @@ namespace ChineseSaleApi.Services
             };
         }
         //update
-        public async Task UpdateGift(UpdateGiftDto updateGiftDto)
+        public async Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto)
         {
             Lottery? lottery = await _lotteryRepository.GetLotteryById(updateGiftDto.LotteryId);
             if (lottery?.StartDate < DateTime.Now)
@@ -76,7 +76,9 @@ namespace ChineseSaleApi.Services
                 gift.CategoryId = updateGiftDto.CategoryId;
                 //gift.LotteryId = updateGiftDto.LotteryId;
                 await _repository.UpdateGift(gift);
+                return true;
             }
+            return null;
         }
         //delete
         public async Task DeleteGift(int id)

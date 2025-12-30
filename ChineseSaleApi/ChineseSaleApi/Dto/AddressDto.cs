@@ -1,27 +1,41 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChineseSaleApi.Dto
 {
     public class AddressDto
     {
+        [Key]
         public int Id { get; set; }
-        public string City { get; set; } = null!;
-        public string Street { get; set; } = null!;
+        [Required]
+        [MaxLength(50)]
+        public string City { get; set; } 
+        [Required]
+        [MaxLength(50)]
+        public string Street { get; set; }
         public int? Number { get; set; }
         public int? ZipCode { get; set; }
     }
     public class CreateAddressForUserDto
     {
-        public string City { get; set; } = null!;
-        public string Street { get; set; } = null!;
+        [Required]
+        [MaxLength(50)]
+        public string City { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string Street { get; set; } 
         public int? Number { get; set; }
         public int? ZipCode { get; set; }
         public int UserId { get; set; }
     }
     public class CreateAddressForDonorDto
     {
-        public string City { get; set; } = null!;
-        public string Street { get; set; } = null!;
+        [Required]
+        [MaxLength(50)]
+        public string City { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string Street { get; set; }
         public int? Number { get; set; }
         public int? ZipCode { get; set; }
         public int? DonorId { get; set; }

@@ -53,7 +53,7 @@ namespace ChineseSaleApi.Services
             };
         }
         //update
-        public async Task UpdateAddress(AddressDto addressDto)
+        public async Task<bool?> UpdateAddress(AddressDto addressDto)
         {
             var address = await _repository.GetAddress(addressDto.Id);
             if (address != null)
@@ -63,7 +63,9 @@ namespace ChineseSaleApi.Services
                 address.Number = addressDto.Number;
                 address.ZipCode = addressDto.ZipCode;
                 await  _repository.UpdateAddress(address);
+                return true;
             }
+            return null;
         }
 
     }

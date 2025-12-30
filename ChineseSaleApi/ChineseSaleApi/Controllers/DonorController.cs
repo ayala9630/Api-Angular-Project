@@ -56,12 +56,9 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateDonor([FromBody] DonorDto donor)
         {
-            var existingDonor = await _service.GetDonorById(donor.Id);
-            if (existingDonor == null)
-            {
+            var success = await _service.UpdateDonor(donor);
+            if(success == null)
                 return NotFound();
-            }
-            await _service.UpdateDonor(donor);
             return NoContent();
         }
         //delete
