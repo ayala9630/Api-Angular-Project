@@ -23,11 +23,13 @@ namespace ChineseSaleApi.Dto
     {
         [Key]
         public int Id { get; set; }
+        [MaxLength(50)]
         public string? Name { get; set; }
         [MaxLength(250)]
         public string? Description { get; set; }
         public int? Price { get; set; }
         public int? GiftValue { get; set; }
+        [MaxLength(250)]
         public string? ImageUrl { get; set; }
         public bool? IsPackageAble { get; set; }
         public int? DonorId { get; set; }

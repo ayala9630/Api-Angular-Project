@@ -23,9 +23,9 @@ namespace ChineseSaleApi.Services
             return await _repository.AddCard(card);
         }
         //read
-        public async Task<List<ListCardDto>> GetAllCarsds()
+        public async Task<List<ListCardDto>> GetAllCarsds(int lotteryId)
         {
-            var cards = await _repository.GetAllCards();
+            var cards = await _repository.GetAllCards(lotteryId);
             return cards.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.ImageUrl })
                         .Select(g => new ListCardDto
                         {

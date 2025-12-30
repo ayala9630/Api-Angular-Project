@@ -21,4 +21,11 @@ namespace ChineseSaleApi.Dto
         [Required]
         public int PackageId { get; set; }
     }
+    public class UpdateQuantityDto
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public int Quantity { get; set; }
+    }
 }

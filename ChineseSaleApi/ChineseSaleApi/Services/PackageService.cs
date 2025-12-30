@@ -43,9 +43,9 @@ namespace ChineseSaleApi.Services
                 LoterryId = package.LoterryId
             };
         }
-        public async Task<List<PackageDto>> GetAllPackages()
+        public async Task<List<PackageDto>> GetAllPackages(int lotteryId)
         {
-            var packages = await _repository.GetAllPackages();
+            var packages = await _repository.GetAllPackages(lotteryId);
             return packages.Select(package => new PackageDto
             {
                 Id = package.Id,

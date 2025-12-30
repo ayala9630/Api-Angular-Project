@@ -58,10 +58,10 @@ namespace ChineseSaleApi.Services
             var address = await _repository.GetAddress(addressDto.Id);
             if (address != null)
             {
-                address.City = addressDto.City;
-                address.Street = addressDto.Street;
-                address.Number = addressDto.Number;
-                address.ZipCode = addressDto.ZipCode;
+                address.City = addressDto.City??address.City;
+                address.Street = addressDto.Street??address.Street;
+                address.Number = addressDto.Number ?? address.Number;
+                address.ZipCode = addressDto.ZipCode ?? address.ZipCode;
                 await  _repository.UpdateAddress(address);
                 return true;
             }

@@ -27,22 +27,22 @@ namespace ChineseSaleApi.Controllers
             var donors = await _service.GetAllDonors();
             return Ok(donors);
         }
-        [HttpGet("id")]
-        public async Task<IActionResult> GetDonorById(int id)
+        [HttpGet("{lotteryId}/{id}")]
+        public async Task<IActionResult> GetDonorById(int id,int lotteryId)
         {
-            var donor = await _service.GetDonorById(id);
+            var donor = await _service.GetDonorById(id,lotteryId);
             if (donor == null)
             {
                 return NotFound();
             }
             return Ok(donor);
         }
-        [HttpGet("lottery")]
-        public async Task<IActionResult> GetDonorByLotteryId(int lottery)
+        [HttpGet("{lotteryId}")]
+        public async Task<IActionResult> GetDonorByLotteryId(int lotteryId)
         {
-            if(await _lotteryService.GetLotteryById(lottery)==null)
+            if(await _lotteryService.GetLotteryById(lotteryId)==null)
                 return NotFound();
-            var donors = await _service.GetDonorByLotteryId(lottery);
+            var donors = await _service.GetDonorByLotteryId(lotteryId);
             return Ok(donors);
         }
         //create
@@ -56,7 +56,7 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateDonor([FromBody] DonorDto donor)
         {
-            var success = await _service.UpdateDonor(donor);
+            bool? success = await _service.UpdateDonor(donor);
             if(success == null)
                 return NotFound();
             return NoContent();
@@ -65,11 +65,6 @@ namespace ChineseSaleApi.Controllers
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteDonor(int id)
         {
-            var existingDonor = await _service.GetDonorById(id);
-            if (existingDonor == null)
-            {
-                return NotFound();
-            }
             await _service.DeleteDonor(id);
             return NoContent();
         }

@@ -26,10 +26,10 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(package);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllPackages()
+        [HttpGet("lottery/{lotteryId}")]
+        public async Task<IActionResult> GetAllPackages(int lotteryId)
         {
-            var packages = await _service.GetAllPackages();
+            var packages = await _service.GetAllPackages(lotteryId);
             return Ok(packages);
         }
         //create
