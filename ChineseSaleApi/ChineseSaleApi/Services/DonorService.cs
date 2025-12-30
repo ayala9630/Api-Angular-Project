@@ -97,24 +97,22 @@ namespace ChineseSaleApi.Services
             });
         }
         //update
-        public async Task UpdateDonor(DonorDto donor)
+        public async Task<bool?> UpdateDonor(UpdateDonorDto donor)
         {
-            if (await _repository.GetDonorById(donor.Id) == null)
+            Donor? donor1 = await _repository.GetDonorById(donor.Id);
+            if (donor1 == null)
             {
-                throw new Exception("Donor not found");
+                return null;
             }
-            Donor donor1 = new Donor
-            {
-                Id = donor.Id,
-                FirstName = donor.FirstName,
-                LastName = donor.LastName,
-                CompanyName = donor.CompanyName,
-                CompanyEmail = donor.CompanyEmail,
-                CompanyPhone = donor.CompanyPhone,
-                CompanyIcon = donor.CompanyIcon,
-                CompanyAddressId = donor.CompanyAddressId
-            };
+            donor1.CompanyPhone = donor.CompanyPhone??donor1.CompanyPhone;
+            donor1.CompanyEmail = donor.CompanyEmail ?? donor1.CompanyEmail;
+            donor1.CompanyIcon = donor.CompanyIcon ?? donor1.CompanyIcon;
+            donor1.CompanyName = donor.CompanyName ?? donor1.CompanyName;
+            donor1.CompanyAddressId = donor.CompanyAddressId ?? donor1.CompanyAddressId;
+            donor1.FirstName = donor.FirstName ?? donor1.FirstName;
+            donor1.LastName = donor.LastName ?? donor1.LastName;
             await _repository.UpdateDonor(donor1);
+            return true;
         }
         //delete
         public async Task DeleteDonor(int id)

@@ -7,6 +7,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<int> AddGift(CreateGiftDto createGiftDto);
         Task DeleteGift(int id);
         Task<GiftDto?> GetGiftById(int id);
-        Task UpdateGift(UpdateGiftDto updateGiftDto);
+        Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto);
     }
 }

@@ -57,18 +57,20 @@ namespace ChineseSaleApi.Services
             }).ToList();
         }
         //update
-        public async Task UpdatePackage(PackageDto packageDto)
+        public async Task<bool?> UpdatePackage(UpdatePackageDto packageDto)
         {
             var package = await _repository.GetPackageById(packageDto.Id);
             if (package != null)
             {
-                package.Name = packageDto.Name;
-                package.Description = packageDto.Description;
-                package.NumOfCards = packageDto.NumOfCards;
-                package.Price = packageDto.Price;
-                package.LoterryId = packageDto.LoterryId;
+                package.Name = packageDto.Name ?? package.Name;
+                package.Description = packageDto.Description ?? package.Description;
+                package.NumOfCards = packageDto.NumOfCards ?? package.NumOfCards;
+                package.Price = packageDto.Price ?? package.Price;
+                package.LoterryId = packageDto.LoterryId ?? package.LoterryId;
                 await _repository.UpdatePackage(package);
+                return true;
             }
+            return null;
         }
         //delete
         public async Task DeletePackage(int id)

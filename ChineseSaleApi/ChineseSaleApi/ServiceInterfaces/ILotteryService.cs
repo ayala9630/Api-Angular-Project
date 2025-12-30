@@ -8,6 +8,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task DeleteLottery(int id);
         Task<List<LotteryDto>> GetAllLotteries();
         Task<LotteryDto?> GetLotteryById(int id);
-        Task UpdateLottery(LotteryDto lotteryDto);
+        Task<bool?> UpdateLottery(UpdateLotteryDto lotteryDto);
     }
 }

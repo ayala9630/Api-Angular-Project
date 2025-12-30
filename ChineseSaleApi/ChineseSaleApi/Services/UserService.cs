@@ -59,18 +59,24 @@ namespace ChineseSaleApi.Services
             };
         }
         //update
-        public async Task UpdateUser(UpdateUserDto userDto)
+        public async Task<bool?> UpdateUser(UpdateUserDto userDto)
         {
             var user = await _repository.GetUserById(userDto.Id);
-            await _addressService.UpdateAddress(userDto.Address);
+            if (userDto.Address!=null)
+            {
+                await _addressService.UpdateAddress(userDto.Address);
+
+            }
             if (user != null)
             {
-                user.FirstName = userDto.FirstName;
-                user.LastName = userDto.LastName;
-                user.Phone = userDto.Phone;
-                user.Email = userDto.Email;
+                user.FirstName = userDto.FirstName ?? user.FirstName;
+                user.LastName = userDto.LastName ?? user.LastName;
+                user.Phone = userDto.Phone ?? user.Phone;
+                user.Email = userDto.Email ?? user.Email;
                 await _repository.UpdateUser(user);
+                return true;
             }
+            return null;
         }
 
     }

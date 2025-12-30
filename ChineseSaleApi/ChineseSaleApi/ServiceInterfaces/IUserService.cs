@@ -6,6 +6,6 @@ namespace ChineseSaleApi.ServiceInterfaces
     {
         Task AddUser(CreateUserDto createUserDto);
         Task<UserDto?> GetUserById(int id);
-        Task UpdateUser(UpdateUserDto userDto);
+        Task<bool?> UpdateUser(UpdateUserDto userDto);
     }
 }
