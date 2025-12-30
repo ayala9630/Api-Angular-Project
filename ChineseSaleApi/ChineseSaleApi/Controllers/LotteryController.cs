@@ -39,7 +39,7 @@ namespace ChineseSaleApi.Controllers
             return Created(nameof(GetLotteryById), lottery);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateLottery([FromBody] LotteryDto lottery)
+        public async Task<IActionResult> UpdateLottery([FromBody] UpdateLotteryDto lottery)
         {
             var success =await _service.UpdateLottery(lottery);
             if (success == null)

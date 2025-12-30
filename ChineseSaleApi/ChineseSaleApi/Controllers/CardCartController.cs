@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChineseSaleApi.Controllers
 {
+    
     [ApiController]
     [Route("api/[controller]")]
     public class CardCartController : ControllerBase
@@ -17,6 +19,7 @@ namespace ChineseSaleApi.Controllers
         }
         //read
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCardCartsByUserId(int userId)
         {
             var cards = await _service.GetCardCartsByUserId(userId);

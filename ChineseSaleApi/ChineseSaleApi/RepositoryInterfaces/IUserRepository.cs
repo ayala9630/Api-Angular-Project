@@ -9,5 +9,6 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task<User?> GetUserById(int id);
         Task<User?> GetUserByUserName(string userName);
         Task UpdateUser(User user);
+        Task<bool> IsUserNameExists(string userName);
     }
 }

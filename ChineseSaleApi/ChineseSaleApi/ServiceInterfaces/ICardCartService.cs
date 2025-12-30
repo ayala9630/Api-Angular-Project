@@ -7,6 +7,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<int> CreateCardCar(CreateCardCartDto cardCartDto);
         Task<IEnumerable<CardCartDto>> GetCardCartsByUserId(int userId);
         Task DeleteCardCart(int id);
-        Task<bool?> UpdateCardCart(CardCartDto cardCartDto);
+        Task<bool?> UpdateCardCart(UpdateQuantityDto cardCartDto);
     }
 }

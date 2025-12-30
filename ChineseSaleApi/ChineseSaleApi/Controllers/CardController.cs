@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChineseSaleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CardController : ControllerBase
     {
         private readonly ICardService _service;

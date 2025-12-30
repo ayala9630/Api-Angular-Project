@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using ChineseSaleApi.Services;
+using StoreApi.DTOs;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -14,6 +16,17 @@ namespace ChineseSaleApi.Controllers
         {
             _service = service;
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
+        {
+            var user = await _service.AuthenticateAsync(loginDto);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(user);
+        }
+
         //read
         [HttpGet]
         public async Task<IActionResult> GetUserById(int id)
@@ -28,7 +41,7 @@ namespace ChineseSaleApi.Controllers
         //create
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] CreateUserDto createUserDto)
-        {
+        { 
             await _service.AddUser(createUserDto);
             return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
         }

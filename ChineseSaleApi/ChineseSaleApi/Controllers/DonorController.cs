@@ -54,7 +54,7 @@ namespace ChineseSaleApi.Controllers
         }
         //update
         [HttpPut]
-        public async Task<IActionResult> UpdateDonor([FromBody] DonorDto donor)
+        public async Task<IActionResult> UpdateDonor([FromBody] UpdateDonorDto donor)
         {
             bool? success = await _service.UpdateDonor(donor);
             if(success == null)
