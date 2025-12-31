@@ -31,6 +31,9 @@ packages/
 secrets.json
 appsettings.*.Local.json
 appsettings.*.Secret*.json
+appsettings.Development.json
+appsettings.Production.json
+appsettings.json
 
 # Database files
 *.mdf

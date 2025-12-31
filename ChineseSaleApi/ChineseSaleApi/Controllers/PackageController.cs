@@ -41,7 +41,7 @@ namespace ChineseSaleApi.Controllers
         }
         //update
         [HttpPut]
-        public async Task<IActionResult> UpdatePackage([FromBody] PackageDto packageDto)
+        public async Task<IActionResult> UpdatePackage([FromBody] UpdatePackageDto packageDto)
         {
             var success = await _service.UpdatePackage(packageDto);
             if (success == null)

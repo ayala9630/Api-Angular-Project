@@ -32,6 +32,10 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Users.ToListAsync();
         }
+        public async Task<bool> IsUserNameExists(string userName)
+        {
+            return await _context.Users.AnyAsync(u => u.UserName == userName);
+        }
         //update
         public async Task UpdateUser(User user)
         {

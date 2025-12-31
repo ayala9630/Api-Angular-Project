@@ -24,10 +24,4 @@ namespace ChineseSaleApi.Dto
         [Required]
         public int GiftId { get; set; }
     }
-    public class UpdateQuantityDto
-    {
-        [Key]
-        public int Id { get; set; }
-        public int Quantity { get; set; }
-    }
 }
