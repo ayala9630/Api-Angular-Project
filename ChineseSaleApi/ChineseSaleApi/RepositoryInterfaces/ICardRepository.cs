@@ -6,7 +6,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
     {
         Task<int> AddCard(Card card);
         Task<IEnumerable<Card>> GetAllCards(int lotteryId);
-        Task<IEnumerable<Card?>> GetCardByGiftId(int id);
+        Task<List<Card?>> GetCardByGiftId(int id);
         Task UpdateCard(Card card);
     }
 }

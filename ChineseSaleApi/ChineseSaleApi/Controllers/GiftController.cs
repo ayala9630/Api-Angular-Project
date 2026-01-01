@@ -25,6 +25,12 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(gift);
         }
+        [HttpGet("user/{userId}/lottery/{lotteryId}")]
+        public async Task<IActionResult> GetAllGifts(int lotteryId, int userId)
+        {
+            var gifts = await _service.GetAllGifts(lotteryId, userId);
+            return Ok(gifts);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> AddGift([FromBody] CreateGiftDto gift)

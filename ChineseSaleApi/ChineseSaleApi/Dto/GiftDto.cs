@@ -38,7 +38,7 @@ namespace ChineseSaleApi.Dto
     }
     public class GiftDto
     {
-        [Key]
+        [Required]
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
@@ -49,8 +49,24 @@ namespace ChineseSaleApi.Dto
         [MaxLength(250)]
         public string? ImageUrl { get; set; }
         public bool? IsPackageAble { get; set; }
-        public string? DonorName { get; set; }
+        public string? CompanyName { get; set; }
+        public string? CompanyLogoUrl { get; set; }
         public string? CategoryName { get; set; }
         public int LotteryId { get; set; }
     }
+    public class GiftWithOldPurchaseDto
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
+        public int? Price { get; set; }
+        public int? GiftValue { get; set; }
+        [MaxLength(250)]
+        public string? ImageUrl { get; set; }
+        public bool? IsPackageAble { get; set; }
+        public int OldPurchaseCount { get; set; }
+    }
+
 }

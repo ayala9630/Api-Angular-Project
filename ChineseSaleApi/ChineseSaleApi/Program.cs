@@ -62,7 +62,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<ChineseSaleApi.Data.ChineseSaleContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SeminarConnection")));
 
 //Repository Injections
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();

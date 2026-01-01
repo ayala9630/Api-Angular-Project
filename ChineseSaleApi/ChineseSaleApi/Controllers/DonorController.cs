@@ -50,7 +50,7 @@ namespace ChineseSaleApi.Controllers
         public async Task<IActionResult> AddDonor([FromBody] CreateDonorDto donorDto)
         {
             var donorId = await _service.AddDonor(donorDto);
-            return CreatedAtAction(nameof(GetDonorById), new { id = donorId }, null);
+            return CreatedAtAction(nameof(GetDonorById), new { id = donorId}, donorId);
         }
         //update
         [HttpPut]

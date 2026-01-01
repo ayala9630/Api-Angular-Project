@@ -44,5 +44,17 @@ namespace ChineseSaleApi.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        //public async Task<> Lottery(int lotteryId)
+        //{
+        //    var lottery = await _context.Lotteries.FirstOrDefaultAsync(x => x.Id == lotteryId);
+        //    if (lottery == null)
+        //    {
+        //        return null;
+        //    }
+        //    _context.Lotteries.Update(lottery);
+        //    await _context.SaveChangesAsync();
+        //    return lottery.Id;
+        //}
     }
 }

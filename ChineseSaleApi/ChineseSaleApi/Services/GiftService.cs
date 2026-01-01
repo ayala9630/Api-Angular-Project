@@ -51,10 +51,26 @@ namespace ChineseSaleApi.Services
                 GiftValue = gift.GiftValue,
                 ImageUrl = gift.ImageUrl,
                 IsPackageAble = gift.IsPackageAble,
-                DonorName = gift.Donor?.FirstName + " " + gift.Donor?.LastName ?? "",
+                CompanyName = gift.Donor?.CompanyName ?? "",
+                CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
                 CategoryName = gift.Category?.Name ?? "",
                 LotteryId = gift.LotteryId,
             };
+        }
+
+        public async Task<IEnumerable<GiftWithOldPurchaseDto>> GetAllGifts(int lotteryId,int userId)
+        {
+            var gifts = await _repository.GetAllGifts(lotteryId);
+            return gifts.Select(gifts => new GiftWithOldPurchaseDto
+            {
+                Id = gifts.Id,
+                Name = gifts.Name,
+                Price = gifts.Price,
+                GiftValue = gifts.GiftValue,
+                ImageUrl = gifts.ImageUrl,
+                IsPackageAble = gifts.IsPackageAble,
+                OldPurchaseCount = gifts.Cards?.Where(x=>x.UserId==userId).Count() ?? 0
+            }).ToList();
         }
         //update
         public async Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto)

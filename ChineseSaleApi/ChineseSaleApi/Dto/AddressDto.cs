@@ -38,6 +38,6 @@ namespace ChineseSaleApi.Dto
         public string Street { get; set; }
         public int? Number { get; set; }
         public int? ZipCode { get; set; }
-        public int? DonorId { get; set; }
+        //public int? DonorId { get; set; }
     }
 }
