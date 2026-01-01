@@ -24,7 +24,7 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Cards.Include(p => p.Gift).Where(x=>x.Gift.LotteryId==lotteryId).ToListAsync();
         }
-        public async Task<IEnumerable<Card?>> GetCardByGiftId(int id)
+        public async Task<List<Card?>> GetCardByGiftId(int id)
         {
             return await _context.Cards.Include(g=>g.Gift).Include(u=>u.User).Where(x => x.GiftId == id).ToListAsync();
         }

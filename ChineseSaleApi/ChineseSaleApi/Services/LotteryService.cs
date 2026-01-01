@@ -8,9 +8,18 @@ namespace ChineseSaleApi.Services
     public class LotteryService : ILotteryService
     {
         private readonly ILotteryRepository _repository;
-        public LotteryService(ILotteryRepository repository)
+        private readonly ICardRepository _cardRepository;
+        private readonly IUserRepository _userRepository;
+        public LotteryService
+            (
+            ILotteryRepository repository,
+            ICardRepository cardRepository,
+            IUserRepository userRepository
+            )
         {
             _repository = repository;
+            _cardRepository = cardRepository;
+            _userRepository = userRepository;
         }
         //create
         public async Task AddLottery(CreateLotteryDto lotteryDto)
@@ -110,6 +119,27 @@ namespace ChineseSaleApi.Services
                 throw new Exception("Cannot delete a lottery that already started.");
             }
             await _repository.DeleteLottery(id);
+        }
+
+        public async Task<UserDto?> Lottery(int lotteryId)
+        {
+            var lottery = await _repository.GetLotteryById(lotteryId);
+            if (lottery == null)
+            {
+                throw new Exception("Lottery not found.");
+            }
+            List<Card> cardsList = await _cardRepository.GetCardByGiftId(lotteryId);
+            int winnerCardNumber = new Random().Next(1, cardsList.Count() + 1);
+            User? winnerUser = _userRepository.GetUserById(3);//cardsList[winnerCardNumber - 1].UserId);
+            return new UserDto
+            {
+                Id = winnerUser.Id,
+                Username = winnerUser.UserName,
+                FirstName = winnerUser.FirstName,
+                LastName = winnerUser.LastName,
+                Phone = winnerUser.Phone,
+                Email = winnerUser.Email
+            };
         }
     }
 }

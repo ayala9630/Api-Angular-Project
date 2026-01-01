@@ -54,12 +54,12 @@ namespace ChineseSaleApi.Services
                 Email = createUserDto.Email,
                 AddressId = idAddress
             };
-            _emailService.SendEmail(new EmailRequestDto()
-            {
-                To = createUserDto.Email,
-                Subject = "Welcome to Chinese Sale!",
-                Body = $"Hello {createUserDto.FirstName},\n\nThank you for registering at Chinese Sale. We're excited to have you on board!\n\nBest regards,\nChinese Sale Team"
-            });
+            //_emailService.SendEmail(new EmailRequestDto()
+            //{
+            //    To = createUserDto.Email,
+            //    Subject = "Welcome to Chinese Sale!",
+            //    Body = $"Hello {createUserDto.FirstName},\n\nThank you for registering at Chinese Sale. We're excited to have you on board!\n\nBest regards,\nChinese Sale Team"
+            //});
             await _repository.AddUser(user);
         }
         //read
@@ -134,12 +134,12 @@ namespace ChineseSaleApi.Services
             var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName);
             var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 60);
 
-            _emailService.SendEmail(new EmailRequestDto()
-            {
-                To = user.Email,
-                Subject = "New Login Notification",
-                Body = $"Hello {user.FirstName},\n\nWe noticed a new login to your account. If this was you, no further action is needed. If you did not log in, please reset your password immediately.\n\nBest regards,\nChinese Sale Team"
-            });
+            //_emailService.SendEmail(new EmailRequestDto()
+            //{
+            //    To = user.Email,
+            //    Subject = "New Login Notification",
+            //    Body = $"Hello {user.FirstName},\n\nWe noticed a new login to your account. If this was you, no further action is needed. If you did not log in, please reset your password immediately.\n\nBest regards,\nChinese Sale Team"
+            //});
             _logger.LogInformation($"User {user.UserName} logged in successfully.");
             return new LoginResponseDto
             {

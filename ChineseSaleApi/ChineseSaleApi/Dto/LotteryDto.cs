@@ -45,4 +45,5 @@ namespace ChineseSaleApi.Dto
         public int? TotalSum { get; set; }
         public bool? IsDone { get; set; }
     }
+    
 }
