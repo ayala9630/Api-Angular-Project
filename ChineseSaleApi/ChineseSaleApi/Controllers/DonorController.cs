@@ -50,7 +50,11 @@ namespace ChineseSaleApi.Controllers
         public async Task<IActionResult> AddDonor([FromBody] CreateDonorDto donorDto)
         {
             var donorId = await _service.AddDonor(donorDto);
+<<<<<<< HEAD
             return CreatedAtAction(nameof(GetDonorById), new { id = donorId}, donorId);
+=======
+            return CreatedAtAction(nameof(GetDonorById), new { id = donorId },donorId);
+>>>>>>> main
         }
         //update
         [HttpPut]
@@ -61,11 +65,21 @@ namespace ChineseSaleApi.Controllers
                 return NotFound();
             return NoContent();
         }
-        //delete
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteDonor(int id)
+        //update lottery donor
+        [HttpPut("lottery/{donorId}/{lotteryId}")]
+        public async Task<IActionResult> AddLotteryToDonor(int donorId, int lotteryId)
         {
-            await _service.DeleteDonor(id);
+            bool? success = await _service.AddLotteryToDonor(donorId, lotteryId);
+            if (success == null)
+                return NotFound();
+            return NoContent();
+        }
+        //delete
+        [HttpDelete("lottery/{lotteryId}")]
+        public async Task<IActionResult> DeleteDonor(int id,int lotteryId)
+        {
+            if(await _service.DeleteDonor(id,lotteryId)==null)
+                return NotFound();
             return NoContent();
         }
     }
