@@ -19,12 +19,15 @@ namespace ChineseSaleApi.Services
             {
                 throw new ArgumentException("Lottery end date must be after start date.");
             }
-            
+
             List<LotteryDto> lotteries = await GetAllLotteries();
-            var prevLottery = lotteries.OrderByDescending(l => l.Id).First();
-            if (prevLottery != null && prevLottery.EndDate >= lotteryDto.StartDate)
+            if (lotteries.Count > 0)
             {
-                throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.");
+                var prevLottery = lotteries.OrderByDescending(l => l.Id).First();
+                if (prevLottery != null && prevLottery.EndDate >= lotteryDto.StartDate)
+                {
+                    throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.");
+                }
             }
             Lottery lottery = new Lottery
             {

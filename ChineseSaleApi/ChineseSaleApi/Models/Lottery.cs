@@ -21,6 +21,6 @@ namespace ChineseSaleApi.Models
         //ICollection
         public ICollection<Package> Packages { get; set; } = new List<Package>();
         public ICollection<Gift> Gifts { get; set; }= new List<Gift>();
-        public ICollection<Donor> Cards { get; set; }= new List<Donor>();
+        public ICollection<Donor> Donors { get; set; }= new List<Donor>();
     }
 }

@@ -42,15 +42,54 @@ namespace ChineseSaleApi.Repositories
             _context.Donors.Update(donor);
             await _context.SaveChangesAsync();
         }
+        //update lottery donor
+        public async Task<bool?> UpdateLotteryDonor(int donorId, int lotteryId)
+        {
+            var donor = await _context.Donors.Include(d => d.Lotteries)
+                .FirstOrDefaultAsync(d => d.Id == donorId);
+            var lottery = await _context.Lotteries
+                .FirstOrDefaultAsync(l => l.Id == lotteryId);
+            if (donor == null || lottery == null)
+            {
+                return null;
+            }
+            if (!donor.Lotteries.Any(l => l.Id == lotteryId))
+            {
+                donor.Lotteries.Add(lottery);
+                await _context.SaveChangesAsync();
+            }
+            return true;
+        }
         //delete
-        public async Task DeleteDonor(int id)
+        public async Task<bool?> DeleteDonor(int id)
         {
             var donor = await _context.Donors.FirstOrDefaultAsync(x => x.Id == id);
             if (donor != null)
             {
                 _context.Donors.Remove(donor);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return null;
         }
+        //delete lottery donor
+        public async Task<bool?> DeleteLotteryDonor(int donorId, int lotteryId)
+        {
+            var donor = await _context.Donors.Include(d => d.Lotteries)
+                .FirstOrDefaultAsync(d => d.Id == donorId);
+            var lottery = await _context.Lotteries
+                .FirstOrDefaultAsync(l => l.Id == lotteryId);
+            if (donor == null || lottery == null)
+            {
+                return null;
+            }
+            if (donor.Lotteries.Any(l => l.Id == lotteryId))
+            {
+                donor.Lotteries.Remove(lottery);
+                await _context.SaveChangesAsync();
+            }
+            return true;
+        }
+
     }
 }

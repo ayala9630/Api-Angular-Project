@@ -61,8 +61,6 @@ namespace ChineseSaleApi.Services
                 GiftName = x.GiftName,
                 CardPurchases = dict
             }).FirstOrDefault();
-
         }
-
     }
 }

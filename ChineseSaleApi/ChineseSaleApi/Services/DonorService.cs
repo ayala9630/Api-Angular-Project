@@ -114,10 +114,22 @@ namespace ChineseSaleApi.Services
             await _repository.UpdateDonor(donor1);
             return true;
         }
-        //delete
-        public async Task DeleteDonor(int id)
+        //add lottery to donor
+        public async Task<bool?> AddLotteryToDonor(int donorId, int lotteryId)
         {
-            await _repository.DeleteDonor(id);
+            return await _repository.UpdateLotteryDonor(donorId, lotteryId);
+        }
+        //delete
+        public async Task<bool?> DeleteDonor(int id,int lotteryId)
+        {
+            Donor? donor = await _repository.GetDonorById(id);
+            if (donor == null)
+            {
+                return null;
+            }
+            if (donor.Lotteries.Count() > 0)
+                return await _repository.DeleteLotteryDonor(id, lotteryId);
+            return await _repository.DeleteDonor(id);
         }
     }
 }
