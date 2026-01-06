@@ -1,4 +1,5 @@
 ﻿using ChineseSaleApi.Data;
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,16 @@ namespace ChineseSaleApi.Repositories
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _context.Users.ToListAsync();
+        }
+        public async Task<(IEnumerable<User> items,int totalcount)> GetUserWithPagination(int pageNumber,int pageSize)
+        {
+            var query = _context.Users.AsQueryable();
+            var totalCount = await query.CountAsync();
+            var users = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (users,totalCount);
         }
         public async Task<bool> IsUserNameExists(string userName)
         {

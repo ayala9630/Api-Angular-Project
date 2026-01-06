@@ -36,6 +36,16 @@ namespace ChineseSaleApi.Repositories
             return await _context.Donors.Include(g => g.Gifts).Include(d=>d.Lotteries)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsWithPagination(int pageNumber, int pageSize)
+        {
+            var query = _context.Donors.AsQueryable();
+            var totalCount = await query.CountAsync();
+            var donors = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (donors, totalCount);
+        }
         //update
         public async Task UpdateDonor(Donor donor)
         {

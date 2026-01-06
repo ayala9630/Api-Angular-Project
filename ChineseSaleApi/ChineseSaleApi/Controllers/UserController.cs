@@ -28,7 +28,7 @@ namespace ChineseSaleApi.Controllers
         }
 
         //read
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _service.GetUserById(id);
@@ -38,9 +38,22 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(user);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _service.GetAllUsers();
+            return Ok(users);
+        }
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
+        {
+            var pagedUsers = await _service.GetUserWithPagination(paginationParamsDto);
+            return Ok(pagedUsers);
+        }
         //create
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] CreateUserDto createUserDto)
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         { 
             await _service.AddUser(createUserDto);
             return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
