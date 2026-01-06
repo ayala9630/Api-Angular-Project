@@ -2,6 +2,7 @@ using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
+using System.ComponentModel;
 
 namespace ChineseSaleApi.Services
 {
@@ -61,6 +62,10 @@ namespace ChineseSaleApi.Services
                 GiftName = x.GiftName,
                 CardPurchases = dict
             }).FirstOrDefault();
+        }
+        public async Task<bool> ResetWinnersByLotteryId(int lotteryId)
+        {
+            return await _repository.ResetWinnersByLotteryId(lotteryId);
         }
     }
 }

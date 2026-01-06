@@ -28,11 +28,31 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Cards.Include(g=>g.Gift).Include(u=>u.User).Where(x => x.GiftId == id).ToListAsync();
         }
+
         //update
-        public async Task UpdateCard(Card card)
+        public async Task UpdateCardToWin(Card card)
         {
             _context.Cards.Update(card);
             await _context.SaveChangesAsync();
+        }
+        
+        public async Task<bool> ResetWinnersByLotteryId(int lotteryId)
+        {
+            var winners = await _context.Cards.Include(g=>g.Gift)
+                                              .Where(c=>c.Gift.LotteryId==lotteryId)
+                                              .Where(c => c.IsWin == true)
+                                              .ToListAsync();
+            if (winners.Count == 0)
+            {
+                return false;
+            }
+            foreach (var winner in winners)
+            {
+                winner.IsWin = false;
+            }
+            _context.Cards.UpdateRange(winners);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

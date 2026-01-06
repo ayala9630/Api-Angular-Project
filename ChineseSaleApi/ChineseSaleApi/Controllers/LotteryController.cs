@@ -41,7 +41,7 @@ namespace ChineseSaleApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateLottery([FromBody] UpdateLotteryDto lottery)
         {
-            var success =await _service.UpdateLottery(lottery);
+            var success = await _service.UpdateLottery(lottery);
             if (success == null)
                 return NotFound();
             return NoContent();
@@ -52,6 +52,23 @@ namespace ChineseSaleApi.Controllers
         {
             await _service.DeleteLottery(id);
             return NoContent();
+        }
+
+        [HttpPut]
+        [Route("DrawWinners/{giftId}")]
+        public async Task<IActionResult> DrawWinners(int giftId)
+        {
+            try
+            {
+                var winner = await _service.Lottery(giftId);
+                return Ok("The winner is +" + winner.FirstName + " " + winner.LastName + "!!! ");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

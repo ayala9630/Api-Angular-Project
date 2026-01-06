@@ -121,16 +121,22 @@ namespace ChineseSaleApi.Services
             await _repository.DeleteLottery(id);
         }
 
-        public async Task<UserDto?> Lottery(int lotteryId)
+        public async Task <bool> UpdateWin(Card card)
         {
-            var lottery = await _repository.GetLotteryById(lotteryId);
-            if (lottery == null)
-            {
-                throw new Exception("Lottery not found.");
-            }
-            List<Card> cardsList = await _cardRepository.GetCardByGiftId(lotteryId);
+            card.IsWin = true;
+            await _cardRepository.UpdateCardToWin(card);
+            return true;
+        }
+
+        public async Task<UserDto?> Lottery(int giftId)
+        {
+            List<Card?> cardsList = await _cardRepository.GetCardByGiftId(giftId);
             int winnerCardNumber = new Random().Next(1, cardsList.Count() + 1);
-            User? winnerUser = _userRepository.GetUserById(3);//cardsList[winnerCardNumber - 1].UserId);
+            User? winnerUser = await _userRepository.GetUserById(cardsList[winnerCardNumber - 1].UserId);
+            if (winnerUser == null) {
+                throw new Exception("Winner user not found.");
+            }
+            await UpdateWin(cardsList[winnerCardNumber - 1]);
             return new UserDto
             {
                 Id = winnerUser.Id,
@@ -140,6 +146,7 @@ namespace ChineseSaleApi.Services
                 Phone = winnerUser.Phone,
                 Email = winnerUser.Email
             };
+            
         }
     }
 }

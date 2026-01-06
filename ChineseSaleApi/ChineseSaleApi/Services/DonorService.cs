@@ -127,7 +127,7 @@ namespace ChineseSaleApi.Services
             {
                 return null;
             }
-            if (donor.Lotteries.Count() > 0)
+            if (donor.Lotteries.Count() > 1)
                 return await _repository.DeleteLotteryDonor(id, lotteryId);
             return await _repository.DeleteDonor(id);
         }

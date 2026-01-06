@@ -24,7 +24,8 @@ builder.Services.AddEndpointsApiExplorer();
 // Configure Serilog
  Log.Logger = new LoggerConfiguration()
      .ReadFrom.Configuration(new ConfigurationBuilder()
-         .AddJsonFile("appsettings.json")
+         .AddJsonFile("appsettings.json" +
+         "")
          .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
          .Build())
      .Enrich.FromLogContext()
@@ -62,7 +63,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<ChineseSaleApi.Data.ChineseSaleContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SeminarConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Repository Injections
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();

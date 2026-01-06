@@ -33,7 +33,7 @@ namespace ChineseSaleApi.Repositories
         }
         public async Task<Donor?> GetDonorById(int id)
         {
-            return await _context.Donors.Include(g => g.Gifts)
+            return await _context.Donors.Include(g => g.Gifts).Include(d=>d.Lotteries)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
         //update
@@ -58,6 +58,7 @@ namespace ChineseSaleApi.Repositories
                 donor.Lotteries.Add(lottery);
                 await _context.SaveChangesAsync();
             }
+
             return true;
         }
         //delete
@@ -75,10 +76,13 @@ namespace ChineseSaleApi.Repositories
         //delete lottery donor
         public async Task<bool?> DeleteLotteryDonor(int donorId, int lotteryId)
         {
-            var donor = await _context.Donors.Include(d => d.Lotteries)
+            var donor = await _context.Donors
+                .Include(d => d.Lotteries)
                 .FirstOrDefaultAsync(d => d.Id == donorId);
+
             var lottery = await _context.Lotteries
                 .FirstOrDefaultAsync(l => l.Id == lotteryId);
+
             if (donor == null || lottery == null)
             {
                 return null;
