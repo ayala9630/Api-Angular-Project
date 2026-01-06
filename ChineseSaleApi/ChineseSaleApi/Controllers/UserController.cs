@@ -21,7 +21,7 @@ namespace ChineseSaleApi.Controllers
             var user = await _service.GetUserById(id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(); 
             }
             return Ok(user);
         }
@@ -31,6 +31,7 @@ namespace ChineseSaleApi.Controllers
         {
             await _service.AddUser(createUserDto);
             return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
+        
         }
         //update
         [HttpPut]

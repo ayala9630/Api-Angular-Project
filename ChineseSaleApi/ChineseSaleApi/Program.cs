@@ -1,9 +1,12 @@
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Repositories;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ChineseSaleApi.Data.ChineseSaleContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<EmailService>();
+builder.Services.AddScoped<IEmailService ,EmailService>();
 
 //Repository Injections
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
@@ -53,6 +60,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
