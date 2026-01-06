@@ -9,5 +9,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<List<LotteryDto>> GetAllLotteries();
         Task<LotteryDto?> GetLotteryById(int id);
         Task<bool?> UpdateLottery(UpdateLotteryDto lotteryDto);
+        Task<UserDto?> Lottery(int giftId);
     }
 }

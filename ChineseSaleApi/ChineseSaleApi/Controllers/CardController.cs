@@ -42,5 +42,11 @@ namespace ChineseSaleApi.Controllers
             return CreatedAtAction(nameof(CreateCard), new { id = id }, id);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> ResetWinnersByLotteryId(int lotteryId)
+        {
+            await _service.ResetWinnersByLotteryId(lotteryId);
+            return NoContent();
+        }
     }
 }

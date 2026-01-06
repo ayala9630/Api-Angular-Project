@@ -7,5 +7,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<int> AddCard(CreateCardDto createCardDto);
         Task<List<ListCardDto>> GetAllCarsds(int lotteryId);
         Task<CardDto?> GetCardByGiftId(int id);
+        Task<bool> ResetWinnersByLotteryId(int lotteryId);
     }
 }

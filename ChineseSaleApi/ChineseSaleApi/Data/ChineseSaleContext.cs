@@ -93,6 +93,29 @@ namespace ChineseSaleApi.Data
                 .WithMany(g => g.Cards)
                 .HasForeignKey(c => c.GiftId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+        //    modelBuilder.Entity<Donor>()
+        //    .HasMany(d => d.Lotteries)
+        //    .WithMany(l => l.Donors)
+        //    .UsingEntity<Dictionary<string, object>>(
+        //    "DonorLottery", // join table name
+        //    j => j
+        //        .HasOne<Lottery>()
+        //        .WithMany()
+        //        .HasForeignKey("LotteryId")
+        //        .HasConstraintName("FK_DonorLottery_Lotteries_LotteryId")
+        //        .OnDelete(DeleteBehavior.Cascade),
+        //    j => j
+        //        .HasOne<Donor>()
+        //        .WithMany()
+        //        .HasForeignKey("DonorId")
+        //        .HasConstraintName("FK_DonorLottery_Donors_DonorId")
+        //        .OnDelete(DeleteBehavior.Cascade),
+        //    j =>
+        //    {
+        //        j.HasKey("DonorId", "LotteryId");
+        //        j.ToTable("DonorLottery");
+        //    });
         }
     }
 }
