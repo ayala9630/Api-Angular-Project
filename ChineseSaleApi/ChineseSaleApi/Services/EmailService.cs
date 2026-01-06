@@ -1,13 +1,13 @@
-﻿using MimeKit;
-using System.Net.Mail;
+﻿//using MimeKit;
+//using System.Net.Mail;
+using ChineseSaleApi.Dto;
+using ChineseSaleApi.ServiceInterfaces;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace ChineseSaleApi.Services
 {
-    using ChineseSaleApi.Dto;
-    using ChineseSaleApi.ServiceInterfaces;
-    using MailKit.Net.Smtp;
-    using Microsoft.Extensions.Options;
-    using MimeKit;
 
     public class EmailService : IEmailService
     {
@@ -21,7 +21,7 @@ namespace ChineseSaleApi.Services
         public void SendEmail(EmailRequestDto emailRequest)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_emailSettings.SenderEmail, _emailSettings.SenderEmail));
+            message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
             message.To.Add(new MailboxAddress("", emailRequest.To));
             message.Subject = emailRequest.Subject;
 
@@ -33,7 +33,7 @@ namespace ChineseSaleApi.Services
             using (var client = new SmtpClient())
             {
                 client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls); // Use settings from appsettings
-                client.Authenticate("daatchava@gmail.com", "vnvi chvo hfjn nrdn");
+                client.Authenticate(_emailSettings.SenderEmail, _emailSettings.Password);
 
                 client.Send(message);
                 client.Disconnect(true);

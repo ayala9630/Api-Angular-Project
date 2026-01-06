@@ -31,6 +31,12 @@ namespace ChineseSaleApi.Controllers
             var gifts = await _service.GetAllGifts(lotteryId, userId);
             return Ok(gifts);
         }
+        [HttpGet("lottery/{lotteryId}/pagination")]
+        public async Task<IActionResult> GetGiftsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams)
+        {
+            var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParams);
+            return Ok(pagedGifts);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> AddGift([FromBody] CreateGiftDto gift)
