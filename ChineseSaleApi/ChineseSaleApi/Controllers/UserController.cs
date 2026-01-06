@@ -3,6 +3,7 @@ using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
 using StoreApi.DTOs;
+using ChineseSaleApi.Models;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -28,7 +29,7 @@ namespace ChineseSaleApi.Controllers
         }
 
         //read
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _service.GetUserById(id);
@@ -38,9 +39,25 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(user);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _service.GetAllUsers();
+            return Ok(users);
+        }
+        [HttpGet("paginatin")]
+        public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsdto paginationParamsdto)
+        {
+            var pagedUsers = await _service.GetUsersWithPagination(paginationParamsdto);
+            return Ok(pagedUsers);
+        }
+
+
         //create
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] CreateUserDto createUserDto)
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         { 
             await _service.AddUser(createUserDto);
             return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);

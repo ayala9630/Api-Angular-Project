@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using ChineseSaleApi.Models;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -30,6 +31,12 @@ namespace ChineseSaleApi.Controllers
         {
             var gifts = await _service.GetAllGifts(lotteryId, userId);
             return Ok(gifts);
+        }
+        [HttpGet("lottery/{lotteryId}/pagination")]
+        public async Task<IActionResult> GetGiftsWithPagination([FromQuery] PaginationParamsdto paginationParamsDto,int lotteryId)
+        {
+            var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParamsDto);
+            return Ok(pagedGifts);
         }
         //create
         [HttpPost]

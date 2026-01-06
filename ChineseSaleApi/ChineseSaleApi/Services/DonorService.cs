@@ -10,11 +10,13 @@ namespace ChineseSaleApi.Services
         private readonly IDonorRepository _repository;
         private readonly IAddressService _addressService;
         private readonly ICardRepository _cardRepository;
-        public DonorService(IDonorRepository repository, IAddressService addressService,ICardRepository cardRepository)
+        private readonly ICardService _cardService;
+        public DonorService(IDonorRepository repository, IAddressService addressService,ICardRepository cardRepository, ICardService cardService)
         {
             _repository = repository;
             _addressService = addressService;
             _cardRepository= cardRepository;
+            _cardService= cardService;
         }
         //create
         public async Task<int> AddDonor(CreateDonorDto donorDto)
@@ -33,7 +35,7 @@ namespace ChineseSaleApi.Services
             return await _repository.AddDonor(donor);
         }
         //read
-        public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId)
+        public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId, PaginationParamsdto paginationParamsdto)
         {
             Dictionary<string,int> dict = new();
 
@@ -42,8 +44,8 @@ namespace ChineseSaleApi.Services
             {
                 return null;
             }
-            var cards = await _cardRepository.GetAllCards(lotteryId);
-            var donorGifts = cards.Where(x=>x.Gift.DonorId==id).GroupBy(g => new {  g.GiftId,g.Gift.Name})
+            var cards = await _cardRepository.GetCardsWithPagination(lotteryId, paginationParamsdto.PageNumber,paginationParamsdto.PageSize);
+            var donorGifts = cards.items.Where(x=>x.Gift.DonorId==id).GroupBy(g => new {  g.GiftId,g.Gift.Name})
                              .Select(x => new
                              {
                                  GiftName = x.Key.Name,
