@@ -10,6 +10,7 @@ namespace ChineseSaleApi.Dto
         public int Quantity { get; set; }
         [Required]
         public int GiftId { get; set; }
+        public int? GiftValue { get; set; }
         public UserDto WinUser { get; set; }
     }
     public class CardDto

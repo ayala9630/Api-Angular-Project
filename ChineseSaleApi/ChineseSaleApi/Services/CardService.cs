@@ -39,7 +39,8 @@ namespace ChineseSaleApi.Services
 
         public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPagination(int lotteryId, PaginationParamsDto paginationParams)
         {
-            var (items, totalCount) = await _repository.GetCardsWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
+            var items = await _repository.GetAllCards(lotteryId);
+            int totalCount = items.GroupBy(x => x.Gift.Id).Count();
             var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.ImageUrl })
                         .Select(g => new ListCardDto
                         {
@@ -47,7 +48,11 @@ namespace ChineseSaleApi.Services
                             GiftName = g.Key.Name,
                             ImageUrl = g.Key?.ImageUrl ?? "",
                             Quantity = g.Count()
-                        }).ToList();
+                        })
+                        .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                        .Take(paginationParams.PageSize)
+                        .ToList();
+
             return new PaginatedResultDto<ListCardDto>
             {
                 Items = cardDtos,
@@ -55,6 +60,55 @@ namespace ChineseSaleApi.Services
             };
         }
 
+        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByValue(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        {
+            var items = await _repository.GetAllCards(lotteryId);
+            int totalCount = items.GroupBy(x => x.Gift.Id).Count();
+            var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name,x.Gift.GiftValue, x.Gift.ImageUrl })
+                        .Select(g => new ListCardDto
+                        {
+                            GiftId = g.Key.Id,
+                            GiftName = g.Key.Name,
+                            ImageUrl = g.Key?.ImageUrl ?? "",
+                            GiftValue = g.Key?.GiftValue,
+                            Quantity = g.Count()
+                        })
+                        .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                        .Take(paginationParams.PageSize);
+
+            cardDtos = ascending ? cardDtos.OrderBy(x => x.GiftValue).ToList() : cardDtos.OrderByDescending(x => x.GiftValue).ToList();
+
+            return new PaginatedResultDto<ListCardDto>
+            {
+                Items = cardDtos,
+                TotalCount = totalCount
+            };
+        }
+
+        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByPurchases(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        {
+            var items = await _repository.GetAllCards(lotteryId);
+            int totalCount = items.GroupBy(x => x.Gift.Id).Count();
+            var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.GiftValue, x.Gift.ImageUrl })
+                        .Select(g => new ListCardDto
+                        {
+                            GiftId = g.Key.Id,
+                            GiftName = g.Key.Name,
+                            ImageUrl = g.Key?.ImageUrl ?? "",
+                            GiftValue = g.Key?.GiftValue,
+                            Quantity = g.Count()
+                        })
+                        .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                        .Take(paginationParams.PageSize);
+
+            cardDtos = ascending ? cardDtos.OrderBy(x => x.Quantity).ToList() : cardDtos.OrderByDescending(x => x.Quantity).ToList();
+
+            return new PaginatedResultDto<ListCardDto>
+            {
+                Items = cardDtos,
+                TotalCount = totalCount
+            };
+        }
 
         public async Task<CardDto?> GetCardByGiftId(int id)
         {
@@ -82,6 +136,7 @@ namespace ChineseSaleApi.Services
                 CardPurchases = dict
             }).FirstOrDefault();
         }
+
         public async Task<bool> ResetWinnersByLotteryId(int lotteryId)
         {
             return await _repository.ResetWinnersByLotteryId(lotteryId);
