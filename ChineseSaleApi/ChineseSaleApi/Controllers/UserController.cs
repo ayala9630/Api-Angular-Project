@@ -39,13 +39,17 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(user);
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _service.GetAllUsers();
             return Ok(users);
         }
+<<<<<<< HEAD
         [HttpGet("paginatin")]
         public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsdto paginationParamsdto)
         {
@@ -54,6 +58,14 @@ namespace ChineseSaleApi.Controllers
         }
 
 
+=======
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
+        {
+            var pagedUsers = await _service.GetUserWithPagination(paginationParamsDto);
+            return Ok(pagedUsers);
+        }
+>>>>>>> main
         //create
         [HttpPost]
         [Route("register")]

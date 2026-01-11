@@ -33,9 +33,15 @@ namespace ChineseSaleApi.Controllers
             return Ok(gifts);
         }
         [HttpGet("lottery/{lotteryId}/pagination")]
+<<<<<<< HEAD
         public async Task<IActionResult> GetGiftsWithPagination([FromQuery] PaginationParamsdto paginationParamsDto,int lotteryId)
         {
             var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParamsDto);
+=======
+        public async Task<IActionResult> GetGiftsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams)
+        {
+            var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParams);
+>>>>>>> main
             return Ok(pagedGifts);
         }
         //create

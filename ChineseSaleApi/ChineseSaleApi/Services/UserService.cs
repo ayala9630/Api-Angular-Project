@@ -111,11 +111,18 @@ namespace ChineseSaleApi.Services
                 } : null
             }).ToList();
         }
+<<<<<<< HEAD
 
         public async Task<PaginatedResultDto<UserDto>> GetUsersWithPagination(PaginationParamsdto paginationParams)
         {
             var (items, totalCount) = await _repository.GetUsersWithPagination(paginationParams.PageNumber,paginationParams.PageSize);
             List<UserDto> userDto = items.Select(user => new UserDto
+=======
+        public async Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams)
+        {
+            var (items,totalCount) = await _repository.GetUserWithPagination(paginationParams.PageNumber,paginationParams.PageSize);
+            List<UserDto> userDtos = items.Select(user => new UserDto
+>>>>>>> main
             {
                 Id = user.Id,
                 Username = user.UserName,
@@ -134,13 +141,20 @@ namespace ChineseSaleApi.Services
             }).ToList();
             return new PaginatedResultDto<UserDto>
             {
+<<<<<<< HEAD
                 Items = userDto,
+=======
+                Items = userDtos,
+>>>>>>> main
                 TotalCount = totalCount,
                 PageNumber = paginationParams.PageNumber,
                 PageSize = paginationParams.PageSize
             };
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
         //update
         public async Task<bool?> UpdateUser(UpdateUserDto userDto)
         {
@@ -190,10 +204,16 @@ namespace ChineseSaleApi.Services
             _emailService.SendEmail(new EmailRequestDto()
             {
                 To = user.Email,
+<<<<<<< HEAD
                 Subject = "התראת כניסה — Chinese Sale",
                 Body = BuildLoginNotificationHtml(user.FirstName, DateTime.UtcNow)
             });
 
+=======
+                Subject = "New Login Notification",
+                Body = $"Hello {user.FirstName},\n\nWe noticed a new login to your account. If this was you, no further action is needed. If you did not log in, please reset your password immediately.\n\nBest regards,\nChinese Sale Team"
+            });
+>>>>>>> main
             _logger.LogInformation($"User {user.UserName} logged in successfully.");
             return new LoginResponseDto
             {

@@ -10,6 +10,7 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<GiftDto?> GetGiftById(int id);
         Task<PaginatedResultDto<GiftDto>> GetGiftsWithPagination(int lotteryId, PaginationParamsdto paginationParams);
         Task<IEnumerable<GiftWithOldPurchaseDto>> GetAllGifts(int lotteryId, int userId);
+        Task<PaginatedResultDto<GiftDto>> GetGiftsWithPagination(int lotteryId, PaginationParamsDto paginationParams);
         Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto);
     }
 }

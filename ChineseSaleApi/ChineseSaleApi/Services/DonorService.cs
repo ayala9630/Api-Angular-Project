@@ -98,6 +98,29 @@ namespace ChineseSaleApi.Services
                 CompanyAddressId = donor.CompanyAddressId
             });
         }
+        //with pagination
+        public async Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(PaginationParamsDto paginationParams)
+        {
+            var (donors, totalCount) = await _repository.GetDonorsWithPagination(paginationParams.PageNumber, paginationParams.PageSize);
+            var donorDtos = donors.Select(donor => new DonorDto
+            {
+                Id = donor.Id,
+                FirstName = donor.FirstName,
+                LastName = donor.LastName,
+                CompanyName = donor.CompanyName,
+                CompanyEmail = donor.CompanyEmail,
+                CompanyPhone = donor.CompanyPhone,
+                CompanyIcon = donor.CompanyIcon,
+                CompanyAddressId = donor.CompanyAddressId
+            });
+            return new PaginatedResultDto<DonorDto>
+            {
+                Items = donorDtos,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
         //update
         public async Task<bool?> UpdateDonor(UpdateDonorDto donor)
         {

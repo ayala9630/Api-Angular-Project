@@ -45,6 +45,12 @@ namespace ChineseSaleApi.Controllers
             var donors = await _service.GetDonorByLotteryId(lotteryId);
             return Ok(donors);
         }
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetDonorsWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
+        {
+            var pagedDonors = await _service.GetDonorsWithPagination(paginationParamsDto);
+            return Ok(pagedDonors);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> AddDonor([FromBody] CreateDonorDto donorDto)
