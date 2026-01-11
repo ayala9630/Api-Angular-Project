@@ -58,7 +58,7 @@ namespace ChineseSaleApi.Services
             _emailService.SendEmail(new EmailRequestDto()
             {
                 To = createUserDto.Email,
-                Subject = "Welcome to Chinese Sale!",
+                Subject = "ברוכים הבאים ל‑Chinese Sale — הרשמתך להגרלה",
                 Body = BuildWelcomeHtml(createUserDto.FirstName)
             });
 
@@ -190,7 +190,7 @@ namespace ChineseSaleApi.Services
             _emailService.SendEmail(new EmailRequestDto()
             {
                 To = user.Email,
-                Subject = "התראת כניסה חדשה 🔔",
+                Subject = "התראת כניסה — Chinese Sale",
                 Body = BuildLoginNotificationHtml(user.FirstName, DateTime.UtcNow)
             });
 
@@ -228,59 +228,37 @@ namespace ChineseSaleApi.Services
         {
             var loginTimeLocal = loginTimeUtc.ToLocalTime().ToString("f");
             return $@"<!doctype html>
-<html lang=""he"">
+<html lang=""he"" dir=""rtl"">
   <head>
     <meta charset=""utf-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>התראת כניסה — Chinese Sale</title>
   </head>
-  <body style=""margin:0;padding:0;background:#fff8f0;font-family:Arial,Helvetica,sans-serif;color:#333;direction:rtl;text-align:right;"">
-    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:680px;margin:28px auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #fde8d6;box-shadow:0 6px 18px rgba(0,0,0,0.06);"">
+  <body style=""margin:0;padding:0;background:#fbfaf8;font-family:Arial, Helvetica, sans-serif;color:#1b1b1b;direction:rtl;text-align:right;"">
+    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:720px;margin:36px auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e9e6e2;box-shadow:0 8px 28px rgba(20,20,20,0.06);"">
       <tr>
-        <td style=""background:linear-gradient(90deg,#ff9a76 0%,#ffd36b 100%);padding:22px 24px;color:#fff;text-align:right;"">
-          <h1 style=""margin:0;font-size:22px;line-height:1.1;"">✨ Chinese Sale</h1>
-          <p style=""margin:6px 0 0;font-size:13px;opacity:0.95;"">נעים לראות אותך!</p>
+        <td style=""background:#0f2230;padding:26px 30px;color:#f3e9db;text-align:right;"">
+          <h1 style=""margin:0;font-size:22px;font-weight:700;"">Chinese Sale — עדכון חשבון</h1>
+          <p style=""margin:6px 0 0;font-size:13px;opacity:0.92;color:#d8cdb6;"">הודעה בטוחה ומכובדת</p>
         </td>
       </tr>
       <tr>
-        <td style=""padding:22px 24px;"">
-          <div style=""display:flex;flex-direction:row-reverse;align-items:center;gap:14px;margin-bottom:12px;"">
-            <div style=""width:56px;height:56px;border-radius:50%;background:linear-gradient(180deg,#ffefc4,#ffd36b);display:flex;align-items:center;justify-content:center;font-size:28px;"">🎈</div>
-            <div>
-              <p style=""margin:0;font-size:18px;font-weight:600;color:#222;"">שלום {firstName}!</p>
-              <p style=""margin:4px 0 0;font-size:13px;color:#666;"">זוהתה כניסה חדשה לחשבונך.</p>
-            </div>
-          </div>
+        <td style=""padding:28px 30px;"">
+          <p style=""margin:0 0 12px;font-size:16px;color:#111;"">שלום {firstName},</p>
+          <p style=""margin:0 0 16px;font-size:14px;color:#333;line-height:1.6;"">זוהתה כניסה חדשה לחשבונך בתאריך: <strong>{loginTimeLocal}</strong>.</p>
 
-          <table role=""presentation"" cellpadding=""0"" cellspacing=""0"" style=""width:100%;margin:10px 0 18px;border-radius:8px;background:#fff7ee;padding:12px;border:1px dashed #ffe1c7;"">
-            <tr>
-              <td style=""font-size:13px;color:#6b4a2f;"">
-                <strong>מתי:</strong> {loginTimeLocal}
-              </td>
-            </tr>
-            <tr>
-              <td style=""padding-top:8px;font-size:13px;color:#6b4a2f;"">
-                <strong>מיקום:</strong> לא נרשם — במידה ולא הכרת את הפעולה, אבטח את החשבון.
-              </td>
-            </tr>
-          </table>
+          <p style=""margin:0 0 18px;font-size:14px;color:#333;"">אם זו פעולה שלא בוצעה על ידך — אנא שנה את הסיסמה באופן מיידי ופנה לתמיכה.</p>
 
-          <p style=""margin:0 0 18px;font-size:14px;color:#444;line-height:1.45;"">
-            אם זו הייתה אתה — כל שנדרש הוא לשמוח. אם לא — יש ללחוץ על הכפתור מטה כדי לאבטח את חשבונך.
+          <p style=""margin:0 0 18px;"">
+            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:#b8873e;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;"">אבטח את החשבון</a>
           </p>
 
-          <p style=""margin:0 0 20px;"">
-            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:linear-gradient(90deg,#ff7a59,#ffb86b);color:#fff;border-radius:28px;text-decoration:none;font-weight:700;font-size:14px;"">לאבטח את החשבון</a>
-          </p>
-
-          <hr style=""border:none;border-top:1px solid #f4e6da;margin:18px 0;"" />
-
-          <p style=""margin:0;font-size:13px;color:#8b6b52;"">בברכה,<br/>צוות Chinese Sale 🎉</p>
+          <p style=""margin:18px 0 0;font-size:13px;color:#6b655f;"">בברכה,<br/><strong>צוות Chinese Sale</strong></p>
         </td>
       </tr>
       <tr>
-        <td style=""background:#fffaf6;padding:14px 18px;font-size:12px;color:#b0855a;text-align:center;"">
-          זו הודעה אוטומטית — במידה ויש צורך בעזרה השב להודעה זו או בקר במרכז העזרה.
+        <td style=""background:#fbf8f6;padding:14px 18px;font-size:12px;color:#8b7a62;text-align:center;"">
+          הודעה אוטומטית — במידה ויש צורך בעזרה יש להשיב להודעה זו או לגשת למרכז העזרה שלנו.
         </td>
       </tr>
     </table>
@@ -290,56 +268,190 @@ namespace ChineseSaleApi.Services
 
         private static string BuildWelcomeHtml(string firstName)
         {
+            // מכובד, מזמין, ממוקד בהגרלות סיניות ועוסק בהצטרפות והשתתפות
             return $@"<!doctype html>
-<html lang=""he"">
+<html lang=""he"" dir=""rtl"">
   <head>
     <meta charset=""utf-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>ברוכים הבאים — Chinese Sale</title>
   </head>
-  <body style=""margin:0;padding:0;background:#f0fff9;font-family:Arial,Helvetica,sans-serif;color:#223;direction:rtl;text-align:right;"">
-    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:680px;margin:28px auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6fbf2;box-shadow:0 6px 18px rgba(0,0,0,0.04);"">
+  <body style=""margin:0;padding:0;background:#fbfaf8;font-family:Arial, Helvetica, sans-serif;color:#1b1b1b;direction:rtl;text-align:right;"">
+    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:720px;margin:36px auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #ece6df;box-shadow:0 10px 36px rgba(12,18,23,0.06);"">
       <tr>
-        <td style=""background:linear-gradient(90deg,#62d2a2 0%,#8ef3d1 100%);padding:22px 24px;color:#fff;text-align:right;"">
-          <h1 style=""margin:0;font-size:22px;"">ברוכים הבאים ל‑Chinese Sale 🎉</h1>
-          <p style=""margin:6px 0 0;font-size:13px;opacity:0.95;"">שמחים שהצטרפת — בוא נתחיל לקנות!</p>
+        <td style=""background:#071926;padding:28px 34px;color:#f6ead0;text-align:right;"">
+          <h1 style=""margin:0;font-size:24px;font-weight:700;"">ברוכים הבאים ל‑Chinese Sale</h1>
+          <p style=""margin:6px 0 0;font-size:13px;opacity:0.9;color:#d9cfa6;"">הצטרפתך מאפשרת השתתפות בהגרלות סיניות מובחרות</p>
         </td>
       </tr>
       <tr>
-        <td style=""padding:22px 24px;"">
-          <div style=""display:flex;flex-direction:row-reverse;align-items:center;gap:14px;margin-bottom:12px;"">
-            <div style=""width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#fff9e6,#ffd36b);display:flex;align-items:center;justify-content:center;font-size:30px;"">✨</div>
-            <div>
-              <p style=""margin:0;font-size:18px;font-weight:700;color:#114;"">שלום {firstName} — ברוך הבא!</p>
-              <p style=""margin:6px 0 0;font-size:14px;color:#3b5a54;"">הכנו עבורך מבצעים מיוחדים.</p>
-            </div>
-          </div>
+        <td style=""padding:30px 34px;"">
+          <p style=""margin:0 0 14px;font-size:16px;color:#111;"">שלום {firstName},</p>
 
-          <p style=""margin:0 0 16px;font-size:14px;color:#334;"">
-            התחיל/י לגלוש במבצעים של היום או צפה בהמלצות האישיות שלך.
+          <p style=""margin:0 0 16px;font-size:14px;color:#333;line-height:1.6;"">
+            תודה על הרשמתך. חשבונך מוכן להשתתפות בהגרלות הסיניות היוקרתיות שאנו מארגנים — הזדמנויות לזכייה במבחר פרסים נבחרים.
           </p>
 
-          <table role=""presentation"" cellpadding=""0"" cellspacing=""0"" style=""width:100%;margin:12px 0 18px;"">
+          <p style=""margin:0 0 18px;font-size:14px;color:#333;"">
+            תוכלו להתחיל בכמה לחיצות: בדוק/י את דף ההגרלות, רכש/י כרטיס והמתן להודעה על מועד ההגרלה.
+          </p>
+
+          <p style=""margin:0 0 18px;"">
+            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:#c59d5f;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;"">עבור להגרלות</a>
+            <a href=""#"" style=""display:inline-block;margin-right:10px;padding:12px 20px;background:#f3efe2;color:#3b2f20;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;border:1px solid #ead6a7;"">החשבון שלי</a>
+          </p>
+
+          <p style=""margin:22px 0 0;font-size:13px;color:#6b6156;"">אנו מאחלים בהצלחה ובהנאה — צוות Chinese Sale</p>
+        </td>
+      </tr>
+      <tr>
+        <td style=""background:#fbf8f6;padding:14px 18px;font-size:12px;color:#8b7a62;text-align:center;"">
+          קיבלת הודעה זו כי נרשמת ל‑Chinese Sale. נהל/י העדפות בתיבת ההגדרות של החשבון.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>";
+        }
+
+        // הודעות המיועדות ספציפית להגרלה — מכובדות, ברורות ובשפה עברית
+        private static string BuildLotteryEntryConfirmationHtml(string firstName, string lotteryName, DateTime entryTimeUtc, string ticketNumber)
+        {
+            var entryLocal = entryTimeUtc.ToLocalTime().ToString("f");
+            return $@"<!doctype html>
+<html lang=""he"" dir=""rtl"">
+  <head>
+    <meta charset=""utf-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>אישור השתתפות — {lotteryName}</title>
+  </head>
+  <body style=""margin:0;padding:0;background:#fbfaf8;font-family:Arial, Helvetica, sans-serif;color:#1b1b1b;direction:rtl;text-align:right;"">
+    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:720px;margin:36px auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #ece6df;box-shadow:0 8px 28px rgba(12,18,23,0.06);"">
+      <tr>
+        <td style=""background:#0d2b3a;padding:24px 28px;color:#f4ead3;text-align:right;"">
+          <h1 style=""margin:0;font-size:20px;font-weight:700;"">אישור השתתפות — {lotteryName}</h1>
+        </td>
+      </tr>
+      <tr>
+        <td style=""padding:24px 28px;"">
+          <p style=""margin:0 0 12px;font-size:16px;color:#111;"">שלום {firstName},</p>
+          <p style=""margin:0 0 12px;font-size:14px;color:#333;line-height:1.6;"">
+            קיבלנו את הרשמתך להגרלה: <strong>{lotteryName}</strong>.
+          </p>
+
+          <table role=""presentation"" cellpadding=""0"" cellspacing=""0"" style=""width:100%;margin:12px 0 18px;background:#fbf7f2;padding:12px;border-radius:8px;border:1px solid #efe6db;"">
             <tr>
-              <td style=""width:50%;padding-right:8px;"">
-                <a href=""#"" style=""display:block;padding:12px 10px;background:#fff;border-radius:10px;border:1px solid #e6f2eb;text-align:center;text-decoration:none;color:#1a7f63;font-weight:700;"">עיין במבצעים</a>
-              </td>
-              <td style=""width:50%;padding-left:8px;"">
-                <a href=""#"" style=""display:block;padding:12px 10px;background:linear-gradient(90deg,#62d2a2,#8ef3d1);border-radius:10px;text-align:center;text-decoration:none;color:#fff;font-weight:700;"">ההמלצות שלי</a>
-              </td>
+              <td style=""font-size:14px;color:#3b382f;""><strong>מתי נרשמת:</strong> {entryLocal}</td>
+            </tr>
+            <tr>
+              <td style=""padding-top:8px;font-size:14px;color:#3b382f;""><strong>מספר כרטיס:</strong> {ticketNumber}</td>
             </tr>
           </table>
 
-          <p style=""margin:0;font-size:13px;color:#6b776f;"">תהנה/י מההנחות הבלעדיות ותהנה/י מהקניות!</p>
+          <p style=""margin:0 0 18px;font-size:14px;color:#333;"">
+            שים/י לב: פרטי ההגרלה ומועד העריכה יישלחו בהודעת תזכורת לפני ביצוע ההגרלה.
+          </p>
 
-          <div style=""margin-top:18px;font-size:13px;color:#7a7f7b;"">
-            <p style=""margin:0;"">בברכה,<br/><strong>צוות Chinese Sale</strong> ❤️</p>
-          </div>
+          <p style=""margin:0 0 18px;"">
+            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:#c59d5f;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;"">צפה בכרטיסים שלי</a>
+          </p>
+
+          <p style=""margin:0;font-size:13px;color:#6b6156;"">בהצלחה רבה,<br/><strong>צוות Chinese Sale</strong></p>
         </td>
       </tr>
       <tr>
-        <td style=""background:#f7fffb;padding:14px 18px;font-size:12px;color:#2f8b6f;text-align:center;"">
-          אתה/את מקבל/ת הודעה זו כיוון שנרשמת באתר Chinese Sale. נהל/י העדxxx בחשבונך.
+        <td style=""background:#fbf8f6;padding:14px 18px;font-size:12px;color:#8b7a62;text-align:center;"">
+          זוהי הודעה אוטומטית — לשאלות ופרטים התקשרו/פנו לתמיכה.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>";
+        }
+
+        private static string BuildLotteryDrawAnnouncementHtml(string lotteryName, DateTime drawDateUtc)
+        {
+            var drawLocal = drawDateUtc.ToLocalTime().ToString("f");
+            return $@"<!doctype html>
+<html lang=""he"" dir=""rtl"">
+  <head>
+    <meta charset=""utf-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>הודעה על הגרלה קרובה — {lotteryName}</title>
+  </head>
+  <body style=""margin:0;padding:0;background:#fbfaf8;font-family:Arial, Helvetica, sans-serif;color:#1b1b1b;direction:rtl;text-align:right;"">
+    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:720px;margin:36px auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #ece6df;box-shadow:0 8px 28px rgba(12,18,23,0.06);"">
+      <tr>
+        <td style=""background:#0d2b3a;padding:24px 28px;color:#f4ead3;text-align:right;"">
+          <h1 style=""margin:0;font-size:20px;font-weight:700;"">התזכורת להגרלה — {lotteryName}</h1>
+        </td>
+      </tr>
+      <tr>
+        <td style=""padding:24px 28px;"">
+          <p style=""margin:0 0 12px;font-size:14px;color:#333;"">שלום,</p>
+          <p style=""margin:0 0 16px;font-size:14px;color:#333;line-height:1.6;"">
+            ברצוננו להזכיר שההגרלה <strong>{lotteryName}</strong> תתקיים ב־<strong>{drawLocal}</strong>.
+          </p>
+
+          <p style=""margin:0 0 16px;font-size:14px;color:#333;"">
+            יש לוודא שלכרטיסיך סטטוס תקין — פרטי הזכייה יישלחו לניצחון בהודעה נפרדת.
+          </p>
+
+          <p style=""margin:0 0 18px;"">
+            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:#b8873e;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;"">צפה בפרטי ההגרלה</a>
+          </p>
+
+          <p style=""margin:0;font-size:13px;color:#6b6156;"">בברכה,<br/><strong>צוות Chinese Sale</strong></p>
+        </td>
+      </tr>
+      <tr>
+        <td style=""background:#fbf8f6;padding:14px 18px;font-size:12px;color:#8b7a62;text-align:center;"">
+          הודעה אוטומטית — לקבלת סיוע יש להשיב להודעה זו או לפנות לשירות הלקוחות.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>";
+        }
+
+        private static string BuildWinnerNotificationHtml(string firstName, string lotteryName, string prize, string claimInstructions)
+        {
+            return $@"<!doctype html>
+<html lang=""he"" dir=""rtl"">
+  <head>
+    <meta charset=""utf-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>מזל טוב — זכית בהגרלה {lotteryName}</title>
+  </head>
+  <body style=""margin:0;padding:0;background:#fbfaf8;font-family:Arial, Helvetica, sans-serif;color:#1b1b1b;direction:rtl;text-align:right;"">
+    <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""max-width:720px;margin:36px auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #ece6df;box-shadow:0 8px 28px rgba(12,18,23,0.06);"">
+      <tr>
+        <td style=""background:#0d2b3a;padding:26px 28px;color:#f4ead3;text-align:right;"">
+          <h1 style=""margin:0;font-size:22px;font-weight:700;"">מזל טוב — זכית ב־{lotteryName}</h1>
+        </td>
+      </tr>
+      <tr>
+        <td style=""padding:26px 28px;"">
+          <p style=""margin:0 0 12px;font-size:16px;color:#111;"">שלום {firstName},</p>
+
+          <p style=""margin:0 0 12px;font-size:15px;color:#333;line-height:1.6;"">
+            אנו שמחים להודיע כי זכית בפרס: <strong>{prize}</strong>.
+          </p>
+
+          <p style=""margin:0 0 16px;font-size:14px;color:#333;"">
+            כדי לקבל את הפרס: {claimInstructions}
+          </p>
+
+          <p style=""margin:0 0 18px;"">
+            <a href=""#"" style=""display:inline-block;padding:12px 20px;background:#b8873e;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;"">פרטי קבלת הפרס</a>
+          </p>
+
+          <p style=""margin:0;font-size:13px;color:#6b6156;"">בהערכה רבה,<br/><strong>צוות Chinese Sale</strong></p>
+        </td>
+      </tr>
+      <tr>
+        <td style=""background:#fbf8f6;padding:14px 18px;font-size:12px;color:#8b7a62;text-align:center;"">
+          זוהי הודעה רשמית — לשאלות יש להשיב להודעה זו או לפנות לשירות הלקוחות.
         </td>
       </tr>
     </table>
