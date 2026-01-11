@@ -28,11 +28,9 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Gifts.Include(x=>x.Donor).Include(x=>x.Category).Include(x=>x.Lottery).FirstOrDefaultAsync(x => x.Id == id);
         }
-<<<<<<< HEAD
+
         public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsWithPagination(int lotteryId, int pageNumber, int pageSize)
-=======
-        public async Task<(IEnumerable<Gift> items, int totalcount)> GetGiftsWithPagination(int lotteryId,int pageNumber, int pageSize)
->>>>>>> main
+
         {
             var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
             var totalCount = await query.CountAsync();

@@ -37,7 +37,7 @@ namespace ChineseSaleApi.Services
                         }).ToList();
         }
 
-        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPagination(int lotteryId, PaginationParamsdto paginationParams)
+        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPagination(int lotteryId, PaginationParamsDto paginationParams)
         {
             var (items, totalCount) = await _repository.GetCardsWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
             var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.ImageUrl })
