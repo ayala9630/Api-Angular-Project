@@ -79,6 +79,7 @@ namespace ChineseSaleApi.Services
                 IsDone = lottery.IsDone
             };
         }
+
         //update
         public async Task<bool?> UpdateLottery(UpdateLotteryDto lotteryDto)
         {

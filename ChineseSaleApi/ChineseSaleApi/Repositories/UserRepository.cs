@@ -33,7 +33,11 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Users.ToListAsync();
         }
+<<<<<<< HEAD
+        public async Task<(IEnumerable<User> items, int totalCount)> GetUsersWithPagination(int pageNumber, int pageSize)
+=======
         public async Task<(IEnumerable<User> items,int totalcount)> GetUserWithPagination(int pageNumber,int pageSize)
+>>>>>>> main
         {
             var query = _context.Users.AsQueryable();
             var totalCount = await query.CountAsync();
@@ -41,12 +45,18 @@ namespace ChineseSaleApi.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+<<<<<<< HEAD
+
+            return (users, totalCount);
+=======
             return (users,totalCount);
+>>>>>>> main
         }
         public async Task<bool> IsUserNameExists(string userName)
         {
             return await _context.Users.AnyAsync(u => u.UserName == userName);
         }
+       
         //update
         public async Task UpdateUser(User user)
         {

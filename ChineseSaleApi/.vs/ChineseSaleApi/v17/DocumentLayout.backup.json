@@ -1,5 +1,9 @@
 {
   "Version": 1,
+<<<<<<< HEAD
+  "WorkspaceRootPath": "C:\\Users\\This_user\\Documents\\\u05D4\u05E0\u05D3\u05E1\u05D0\u05D9\u05DD \u05D9\u05D2\\\u05D4\u05E0\u05D3\u05E1\u05D0\u05D9\u05DD \u05D0\u05D9\u05DC\u05D4\\Api-Angular-Project\\ChineseSaleApi\\",
+  "Documents": [],
+=======
   "WorkspaceRootPath": "C:\\Users\\User\\Documents\\\u05D3\u05D1\u05D5\u05E8\u05D9\\\u05DC\u05D9\u05DE\u05D5\u05D3\u05D9\u05DD\\\u05D9\u05D3\\Api-Angular-Project\\ChineseSaleApi\\",
   "Documents": [
     {
@@ -71,6 +75,7 @@
       "RelativeMoniker": "D:0:0:{5CEE52D7-8A77-47B8-9534-19D0FC172D5F}|ChineseSaleApi\\ChineseSaleApi.csproj|solutionrelative:chinesesaleapi\\serviceinterfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
+>>>>>>> main
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -78,6 +83,13 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< HEAD
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+=======
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -300,6 +312,7 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2026-01-06T20:59:14.823Z",
               "EditorCaption": ""
+>>>>>>> main
             }
           ]
         }

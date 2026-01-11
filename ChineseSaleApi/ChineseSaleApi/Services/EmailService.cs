@@ -1,5 +1,4 @@
-﻿//using MimeKit;
-//using System.Net.Mail;
+
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
 using MailKit.Net.Smtp;
@@ -8,7 +7,6 @@ using MimeKit;
 
 namespace ChineseSaleApi.Services
 {
-
     public class EmailService : IEmailService
     {
         private readonly EmailSettingsDto _emailSettings;
