@@ -38,6 +38,35 @@ namespace ChineseSaleApi.Repositories
                 .ToListAsync();
             return (gifts, totalCount);
         }
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftWithPaginationSortByCategory(int lotteryId,int pageNumber, int pageSize,bool ascending)
+        {
+            var query = _context.Gifts.Include(c => c.Category).Where(l => l.LotteryId == lotteryId).AsQueryable();
+            if (ascending)
+                query = query.OrderBy(x => x.Category.Name);
+            else
+                query = query.OrderByDescending(x => x.Category.Name);
+            var totalCount = await query.CountAsync();
+            var gifts = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (gifts, totalCount);
+        }
+
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftWithPaginationSortByPrice(int lotteryId,int pageNumber, int pageSize,bool ascending)
+        {
+            var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
+            if (ascending)
+                query = query.OrderBy(x => x.Price);
+            else
+                query = query.OrderByDescending(x => x.Price);
+            var totalCount = await query.CountAsync();
+            var gifts = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (gifts, totalCount);
+        }
         //update
         public async Task UpdateGift(Gift gift)
         {
