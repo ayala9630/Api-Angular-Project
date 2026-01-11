@@ -35,7 +35,7 @@ namespace ChineseSaleApi.Services
             return await _repository.AddDonor(donor);
         }
         //read
-        public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId, PaginationParamsdto paginationParamsdto)
+        public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId, PaginationParamsDto paginationParamsdto)
         {
             Dictionary<string,int> dict = new();
 

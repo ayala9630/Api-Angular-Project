@@ -28,7 +28,7 @@ namespace ChineseSaleApi.Controllers
             return Ok(donors);
         }
         [HttpGet("{lotteryId}/{id}")]
-        public async Task<IActionResult> GetDonorById(int id,int lotteryId, [FromQuery] PaginationParamsdto paginationParamsdto)
+        public async Task<IActionResult> GetDonorById(int id,int lotteryId, [FromQuery] PaginationParamsDto paginationParamsdto)
         {
             var donor = await _service.GetDonorById(id,lotteryId,paginationParamsdto);
             if (donor == null)

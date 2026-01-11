@@ -4,7 +4,7 @@ using ChineseSaleApi.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChineseSaleApi.Repositories
-{
+{ 
     public class GiftRepository : IGiftRepository
     {
         private readonly ChineseSaleContext _context;
@@ -28,11 +28,7 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Gifts.Include(x=>x.Donor).Include(x=>x.Category).Include(x=>x.Lottery).FirstOrDefaultAsync(x => x.Id == id);
         }
-<<<<<<< HEAD
-        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsWithPagination(int lotteryId, int pageNumber, int pageSize)
-=======
-        public async Task<(IEnumerable<Gift> items, int totalcount)> GetGiftsWithPagination(int lotteryId,int pageNumber, int pageSize)
->>>>>>> main
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsWithPagination(int lotteryId,int pageNumber, int pageSize)
         {
             var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
             var totalCount = await query.CountAsync();
