@@ -34,6 +34,25 @@ namespace ChineseSaleApi.Controllers
             }
             return Ok(card);
         }
+        [HttpGet("pagination/{lotteryId}")]
+        public async Task<IActionResult> GetCardsWithPagination(int lotteryId,[FromQuery] PaginationParamsDto paginationParams)
+        {
+            var cards = await _service.GetCardsWithPagination(lotteryId, paginationParams);
+            // Response.Headers.Add("X-Total-Count", totalCount.ToString());
+            return Ok(cards);
+        }
+        [HttpGet("pagination/sortByValue/{lotteryId}")]
+        public async Task<IActionResult> GetCardsWithPaginationSortByValue(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
+        {
+            var cards = await _service.GetCardsWithPaginationSortByValue(lotteryId, paginationParams, ascending);
+            return Ok(cards);
+        }
+        [HttpGet("pagination/sortByPurchases/{lotteryId}")]
+        public async Task<IActionResult> GetCardsWithPaginationSortByPurchases(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
+        {
+            var cards = await _service.GetCardsWithPaginationSortByPurchases(lotteryId, paginationParams, ascending);
+            return Ok(cards);
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> CreateCard(CreateCardDto createCardDto)
