@@ -97,6 +97,56 @@ namespace ChineseSaleApi.Services
                 PageSize = paginationParams.PageSize
             };
         }
+        public async Task<PaginatedResultDto<GiftDto>> GetGiftWithPaginationSortByPrice(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        {
+            var (gifts, totalCount) = await _repository.GetGiftWithPaginationSortByPrice(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, ascending);
+            var giftDto = gifts.Select(gift => new GiftDto
+            {
+                Id = gift.Id,
+                Name = gift.Name,
+                Description = gift.Description,
+                Price = gift.Price,
+                GiftValue = gift.GiftValue,
+                ImageUrl = gift.ImageUrl,
+                IsPackageAble = gift.IsPackageAble,
+                CompanyName = gift.Donor?.CompanyName ?? "",
+                CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
+                CategoryName = gift.Category?.Name ?? "",
+                LotteryId = gift.LotteryId,
+            }).ToList();
+            return new PaginatedResultDto<GiftDto>
+            {
+                Items = giftDto,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
+        public async Task<PaginatedResultDto<GiftDto>> GetGiftWithPaginationSortByCategory(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        {
+            var (gifts, totalCount) = await _repository.GetGiftWithPaginationSortByCategory(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, ascending);
+            var giftDtos = gifts.Select(gift => new GiftDto
+            {
+                Id = gift.Id,
+                Name = gift.Name,
+                Description = gift.Description,
+                Price = gift.Price,
+                GiftValue = gift.GiftValue,
+                ImageUrl = gift.ImageUrl,
+                IsPackageAble = gift.IsPackageAble,
+                CompanyName = gift.Donor?.CompanyName ?? "",
+                CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
+                CategoryName = gift.Category?.Name ?? "",
+                LotteryId = gift.LotteryId,
+            }).ToList();
+            return new PaginatedResultDto<GiftDto>
+            {
+                Items = giftDtos,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
         //update
         public async Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto)
         {
