@@ -72,35 +72,35 @@ namespace ChineseSaleApi.Services
                 OldPurchaseCount = gifts.Cards?.Where(x=>x.UserId==userId).Count() ?? 0
             }).ToList();
         }
-        public async Task<PaginatedResultDto<GiftDto>> GetGiftsWithPagination(int lotteryId, PaginationParamsDto paginationParams)
-        {
-            var (gifts, totalCount) = await _repository.GetGiftsWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
-            var giftDtos = gifts.Select(gift => new GiftDto
-            {
-                Id = gift.Id,
-                Name = gift.Name,
-                Description = gift.Description,
-                Price = gift.Price,
-                GiftValue = gift.GiftValue,
-                ImageUrl = gift.ImageUrl,
-                IsPackageAble = gift.IsPackageAble,
-                CompanyName = gift.Donor?.CompanyName ?? "",
-                CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
-                CategoryName = gift.Category?.Name ?? "",
-                LotteryId = gift.LotteryId,
-            }).ToList();
-            return new PaginatedResultDto<GiftDto>
-            {
-                Items = giftDtos,
-                TotalCount = totalCount,
-                PageNumber = paginationParams.PageNumber,
-                PageSize = paginationParams.PageSize
-            };
-        }
+        //public async Task<PaginatedResultDto<GiftDto>> GetGiftsWithPagination(int lotteryId, PaginationParamsDto paginationParams)
+        //{
+        //    var (gifts, totalCount) = await _repository.GetGiftsWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
+        //    var giftDtos = gifts.Select(gift => new GiftDto
+        //    {
+        //        Id = gift.Id,
+        //        Name = gift.Name,
+        //        Description = gift.Description,
+        //        Price = gift.Price,
+        //        GiftValue = gift.GiftValue,
+        //        ImageUrl = gift.ImageUrl,
+        //        IsPackageAble = gift.IsPackageAble,
+        //        CompanyName = gift.Donor?.CompanyName ?? "",
+        //        CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
+        //        CategoryName = gift.Category?.Name ?? "",
+        //        LotteryId = gift.LotteryId,
+        //    }).ToList();
+        //    return new PaginatedResultDto<GiftDto>
+        //    {
+        //        Items = giftDtos,
+        //        TotalCount = totalCount,
+        //        PageNumber = paginationParams.PageNumber,
+        //        PageSize = paginationParams.PageSize
+        //    };
+        //}
 
-        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId,int userId, PaginationParamsDto paginationParams)
+        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId,int? userId, PaginationParamsDto paginationParams)
         {
-            var (gifts, totalCount) = await _repository.GetGiftsWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
+            var (gifts, totalCount) = await _repository.GetGiftsByUserWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
             var giftDto = gifts.Select(gift => new GiftWithOldPurchaseDto
             {
                 Id = gift.Id,
@@ -109,7 +109,7 @@ namespace ChineseSaleApi.Services
                 GiftValue = gift.GiftValue,
                 ImageUrl = gift.ImageUrl,
                 IsPackageAble = gift.IsPackageAble,
-                OldPurchaseCount = gift.Cards.Count(x=>x.UserId==userId)
+                OldPurchaseCount = userId!=null ? gift.Cards.Count(x => x.UserId == userId) : 0
             }).ToList();
             return new PaginatedResultDto<GiftWithOldPurchaseDto>
             {
@@ -119,6 +119,30 @@ namespace ChineseSaleApi.Services
                 PageSize = paginationParams.PageSize
             };
         }
+
+
+        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type)
+        {
+            var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize,textSearch,type);
+            var giftDto = gifts.Select(gift => new GiftWithOldPurchaseDto
+            {
+                Id = gift.Id,
+                Name = gift.Name,
+                Price = gift.Price,
+                GiftValue = gift.GiftValue,
+                ImageUrl = gift.ImageUrl,
+                IsPackageAble = gift.IsPackageAble,
+                OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0
+            }).ToList();
+            return new PaginatedResultDto<GiftWithOldPurchaseDto>
+            {
+                Items = giftDto,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
+
 
         //update
         public async Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto)

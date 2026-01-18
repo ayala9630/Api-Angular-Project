@@ -7,9 +7,12 @@ namespace ChineseSaleApi.ServiceInterfaces
     {
         Task<int> AddDonor(CreateDonorDto donorDto);
         Task<IEnumerable<DonorDto>> GetAllDonors();
-        Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(PaginationParamsDto paginationParams);
+        Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(int lottery, PaginationParamsDto paginationParams);
         Task<IEnumerable<DonorDto?>> GetDonorByLotteryId(int lottery);
         Task<SingelDonorDto?> GetDonorById(int id, int lottery, PaginationParamsDto paginationParamsdto);
+        Task<PaginatedResultDto<DonorDto>> GetDonorsNameSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
+        Task<PaginatedResultDto<DonorDto>> GetDonorsEmailSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
+
         Task<bool?> AddLotteryToDonor(int donorId, int lotteryId);
         Task<bool?> UpdateDonor(UpdateDonorDto donor);
         Task<bool?> DeleteDonor(int id, int lotteryId);
