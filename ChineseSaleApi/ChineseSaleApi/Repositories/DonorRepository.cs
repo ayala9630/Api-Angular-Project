@@ -36,9 +36,9 @@ namespace ChineseSaleApi.Repositories
             return await _context.Donors.Include(g => g.Gifts).Include(d=>d.Lotteries)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsWithPagination(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsWithPagination(int lottery, int pageNumber, int pageSize)
         {
-            var query = _context.Donors.AsQueryable();
+            var query = _context.Donors.Where(d => d.Lotteries.Any(l => l.Id == lottery)).AsQueryable();
             var totalCount = await query.CountAsync();
             var donors = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -46,6 +46,28 @@ namespace ChineseSaleApi.Repositories
                 .ToListAsync();
             return (donors, totalCount);
         }
+        public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsNameSearchedPagination(int lottery, int pageNumber, int pageSize, string textSearch)
+        {
+            var query = _context.Donors.Where(d => d.Lotteries.Any(l => l.Id == lottery)).Where(t=>t.FirstName.Contains(textSearch) || t.LastName.Contains(textSearch)).AsQueryable();
+            var totalCount = await query.CountAsync();
+            var donors = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (donors, totalCount);
+        }
+
+        public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsEmailSearchedPagination(int lottery, int pageNumber, int pageSize, string textSearch)
+        {
+            var query = _context.Donors.Where(d => d.Lotteries.Any(l => l.Id == lottery)).Where(t => t.CompanyEmail.Contains(textSearch)).AsQueryable();
+            var totalCount = await query.CountAsync();
+            var donors = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (donors, totalCount);
+        }
+
         //update
         public async Task UpdateDonor(Donor donor)
         {

@@ -99,9 +99,9 @@ namespace ChineseSaleApi.Services
             });
         }
         //with pagination
-        public async Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(PaginationParamsDto paginationParams)
+        public async Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(int lottery, PaginationParamsDto paginationParams)
         {
-            var (donors, totalCount) = await _repository.GetDonorsWithPagination(paginationParams.PageNumber, paginationParams.PageSize);
+            var (donors, totalCount) = await _repository.GetDonorsWithPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize);
             var donorDtos = donors.Select(donor => new DonorDto
             {
                 Id = donor.Id,
@@ -121,6 +121,51 @@ namespace ChineseSaleApi.Services
                 PageSize = paginationParams.PageSize
             };
         }
+        public async Task<PaginatedResultDto<DonorDto>> GetDonorsNameSearchedPagination(int lottery, PaginationParamsDto paginationParams,string textSearch)
+        {
+            var (donors, totalCount) = await _repository.GetDonorsNameSearchedPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize,textSearch);
+            var donorDtos = donors.Select(donor => new DonorDto
+            {
+                Id = donor.Id,
+                FirstName = donor.FirstName,
+                LastName = donor.LastName,
+                CompanyName = donor.CompanyName,
+                CompanyEmail = donor.CompanyEmail,
+                CompanyPhone = donor.CompanyPhone,
+                CompanyIcon = donor.CompanyIcon,
+                CompanyAddressId = donor.CompanyAddressId
+            });
+            return new PaginatedResultDto<DonorDto>
+            {
+                Items = donorDtos,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
+        public async Task<PaginatedResultDto<DonorDto>> GetDonorsEmailSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch)
+        {
+            var (donors, totalCount) = await _repository.GetDonorsEmailSearchedPagination(lottery,paginationParams.PageNumber, paginationParams.PageSize, textSearch);
+            var donorDtos = donors.Select(donor => new DonorDto
+            {
+                Id = donor.Id,
+                FirstName = donor.FirstName,
+                LastName = donor.LastName,
+                CompanyName = donor.CompanyName,
+                CompanyEmail = donor.CompanyEmail,
+                CompanyPhone = donor.CompanyPhone,
+                CompanyIcon = donor.CompanyIcon,
+                CompanyAddressId = donor.CompanyAddressId
+            });
+            return new PaginatedResultDto<DonorDto>
+            {
+                Items = donorDtos,
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            };
+        }
+
         //update
         public async Task<bool?> UpdateDonor(UpdateDonorDto donor)
         {

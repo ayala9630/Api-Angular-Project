@@ -32,17 +32,36 @@ namespace ChineseSaleApi.Controllers
             var gifts = await _service.GetAllGifts(lotteryId, userId);
             return Ok(gifts);
         }
+        //[HttpGet("lottery/{lotteryId}/pagination")]
+        //public async Task<IActionResult> GetGiftsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams)
+        //{
+        //    var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParams);
+        //    return Ok(pagedGifts);
+        //}
         [HttpGet("lottery/{lotteryId}/pagination")]
-        public async Task<IActionResult> GetGiftsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams)
+        public async Task<IActionResult> GetGiftsByUserWithPagination(int lotteryId,[FromQuery] int? userId, [FromQuery] PaginationParamsDto paginationParams)
         {
-            var pagedGifts = await _service.GetGiftsWithPagination(lotteryId, paginationParams);
+            var pagedGifts = await _service.GetGiftsByUserWithPagination(lotteryId, userId, paginationParams);
             return Ok(pagedGifts);
         }
-        [HttpGet("user/{userId}/lottery/{lotteryId}/pagination")]
-        public async Task<IActionResult> GetGiftsByUserWithPagination(int lotteryId, int userId, [FromQuery] PaginationParamsDto paginationParams)
+        [HttpGet("lottery/{lotteryId}/search-pagination")]
+        public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] string? name, [FromQuery] string? donor)
         {
-            var pagedGifts = await _service.GetGiftsByUserWithPagination(lotteryId,userId, paginationParams);
-            return Ok(pagedGifts);
+            if (name != null)
+            {
+                var pagedGiftsName = await _service.GetGiftsSearchPagination(lotteryId,userId, paginationParams, name, "name");
+                return Ok(pagedGiftsName);
+            }
+            else if (donor != null)
+            {
+                var pagedGiftsDonor = await _service.GetGiftsSearchPagination(lotteryId,userId, paginationParams, donor, "donor");
+                return Ok(pagedGiftsDonor);
+            }
+            else
+            {
+                var pagedGifts = await _service.GetGiftsSearchPagination(lotteryId,userId, paginationParams,null,null);
+                return Ok(pagedGifts);
+            }
         }
         //create
         [HttpPost]

@@ -4,6 +4,7 @@ using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -45,11 +46,28 @@ namespace ChineseSaleApi.Controllers
             var donors = await _service.GetDonorByLotteryId(lotteryId);
             return Ok(donors);
         }
-        [HttpGet("pagination")]
-        public async Task<IActionResult> GetDonorsWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
+        [HttpGet("lottery/{lotteryId}/pagination")]
+        public async Task<IActionResult> GetDonorsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParamsDto)
         {
-            var pagedDonors = await _service.GetDonorsWithPagination(paginationParamsDto);
+            var pagedDonors = await _service.GetDonorsWithPagination(lotteryId,paginationParamsDto);
             return Ok(pagedDonors);
+        }
+        [HttpGet("lottery/{lotteryId}/search")]
+        public async Task<IActionResult> GetDonorSearchedPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] string? name, [FromQuery] string? email)
+        {
+            if (name != null)
+            {
+                var pagedDonorsName = await _service.GetDonorsNameSearchedPagination(lotteryId, paginationParams, name);
+                return Ok(pagedDonorsName);
+            }
+            else if (email != null)
+            {
+                var pagedDonorsEmail = await _service.GetDonorsEmailSearchedPagination(lotteryId, paginationParams, email);
+                return Ok(pagedDonorsEmail);
+            }
+            var pagedDonors = await _service.GetDonorsWithPagination(lotteryId, paginationParams);
+            return Ok(pagedDonors);
+
         }
         //create
         [HttpPost]

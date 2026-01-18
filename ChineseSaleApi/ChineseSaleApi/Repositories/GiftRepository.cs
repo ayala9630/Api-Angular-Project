@@ -28,9 +28,19 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Gifts.Include(x=>x.Donor).Include(x=>x.Category).Include(x=>x.Lottery).FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsWithPagination(int lotteryId,int pageNumber, int pageSize)
+        //public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsWithPagination(int lotteryId,int pageNumber, int pageSize)
+        //{
+        //    var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
+        //    var totalCount = await query.CountAsync();
+        //    var gifts = await query
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToListAsync();
+        //    return (gifts, totalCount);
+        //}
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsByUserWithPagination(int lotteryId, int pageNumber, int pageSize)
         {
-            var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
+            var query = _context.Gifts.Include(x=>x.Cards).Where(l => l.LotteryId == lotteryId).AsQueryable();
             var totalCount = await query.CountAsync();
             var gifts = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -38,7 +48,32 @@ namespace ChineseSaleApi.Repositories
                 .ToListAsync();
             return (gifts, totalCount);
         }
-        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsByUserWithPagination(int lotteryId, int pageNumber, int pageSize)
+
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsSearchPagination(int lotteryId, int pageNumber, int pageSize,string? textSearch ,string? type)
+        {
+            IQueryable<Gift> query;
+
+            switch (type)
+            {
+                case "name":
+                    query = _context.Gifts.Include(x => x.Cards).Where(l => l.LotteryId == lotteryId && l.Name.Contains(textSearch)).AsQueryable();
+                    break;
+                case "donor":
+                    query = _context.Gifts.Include(x => x.Cards).Include(x => x.Donor).Where(l => l.LotteryId == lotteryId && (l.Donor.CompanyName.Contains(textSearch) || l.Donor.FirstName.Contains(textSearch) || l.Donor.LastName.Contains(textSearch))).AsQueryable();
+                    break;
+                default:
+                    query = _context.Gifts.Include(x => x.Cards).Where(l => l.LotteryId == lotteryId).AsQueryable();
+                    break;
+            }
+            var totalCount = await query.CountAsync();
+            var gifts = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (gifts, totalCount);
+        }
+
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsByUserPagination(int lotteryId, int pageNumber, int pageSize)
         {
             var query = _context.Gifts.Where(l => l.LotteryId == lotteryId).AsQueryable();
             var totalCount = await query.CountAsync();
