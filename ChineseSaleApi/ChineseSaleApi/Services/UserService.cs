@@ -1,4 +1,7 @@
-﻿using ChineseSaleApi.Dto;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
@@ -38,183 +41,54 @@ namespace ChineseSaleApi.Services
         // create
         public async Task AddUser(CreateUserDto createUserDto)
         {
-            if (await _repository.IsUserNameExists(createUserDto.Username))
+            try
             {
-                throw new Exception("Username already exists");
+                if (await _repository.IsUserNameExists(createUserDto.Username))
+                {
+                    throw new Exception("Username already exists");
+                }
+
+                int idAddress = await _addressService.AddAddressForUser(createUserDto.Address);
+                User user = new User
+                {
+                    UserName = createUserDto.Username,
+                    Password = HashPassword(createUserDto.Password),
+                    FirstName = createUserDto.FirstName,
+                    LastName = createUserDto.LastName,
+                    Phone = createUserDto.Phone,
+                    Email = createUserDto.Email,
+                    AddressId = idAddress
+                };
+
+                // send welcome email (synchronous method in your EmailService)
+                _emailService.SendEmail(new EmailRequestDto()
+                {
+                    To = createUserDto.Email,
+                    Subject = "ברוכים הבאים ל‑Chinese Sale — הרשמתך להגרלה",
+                    Body = BuildWelcomeHtml(createUserDto.FirstName)
+                });
+
+                await _repository.AddUser(user);
             }
-
-            int idAddress = await _addressService.AddAddressForUser(createUserDto.Address);
-            User user = new User
+            catch (Exception ex)
             {
-                UserName = createUserDto.Username,
-                Password = HashPassword(createUserDto.Password),
-                FirstName = createUserDto.FirstName,
-                LastName = createUserDto.LastName,
-                Phone = createUserDto.Phone,
-                Email = createUserDto.Email,
-                AddressId = idAddress
-            };
-
-            // send welcome email (synchronous method in your EmailService)
-            _emailService.SendEmail(new EmailRequestDto()
-            {
-                To = createUserDto.Email,
-                Subject = "ברוכים הבאים ל‑Chinese Sale — הרשמתך להגרלה",
-                Body = BuildWelcomeHtml(createUserDto.FirstName)
-            });
-
-            await _repository.AddUser(user);
+                _logger.LogError(ex, "Failed to add user {Username}.", createUserDto?.Username);
+                throw;
+            }
         }
 
         // read one
         public async Task<UserDto?> GetUserById(int id)
         {
-            var user = await _repository.GetUserById(id);
-            if (user == null)
+            try
             {
-                return null;
-            }
-
-            return new UserDto
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                Address = user.Address != null ? new AddressDto
+                var user = await _repository.GetUserById(id);
+                if (user == null)
                 {
-                    Id = user.Address.Id,
-                    City = user.Address.City,
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    ZipCode = user.Address.ZipCode
-                } : null
-            };
-        }
-
-        // read all
-        public async Task<List<UserDto>> GetAllUsers()
-        {
-            var users = await _repository.GetAllUsers();
-            return users.Select(user => new UserDto
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                Address = user.Address != null ? new AddressDto
-                {
-                    Id = user.Address.Id,
-                    City = user.Address.City,
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    ZipCode = user.Address.ZipCode
-                } : null
-            }).ToList();
-        }
-
-        // pagination
-        public async Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams)
-        {
-            var (items, totalCount) = await _repository.GetUsersWithPagination(paginationParams.PageNumber, paginationParams.PageSize);
-
-            List<UserDto> userDtos = items.Select(user => new UserDto
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                Address = user.Address != null ? new AddressDto
-                {
-                    Id = user.Address.Id,
-                    City = user.Address.City,
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    ZipCode = user.Address.ZipCode
-                } : null
-            }).ToList();
-
-            return new PaginatedResultDto<UserDto>
-            {
-                Items = userDtos,
-                TotalCount = totalCount,
-                PageNumber = paginationParams.PageNumber,
-                PageSize = paginationParams.PageSize
-            };
-        }
-
-        // update
-        public async Task<bool?> UpdateUser(UpdateUserDto userDto)
-        {
-            var user = await _repository.GetUserById(userDto.Id);
-            if (user == null)
-            {
-                return null;
-            }
-
-            if (userDto.Address != null)
-            {
-                await _addressService.UpdateAddress(userDto.Address);
-            }
-
-            if (!string.IsNullOrWhiteSpace(userDto.Email) && userDto.Email != user.Email)
-            {
-                var allUsers = await _repository.GetAllUsers();
-                if (allUsers.Any(u => u.Email == userDto.Email))
-                {
-                    throw new Exception("Email already exists");
+                    return null;
                 }
-            }
 
-            user.FirstName = userDto.FirstName ?? user.FirstName;
-            user.LastName = userDto.LastName ?? user.LastName;
-            user.Phone = userDto.Phone ?? user.Phone;
-            user.Email = userDto.Email ?? user.Email;
-
-            await _repository.UpdateUser(user);
-            return true;
-        }
-
-        // authenticate
-        public async Task<LoginResponseDto?> AuthenticateAsync(LoginRequestDto loginRequest)
-        {
-            var user = await _repository.GetUserByUserName(loginRequest.UserName);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var hashedPassword = HashPassword(loginRequest.Password);
-            if (user.Password != hashedPassword)
-            {
-                return null;
-            }
-
-            var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName);
-            var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 60);
-
-            // send login notification
-            _emailService.SendEmail(new EmailRequestDto()
-            {
-                To = user.Email,
-                Subject = "התראת כניסה — Chinese Sale",
-                Body = BuildLoginNotificationHtml(user.FirstName, DateTime.UtcNow)
-            });
-
-            _logger.LogInformation($"User {user.UserName} logged in successfully.");
-
-            return new LoginResponseDto
-            {
-                Token = token,
-                TokenType = "Bearer",
-                ExpiresIn = expiryMinutes * 60,
-                User = new UserDto
+                return new UserDto
                 {
                     Id = user.Id,
                     Username = user.UserName,
@@ -230,8 +104,185 @@ namespace ChineseSaleApi.Services
                         Number = user.Address.Number,
                         ZipCode = user.Address.ZipCode
                     } : null
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get user by id {UserId}.", id);
+                throw;
+            }
+        }
+
+        // read all
+        public async Task<List<UserDto>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _repository.GetAllUsers();
+                return users.Select(user => new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Phone = user.Phone,
+                    Email = user.Email,
+                    Address = user.Address != null ? new AddressDto
+                    {
+                        Id = user.Address.Id,
+                        City = user.Address.City,
+                        Street = user.Address.Street,
+                        Number = user.Address.Number,
+                        ZipCode = user.Address.ZipCode
+                    } : null
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get all users.");
+                throw;
+            }
+        }
+
+        // pagination
+        public async Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams)
+        {
+            try
+            {
+                var (items, totalCount) = await _repository.GetUsersWithPagination(paginationParams.PageNumber, paginationParams.PageSize);
+
+                List<UserDto> userDtos = items.Select(user => new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Phone = user.Phone,
+                    Email = user.Email,
+                    Address = user.Address != null ? new AddressDto
+                    {
+                        Id = user.Address.Id,
+                        City = user.Address.City,
+                        Street = user.Address.Street,
+                        Number = user.Address.Number,
+                        ZipCode = user.Address.ZipCode
+                    } : null
+                }).ToList();
+
+                return new PaginatedResultDto<UserDto>
+                {
+                    Items = userDtos,
+                    TotalCount = totalCount,
+                    PageNumber = paginationParams.PageNumber,
+                    PageSize = paginationParams.PageSize
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get users with pagination.");
+                throw;
+            }
+        }
+
+        // update
+        public async Task<bool?> UpdateUser(UpdateUserDto userDto)
+        {
+            try
+            {
+                var user = await _repository.GetUserById(userDto.Id);
+                if (user == null)
+                {
+                    return null;
                 }
-            };
+
+                if (userDto.Address != null)
+                {
+                    await _addressService.UpdateAddress(userDto.Address);
+                }
+
+                if (!string.IsNullOrWhiteSpace(userDto.Email) && userDto.Email != user.Email)
+                {
+                    var allUsers = await _repository.GetAllUsers();
+                    if (allUsers.Any(u => u.Email == userDto.Email))
+                    {
+                        throw new Exception("Email already exists");
+                    }
+                }
+
+                user.FirstName = userDto.FirstName ?? user.FirstName;
+                user.LastName = userDto.LastName ?? user.LastName;
+                user.Phone = userDto.Phone ?? user.Phone;
+                user.Email = userDto.Email ?? user.Email;
+
+                await _repository.UpdateUser(user);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update user {UserId}.", userDto?.Id);
+                throw;
+            }
+        }
+
+        // authenticate
+        public async Task<LoginResponseDto?> AuthenticateAsync(LoginRequestDto loginRequest)
+        {
+            try
+            {
+                var user = await _repository.GetUserByUserName(loginRequest.UserName);
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var hashedPassword = HashPassword(loginRequest.Password);
+                if (user.Password != hashedPassword)
+                {
+                    return null;
+                }
+
+                var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName);
+                var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 60);
+
+                // send login notification
+                _emailService.SendEmail(new EmailRequestDto()
+                {
+                    To = user.Email,
+                    Subject = "התראת כניסה — Chinese Sale",
+                    Body = BuildLoginNotificationHtml(user.FirstName, DateTime.UtcNow)
+                });
+
+                _logger.LogInformation($"User {user.UserName} logged in successfully.");
+
+                return new LoginResponseDto
+                {
+                    Token = token,
+                    TokenType = "Bearer",
+                    ExpiresIn = expiryMinutes * 60,
+                    User = new UserDto
+                    {
+                        Id = user.Id,
+                        Username = user.UserName,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Phone = user.Phone,
+                        Email = user.Email,
+                        Address = user.Address != null ? new AddressDto
+                        {
+                            Id = user.Address.Id,
+                            City = user.Address.City,
+                            Street = user.Address.Street,
+                            Number = user.Address.Number,
+                            ZipCode = user.Address.ZipCode
+                        } : null
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Authentication failed for user {Username}.", loginRequest?.UserName);
+                throw;
+            }
         }
 
         private static string HashPassword(string password)

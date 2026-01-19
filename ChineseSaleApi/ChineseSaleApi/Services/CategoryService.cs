@@ -1,54 +1,101 @@
-﻿using ChineseSaleApi.Dto;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ChineseSaleApi.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repository;
+        private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(ICategoryRepository repository)
+        public CategoryService(ICategoryRepository repository, ILogger<CategoryService> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
+
         //create
         public async Task AddCategory(CreateCategoryDto categoryDto)
         {
-            Category category = new Category
+            try
             {
-                Name = categoryDto.Name
-            };
-            await _repository.AddCategory(category);
+                Category category = new Category
+                {
+                    Name = categoryDto.Name
+                };
+                await _repository.AddCategory(category);
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogError(ex, "AddCategory received a null argument: {@CategoryDto}", categoryDto);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while adding a category.");
+                throw;
+            }
         }
+
         //read
         public async Task<CategoryDto?> GetCategoryById(int id)
         {
-            var category = await _repository.GetCategory(id);
-            if (category == null)
+            try
             {
-                return null;
+                var category = await _repository.GetCategory(id);
+                if (category == null)
+                {
+                    return null;
+                }
+                return new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name
+                };
             }
-            return new CategoryDto
+            catch (Exception ex)
             {
-                Id = category.Id,
-                Name = category.Name
-            };
+                _logger.LogError(ex, "Failed to get category by id {CategoryId}.", id);
+                throw;
+            }
         }
+
         public async Task<List<CategoryDto>> GetAllCategories()
         {
-            var categories = await _repository.GetAllCategories();
-            return categories.Select(category => new CategoryDto
+            try
             {
-                Id = category.Id,
-                Name = category.Name
-            }).ToList();
+                var categories = await _repository.GetAllCategories();
+                return categories.Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get all categories.");
+                throw;
+            }
         }
+
         //delete
         public async Task DeleteCategory(int id)
         {
-            await _repository.DeleteCategory(id);
+            try
+            {
+                await _repository.DeleteCategory(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete category {CategoryId}.", id);
+                throw;
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -9,41 +11,79 @@ namespace ChineseSaleApi.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _service;
+        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService service)
+        public CategoryController(ICategoryService service, ILogger<CategoryController> logger)
         {
             _service = service;
+            _logger = logger;
         }
+
         //read
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
-            var categories = await _service.GetAllCategories();
-            return Ok(categories);
+            try
+            {
+                var categories = await _service.GetAllCategories();
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get all categories.");
+                return StatusCode(500, "An unexpected error occurred while retrieving categories.");
+            }
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            var category = await _service.GetCategoryById(id);
-            if (category == null)
+            try
             {
-                return NotFound();
+                var category = await _service.GetCategoryById(id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+                return Ok(category);
             }
-            return Ok(category);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get category by id {CategoryId}.", id);
+                return StatusCode(500, "An unexpected error occurred while retrieving the category.");
+            }
         }
+
         //create
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryDto category)
         {
-            await _service.AddCategory(category);
-            return Created(nameof(GetCategoryById), category);
+            try
+            {
+                await _service.AddCategory(category);
+                return Created(nameof(GetCategoryById), category);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add category {Name}.", category?.Name);
+                return StatusCode(500, "An unexpected error occurred while adding the category.");
+            }
         }
+
         //delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _service.DeleteCategory(id);
-            return NoContent();
+            try
+            {
+                await _service.DeleteCategory(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete category {CategoryId}.", id);
+                return StatusCode(500, "An unexpected error occurred while deleting the category.");
+            }
         }
     }
 }

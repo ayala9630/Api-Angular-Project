@@ -4,6 +4,8 @@ using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
 using StoreApi.DTOs;
 using ChineseSaleApi.Models;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -12,62 +14,116 @@ namespace ChineseSaleApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, ILogger<UserController> logger)
         {
             _service = service;
+            _logger = logger;
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
         {
-            var user = await _service.AuthenticateAsync(loginDto);
-            if (user == null)
+            try
             {
-                return Unauthorized();
+                var user = await _service.AuthenticateAsync(loginDto);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+                return Ok(user);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Authentication failed for user {Username}.", loginDto?.UserName);
+                return StatusCode(500, "An unexpected error occurred while authenticating.");
+            }
         }
 
         //read
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _service.GetUserById(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await _service.GetUserById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get user by id {UserId}.", id);
+                return StatusCode(500, "An unexpected error occurred while retrieving the user.");
+            }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _service.GetAllUsers();
-            return Ok(users);
+            try
+            {
+                var users = await _service.GetAllUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get all users.");
+                return StatusCode(500, "An unexpected error occurred while retrieving users.");
+            }
         }
+
         [HttpGet("pagination")]
         public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
         {
-            var pagedUsers = await _service.GetUserWithPagination(paginationParamsDto);
-            return Ok(pagedUsers);
+            try
+            {
+                var pagedUsers = await _service.GetUserWithPagination(paginationParamsDto);
+                return Ok(pagedUsers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get users with pagination.");
+                return StatusCode(500, "An unexpected error occurred while retrieving paginated users.");
+            }
         }
 
         //create
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
-        { 
-            await _service.AddUser(createUserDto);
-            return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
+        {
+            try
+            {
+                await _service.AddUser(createUserDto);
+                return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to register user {Username}.", createUserDto?.Username);
+                return StatusCode(500, "An unexpected error occurred while registering the user.");
+            }
         }
+
         //update
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto)
         {
-            var success =await _service.UpdateUser(userDto);
-            if (success == null)
-                return NotFound();
-            return NoContent();
+            try
+            {
+                var success = await _service.UpdateUser(userDto);
+                if (success == null)
+                    return NotFound();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update user {UserId}.", userDto?.Id);
+                return StatusCode(500, "An unexpected error occurred while updating the user.");
+            }
         }
     }
 }

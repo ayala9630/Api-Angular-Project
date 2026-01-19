@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -11,61 +13,123 @@ namespace ChineseSaleApi.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardService _service;
+        private readonly ILogger<CardController> _logger;
 
-        public CardController(ICardService service)
+        public CardController(ICardService service, ILogger<CardController> logger)
         {
             _service = service;
+            _logger = logger;
         }
+
         //read
         [HttpGet("lottery/{lotteryId}")]
         public async Task<IActionResult> Get(int lotteryId)
         {
-            var cards = await _service.GetAllCarsds(lotteryId);
-            return Ok(cards);
-
+            try
+            {
+                var cards = await _service.GetAllCarsds(lotteryId);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get cards for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving cards.");
+            }
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCardByGiftId(int id)
         {
-            var card = await _service.GetCardByGiftId(id);
-            if (card == null)
+            try
             {
-                return NotFound();
+                var card = await _service.GetCardByGiftId(id);
+                if (card == null)
+                {
+                    return NotFound();
+                }
+                return Ok(card);
             }
-            return Ok(card);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get card by gift id {GiftId}.", id);
+                return StatusCode(500, "An unexpected error occurred while retrieving the card.");
+            }
         }
+
         [HttpGet("pagination/{lotteryId}")]
-        public async Task<IActionResult> GetCardsWithPagination(int lotteryId,[FromQuery] PaginationParamsDto paginationParams)
+        public async Task<IActionResult> GetCardsWithPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams)
         {
-            var cards = await _service.GetCardsWithPagination(lotteryId, paginationParams);
-            // Response.Headers.Add("X-Total-Count", totalCount.ToString());
-            return Ok(cards);
+            try
+            {
+                var cards = await _service.GetCardsWithPagination(lotteryId, paginationParams);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get paginated cards for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving paginated cards.");
+            }
         }
+
         [HttpGet("pagination/sortByValue/{lotteryId}")]
         public async Task<IActionResult> GetCardsWithPaginationSortByValue(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
         {
-            var cards = await _service.GetCardsWithPaginationSortByValue(lotteryId, paginationParams, ascending);
-            return Ok(cards);
+            try
+            {
+                var cards = await _service.GetCardsWithPaginationSortByValue(lotteryId, paginationParams, ascending);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get paginated cards sorted by value for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving sorted cards.");
+            }
         }
+
         [HttpGet("pagination/sortByPurchases/{lotteryId}")]
         public async Task<IActionResult> GetCardsWithPaginationSortByPurchases(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
         {
-            var cards = await _service.GetCardsWithPaginationSortByPurchases(lotteryId, paginationParams, ascending);
-            return Ok(cards);
+            try
+            {
+                var cards = await _service.GetCardsWithPaginationSortByPurchases(lotteryId, paginationParams, ascending);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get paginated cards sorted by purchases for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving sorted cards.");
+            }
         }
+
         //create
         [HttpPost]
-        public async Task<IActionResult> CreateCard(CreateCardDto createCardDto)
+        public async Task<IActionResult> CreateCard([FromBody] CreateCardDto createCardDto)
         {
-            var id = await _service.AddCard(createCardDto);
-            return CreatedAtAction(nameof(CreateCard), new { id = id }, id);
+            try
+            {
+                var id = await _service.AddCard(createCardDto);
+                return CreatedAtAction(nameof(CreateCard), new { id = id }, id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to create card for gift {GiftId}.", createCardDto?.GiftId);
+                return StatusCode(500, "An unexpected error occurred while creating the card.");
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> ResetWinnersByLotteryId(int lotteryId)
         {
-            await _service.ResetWinnersByLotteryId(lotteryId);
-            return NoContent();
+            try
+            {
+                await _service.ResetWinnersByLotteryId(lotteryId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to reset winners for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while resetting winners.");
+            }
         }
     }
 }
