@@ -87,7 +87,7 @@ namespace ChineseSaleApi.Controllers
             return NoContent();
         }
         //update lottery donor
-        [HttpPut("lottery/{donorId}/{lotteryId}")]
+        [HttpPut("lottery/{lotteryId}/id/{donorId}")]
         public async Task<IActionResult> AddLotteryToDonor(int donorId, int lotteryId)
         {
             bool? success = await _service.AddLotteryToDonor(donorId, lotteryId);
@@ -96,7 +96,7 @@ namespace ChineseSaleApi.Controllers
             return NoContent();
         }
         //delete
-        [HttpDelete("lottery/{lotteryId}")]
+        [HttpDelete("lottery/{lotteryId}/id/{id}")]
         public async Task<IActionResult> DeleteDonor(int id,int lotteryId)
         {
             if(await _service.DeleteDonor(id,lotteryId)==null)

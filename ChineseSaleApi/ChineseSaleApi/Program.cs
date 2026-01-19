@@ -133,7 +133,22 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
+
+
+// הפעלת CORS
+app.UseCors("AllowAllOrigins");
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
