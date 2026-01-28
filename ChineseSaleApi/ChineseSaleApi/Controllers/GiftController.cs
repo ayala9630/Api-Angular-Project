@@ -56,8 +56,16 @@ namespace ChineseSaleApi.Controllers
         }
 
         [HttpGet("lottery/{lotteryId}/pagination")]
-        public async Task<IActionResult> GetGiftsByUserWithPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto paginationParams)
+        public async Task<IActionResult> GetGiftsByUserWithPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto? paginationParams)
         {
+            if (paginationParams == null)
+            {
+                var defaultPagination = new PaginationParamsDto 
+                { 
+                    PageNumber = 1, PageSize = 10
+                };
+                paginationParams = defaultPagination;
+            }
             try
             {
                 var pagedGifts = await _service.GetGiftsByUserWithPagination(lotteryId, userId, paginationParams);
@@ -73,6 +81,15 @@ namespace ChineseSaleApi.Controllers
         [HttpGet("lottery/{lotteryId}/search-pagination")]
         public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] string? name, [FromQuery] string? donor)
         {
+            if (paginationParams == null)
+            {
+                var defaultPagination = new PaginationParamsDto
+                {
+                    PageNumber = 1,
+                    PageSize = 10
+                };
+                paginationParams = defaultPagination;
+            }
             try
             {
                 if (name != null)

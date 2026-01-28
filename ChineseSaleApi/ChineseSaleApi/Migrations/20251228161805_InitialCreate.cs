@@ -168,7 +168,9 @@ namespace ChineseSaleApi.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Price = table.Column<int>(type: "int", nullable: true),
                     GiftValue = table.Column<int>(type: "int", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    
+                    
+                    Url = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     IsPackageAble = table.Column<bool>(type: "bit", nullable: true),
                     DonorId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true),

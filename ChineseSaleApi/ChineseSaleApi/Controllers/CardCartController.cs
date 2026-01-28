@@ -54,7 +54,7 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while creating the card cart.");
             }
         }
-
+        
         //update
         [HttpPut]
         public async Task<IActionResult> UpdateCardCart([FromBody] UpdateQuantityDto cardCartDto)

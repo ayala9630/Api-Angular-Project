@@ -1,3 +1,5 @@
+
+
 using ChineseSaleApi.Repositories;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
@@ -22,16 +24,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // Configure Serilog
- Log.Logger = new LoggerConfiguration()
-     .ReadFrom.Configuration(new ConfigurationBuilder()
-         .AddJsonFile("appsettings.json" +
-         "")
-         .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-         .Build())
-     .Enrich.FromLogContext()
-//     .WriteTo.Console()
-//     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
-     .CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json" +
+        "")
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+        .Build())
+    .Enrich.FromLogContext()
+    //     .WriteTo.Console()
+    //     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 builder.Host.UseSerilog();
 
 builder.Services.AddSwaggerGen(options =>
@@ -90,7 +92,7 @@ builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailService,EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 //builder.Services.AddTransient<EmailService>(); // Register your EmailService for injection
 
 
@@ -150,19 +152,19 @@ var app = builder.Build();
 // הפעלת CORS
 app.UseCors("AllowAllOrigins");
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-    app.UseAuthentication();
-    app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
-    app.MapControllers();
+app.MapControllers();
 
-    app.Run();
+app.Run();
 
