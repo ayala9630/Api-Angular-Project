@@ -30,12 +30,15 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ng-zorro-antd/src/ng-zorro-antd.min.css",
+              // "node_modules/ng-zorro-antd/resizable/style/index.min.css",
+              // "node_modules/ng-zorro-antd/code-editor/style/index.min.css",
+              // "node_modules/ng-zorro-antd/graph/style/index.min.css",
               "src/styles.scss"
-            ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
+            // "scripts": [
+            //   "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            // ]
           },
           "configurations": {
             "production": {
@@ -92,6 +95,10 @@
               }
             ],
             "styles": [
+              "node_modules/ng-zorro-antd/src/ng-zorro-antd.min.css",
+                // "node_modules/ng-zorro-antd/resizable/style/index.min.css",
+                // "node_modules/ng-zorro-antd/code-editor/style/index.min.css",
+                // "node_modules/ng-zorro-antd/graph/style/index.min.css",
               "src/styles.scss"
             ]
           }

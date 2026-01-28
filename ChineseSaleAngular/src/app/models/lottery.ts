@@ -24,3 +24,4 @@ export interface UpdateLottery {
   totalSum?: number;
   isDone?: boolean;
 }
+
