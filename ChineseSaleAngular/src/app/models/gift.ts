@@ -40,7 +40,7 @@ export interface Gift {
 export interface GiftWithOldPurchase {
   id: number;
   name: string;
-  price?: number;
+  price: number;
   giftValue?: number;
   imageUrl?: string;
   isPackageAble?: boolean;

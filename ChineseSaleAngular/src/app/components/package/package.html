@@ -1,0 +1,94 @@
+@for(package of allPackages; track package.id) {
+<nz-card style="width:300px;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
+  <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
+</nz-card>
+<ng-template #avatarTemplate>
+  <nz-avatar nzSrc="http://localhost:5025/images/gift.png"></nz-avatar>
+</ng-template>
+<ng-template #coverTemplate>
+  <img alt="example" src="http://localhost:5025/images/gift.png" />
+</ng-template>
+<ng-template #rightAction>
+  @if(admin){
+  <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
+  }
+  @else {
+    <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
+  }
+</ng-template>
+<ng-template #middleAction>
+  @if(!admin){
+    {{getPackageQuantity(package.id)}}
+  }
+  <!-- @if(!admin){
+    <div class="cart-with-plus">
+        <nz-icon nzType="shopping-cart" nzTheme="outline" nzTwotoneColor="#52c41a" [nzRotate]="0">
+        </nz-icon>
+        <nz-icon nzType="plus" nzTheme="outline" class="plus-icon" nzTwotoneColor="#52c41a" [nzRotate]="0">
+        </nz-icon>
+    </div>
+    } -->
+</ng-template>
+<ng-template #leftAction>
+  @if(admin){
+  <nz-icon nzType="edit" />
+  }
+  @else {
+      <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
+
+  }
+</ng-template>
+}
+
+
+
+<button nz-button nzType="primary" (click)="showModal2()">
+  <span>הוסף קטגוריה</span>
+</button>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="הוספת חבילה" (nzOnCancel)="handleCancel()">
+  <div *nzModalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
+          <input nz-input formControlName="name" />
+          <ng-template #userErrorTpl let-control>
+            @if (control.errors?.['required']) {
+            Please input your username!
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7">תאור</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback>
+          <input nz-input formControlName="description" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>מחיר</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input price!">
+          <input nz-input formControlName="price" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>כמות כרטיסים</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input number of cards!">
+          <input nz-input formControlName="numOfCards" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzOffset]="7" [nzSpan]="12">
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">אישור</button>
+          <button nz-button nzType="default" (click)="resetForm($event)" (click)="handleCancel()">ביטול</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+  <div *nzModalFooter>
+    <!-- <button nz-button nzType="default" (click)="handleCancel()">ביטול</button>
+       <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">הוסף</button> -->
+  </div>
+</nz-modal>

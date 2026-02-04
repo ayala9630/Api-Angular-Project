@@ -103,7 +103,7 @@ namespace ChineseSaleApi.Services
                     package.Name = packageDto.Name ?? package.Name;
                     package.Description = packageDto.Description ?? package.Description;
                     package.NumOfCards = packageDto.NumOfCards ?? package.NumOfCards;
-                    package.Price = packageDto.Price ?? package.Price;
+                    package.Price = packageDto.Price ?? package.Price;  
                     package.LoterryId = packageDto.LoterryId ?? package.LoterryId;
                     await _repository.UpdatePackage(package);
                     return true;

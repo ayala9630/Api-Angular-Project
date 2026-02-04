@@ -109,18 +109,19 @@ namespace ChineseSaleApi.Services
             }
         }
 
-        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams)
+        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams,dynamic request)
         {
             try
             {
                 var (gifts, totalCount) = await _repository.GetGiftsByUserWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
+                var baseUrl = $"{request.Scheme}://{request.Host}"; 
                 var giftDto = gifts.Select(gift => new GiftWithOldPurchaseDto
                 {
                     Id = gift.Id,
                     Name = gift.Name,
                     Price = gift.Price,
                     GiftValue = gift.GiftValue,
-                    ImageUrl = gift.ImageUrl,
+                    ImageUrl = $"{baseUrl}/images/{gift.ImageUrl}", 
                     IsPackageAble = gift.IsPackageAble,
                     OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0
                 }).ToList();

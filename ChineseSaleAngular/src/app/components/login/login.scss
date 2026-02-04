@@ -1,0 +1,131 @@
+ .login-form {
+   max-width: 300px;
+ }
+
+ .login-form-margin {
+   margin-bottom: 16px;
+ }
+
+ .login-form-forgot {
+   float: right;
+ }
+
+ .login-form-button {
+   width: 100%;
+ }
+
+ [nz-form] {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+button {
+    margin-left: 8px;
+    min-width: 120px;
+    height: 40px;
+}
+
+* {
+    direction: rtl;
+}
+
+::ng-deep .ant-row.ant-form-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    margin-bottom: 24px !important;
+}
+
+::ng-deep .ant-col.ant-form-item-label {
+    text-align: right !important;
+    padding: 0 12px 0 0 !important;
+    flex-shrink: 0 !important;
+    width: 180px !important;
+    font-weight: 500;
+    color: #262626;
+}
+
+::ng-deep .ant-col.ant-form-item-control {
+    flex: 1 !important;
+    max-width: none !important;
+}
+
+input {
+    text-align: right;
+    height: 40px;
+    border-radius: 4px;
+    padding: 0 12px;
+}
+
+// הזזת האייקון של האיקס לצד שמאל
+::ng-deep .ant-form-item-feedback-icon {
+    left: 12px !important;
+    right: auto !important;
+}
+
+::ng-deep .anticon-close-circle {
+    left: 0 !important;
+    right: auto !important;
+}
+
+::ng-deep .ant-input-suffix {
+    left: 12px !important;
+    right: auto !important;
+}
+
+// כפתורים - עיצוב משופר
+::ng-deep .ant-btn {
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+// מרכז את הכפתורים
+::ng-deep nz-form-item:last-child {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+::ng-deep nz-form-item:last-child .ant-form-item-control-input {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+::ng-deep .ant-btn-primary {
+    background: #1890ff;
+    border-color: #1890ff;
+    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+}
+
+::ng-deep .ant-btn-primary:hover {
+    background: #40a9ff;
+    border-color: #40a9ff;
+    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+}
+
+::ng-deep .ant-btn-default {
+    background: white;
+    border-color: #d9d9d9;
+    color: #595959;
+}
+
+::ng-deep .ant-btn-default:hover {
+    border-color: #40a9ff;
+    color: #40a9ff;
+}

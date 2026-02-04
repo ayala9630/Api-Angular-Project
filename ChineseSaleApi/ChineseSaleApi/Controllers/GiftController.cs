@@ -60,7 +60,7 @@ namespace ChineseSaleApi.Controllers
         {
             try
             {
-                var pagedGifts = await _service.GetGiftsByUserWithPagination(lotteryId, userId, paginationParams);
+                var pagedGifts = await _service.GetGiftsByUserWithPagination(lotteryId, userId, paginationParams,Request);
                 return Ok(pagedGifts);
             }
             catch (Exception ex)
@@ -71,10 +71,19 @@ namespace ChineseSaleApi.Controllers
         }
 
         [HttpGet("lottery/{lotteryId}/search-pagination")]
-        public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] string? name, [FromQuery] string? donor)
+        public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto? paginationParams, [FromQuery] string? name, [FromQuery] string? donor)
         {
             try
             {
+                if(paginationParams == null)
+                {
+                    var defaultPagination = new PaginationParamsDto
+                    {
+                        PageNumber = 1,
+                        PageSize = 10
+                    };
+                    paginationParams = defaultPagination;
+                }
                 if (name != null)
                 {
                     var pagedGiftsName = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, name, "name");

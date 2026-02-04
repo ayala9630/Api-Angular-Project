@@ -1,0 +1,25 @@
+<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+  <h2 class="form-title">התחברות</h2>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>שם משתמש</nz-form-label>
+    <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="userName" placeholder="שם משתמש" />
+      <ng-template #userErrorTpl let-control>
+        @if (control.errors?.['required']) {
+        בבקשה הזן את שם המשתמש שלך!
+        }
+        @if (control.errors?.['duplicated']) {
+        שם המשתמש כבר קיים!
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>סיסמה</nz-form-label>
+    <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את הסיסמה שלך!">
+      <input nz-input type="password" formControlName="password" placeholder="סיסמה" />
+    </nz-form-control>
+  </nz-form-item>
+  <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">אישור</button>
+  <a> אין לך חשבון? הרשם עכשיו!</a>
+</form>

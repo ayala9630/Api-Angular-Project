@@ -60,8 +60,8 @@ namespace ChineseSaleApi.Services
                     AddressId = idAddress
                 };
 
-                // send welcome email (synchronous method in your EmailService)
-                _emailService.SendEmail(new EmailRequestDto()
+                //send welcome email(synchronous method in your EmailService)
+                   _emailService.SendEmail(new EmailRequestDto()
                 {
                     To = createUserDto.Email,
                     Subject = "ברוכים הבאים ל‑Chinese Sale — הרשמתך להגרלה",
