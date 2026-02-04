@@ -17,7 +17,7 @@ public class TokenService : ITokenService
         _logger = logger;
     }
 
-    public string GenerateToken(int userId, string email, string firstName, string lastName)
+    public string GenerateToken(int userId, string email, string firstName, string lastName, bool? isAdmin)
     {
         try
         {
@@ -36,6 +36,9 @@ public class TokenService : ITokenService
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(JwtRegisteredClaimNames.GivenName, firstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
+                new Claim("firstName",firstName.ToLowerInvariant()),
+                new Claim("lastName",lastName.ToLowerInvariant()),
+                new Claim("isAdmin",isAdmin.ToString().ToLowerInvariant()),
                 //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             };

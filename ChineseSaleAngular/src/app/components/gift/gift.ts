@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, SimpleChanges } from '@angular/core';
 import { GiftService } from '../../services/gift/gift.service';
 import { GlobalService } from '../../services/global/global.service';
 import { CreateGift, Gift as GiftModel, GiftWithOldPurchase } from '../../models/gift';
@@ -8,12 +8,13 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CardCarts, PaginatedResult } from '../../models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CookieService } from 'ngx-cookie-service';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { FormsModule } from '@angular/forms';
-import {ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+// import { getClaim } from 'src/app/utils/token.util';
 @Component({
   selector: 'app-gift',
   imports: [NzAvatarModule, NzCardModule, NzIconModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, FormsModule, ReactiveFormsModule],
@@ -37,19 +38,17 @@ export class Gift {
   private fb = inject(NonNullableFormBuilder)
 
 
-  giftData: CreateGift = {
-    name: '',
-    description: '',
-    price: 0,
-    giftValue: 0,
-    imageUrl: '',
-    isPackageAble: false,
-    donorId: 0,
-    categoryId: 0,
-    lotteryId: this.currentLotteryId,
-  }
-
-
+  // giftData: CreateGift = {
+  //   name: '',
+  //   description: '',
+  //   price: 0,
+  //   giftValue: 0,
+  //   imageUrl: '',
+  //   isPackageAble: false,
+  //   donorId: 0,
+  //   categoryId: 0,
+  //   lotteryId: this.currentLotteryId,
+  // }
 
 
   validateForm = this.fb.group({
@@ -62,9 +61,9 @@ export class Gift {
     donorId: [0, [Validators.required, Validators.min(1)]],
     categoryId: [0, [Validators.min(1)]],
     lotteryId: [this.currentLotteryId, [Validators.required]],
-
-
   });
+
+
   uploadData(): void {
     this.giftService.getGifts(this.currentLotteryId).subscribe((gifts) => {
       console.log(gifts);
@@ -73,8 +72,21 @@ export class Gift {
     });
   }
 
+  edit() {
+    this.validateForm.patchValue({
+      name: this.validateForm.value.name,
+      description: this.validateForm.value.description,
+      price: this.validateForm.value.price,
+      giftValue: this.validateForm.value.giftValue,
+      imageUrl: this.validateForm.value.imageUrl,
+      isPackageAble: this.validateForm.value.isPackageAble,
+      donorId: this.validateForm.value.donorId,
+      categoryId: this.validateForm.value.categoryId,
+      lotteryId: this.currentLotteryId,
+    });
 
- 
+  }
+
   showModal2(): void {
     this.isVisible = true;
   };
@@ -82,11 +94,13 @@ export class Gift {
 
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
+    const token = this.cookieService.get('authToken') || '';
+    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
     // this.cookieService.set('cardCart', [], 7);
     this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
     this.uploadData()
   }
- 
+
   resetForm(e: MouseEvent): void {
     e.preventDefault();
     this.validateForm.reset();
@@ -116,29 +130,44 @@ export class Gift {
     const cartItem = this.cart.find(item => item.giftId === giftId);
     return cartItem ? cartItem.quantity : 0;
   }
- 
+
   submitForm(): void {
     console.log('submit', this.validateForm.value);
   }
 
 
+  ngOnChanges(c: SimpleChanges): void {
+    this.currentLotteryId = this.global.currentLotteryId();
+    this.uploadData();
+    // this.validateForm = new FormGroup({
+    //   name: this.fb.group(['', [Validators.required]]),
+    //   description:this.fb.group( ['']),
+    //   price: this.fb.group([0, [Validators.required, Validators.min(0)]]),
+    //   giftValue: this.fb.group([0, [Validators.required, Validators.min(0)]]),
+    //   imageUrl: this.fb.group(['']),
+    //   isPackageAble: this.fb.group([false]),
+    //   donorId: this.fb.group([0, [Validators.required, Validators.min(1)]]),
+    //   categoryId: this.fb.group([0, [Validators.min(1)]]),
+    //   lotteryId: this.fb.group([this.currentLotteryId, [Validators.required]]),
+    // });
+  }
 
 
   handleOk(): void {
-    this.giftData = {
-      name: this.validateForm.value.name || '',
-      description: this.validateForm.value.description || '',
-      price: this.validateForm.value.price || 0,
-      giftValue: this.validateForm.value.giftValue || 0,
-      imageUrl: this.validateForm.value.imageUrl || '',
-      isPackageAble: this.validateForm.value.isPackageAble || false,
-      donorId: this.validateForm.value.donorId || 0,
-      categoryId: this.validateForm.value.categoryId || 0,
-      lotteryId: this.currentLotteryId,
-    }
+    // this.giftData = {
+    //   name: this.validateForm.value.name || '',
+    //   description: this.validateForm.value.description || '',
+    //   price: this.validateForm.value.price || 0,
+    //   giftValue: this.validateForm.value.giftValue || 0,
+    //   imageUrl: this.validateForm.value.imageUrl || '',
+    //   isPackageAble: this.validateForm.value.isPackageAble || false,
+    //   donorId: this.validateForm.value.donorId || 0,
+    //   categoryId: this.validateForm.value.categoryId || 0,
+    //   lotteryId: this.currentLotteryId,
+    // }
     this.resetForm(new MouseEvent('click'));
     this.isConfirmLoading = true;
-    this.giftService.createGift(this.giftData).subscribe((newGift: GiftModel) => {
+    this.giftService.createGift(this.validateForm.value as CreateGift).subscribe((newGift: GiftModel) => {
       this.uploadData();
       console.log(newGift);
     });

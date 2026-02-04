@@ -7,15 +7,17 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { UserService } from '../../services/user/user.service';
 import { LoginRequest } from '../../models';
+import { RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, NzButtonModule, NzCheckboxModule, NzFormModule, NzInputModule],
+  imports: [RouterModule, ReactiveFormsModule, NzButtonModule, NzCheckboxModule, NzFormModule, NzInputModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private cookieService:CookieService) {}
 
   private fb = inject(NonNullableFormBuilder);
   validateForm = this.fb.group({
@@ -29,8 +31,9 @@ export class Login {
       this.userService.login(this.validateForm.value as LoginRequest).subscribe({
         next: (user) => {
           console.log('User logged in successfully:', user);
+          this.cookieService.set('auth_token', user.token);
         }
-      });
+    });
     // } else {
     //   Object.values(this.validateForm.controls).forEach(control => {
     //     if (control.invalid) {

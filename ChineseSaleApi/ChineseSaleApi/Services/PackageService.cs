@@ -30,7 +30,7 @@ namespace ChineseSaleApi.Services
                     Description = createPackageDto.Description,
                     NumOfCards = createPackageDto.NumOfCards,
                     Price = createPackageDto.Price,
-                    LoterryId = createPackageDto.LoterryId
+                    LotteryId = createPackageDto.LotteryId
                 };
                 return await _repository.AddPackage(package);
             }
@@ -62,7 +62,7 @@ namespace ChineseSaleApi.Services
                     Description = package.Description,
                     NumOfCards = package.NumOfCards,
                     Price = package.Price,
-                    LoterryId = package.LoterryId
+                    LotteryId = package.LotteryId
                 };
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace ChineseSaleApi.Services
                     Description = package.Description,
                     NumOfCards = package.NumOfCards,
                     Price = package.Price,
-                    LoterryId = package.LoterryId
+                    LotteryId = package.LotteryId
                 }).ToList();
             }
             catch (Exception ex)
@@ -104,7 +104,7 @@ namespace ChineseSaleApi.Services
                     package.Description = packageDto.Description ?? package.Description;
                     package.NumOfCards = packageDto.NumOfCards ?? package.NumOfCards;
                     package.Price = packageDto.Price ?? package.Price;  
-                    package.LoterryId = packageDto.LoterryId ?? package.LoterryId;
+                    package.LotteryId = packageDto.LotteryId ?? package.LotteryId;
                     await _repository.UpdatePackage(package);
                     return true;
                 }

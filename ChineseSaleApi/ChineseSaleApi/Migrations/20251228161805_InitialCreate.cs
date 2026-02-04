@@ -121,14 +121,14 @@ namespace ChineseSaleApi.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     NumOfCards = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
-                    LoterryId = table.Column<int>(type: "int", nullable: false)
+                    LotteryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Packages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Packages_Lotteries_LoterryId",
-                        column: x => x.LoterryId,
+                        name: "FK_Packages_Lotteries_LotteryId",
+                        column: x => x.LotteryId,
                         principalTable: "Lotteries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -333,9 +333,9 @@ namespace ChineseSaleApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Packages_LoterryId",
+                name: "IX_Packages_LotteryId",
                 table: "Packages",
-                column: "LoterryId");
+                column: "LotteryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AddressId",

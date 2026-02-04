@@ -66,7 +66,7 @@ namespace ChineseSaleApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to add package for lottery {LotteryId}.", createPackageDto?.LoterryId);
+                _logger.LogError(ex, "Failed to add package for lottery {LotteryId}.", createPackageDto?.LotteryId);
                 return StatusCode(500, "An unexpected error occurred while adding the package.");
             }
         }

@@ -241,7 +241,7 @@ namespace ChineseSaleApi.Services
                     return null;
                 }
 
-                var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName);
+                var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName, user.IsAdmin);
                 var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 60);
 
                 // send login notification

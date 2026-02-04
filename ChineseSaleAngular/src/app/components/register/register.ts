@@ -16,17 +16,18 @@ import { Address } from "../address/address";
 import { CreateAddress, CreateUser } from '../../models';
 import { UserService } from '../../services/user/user.service';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, Address, NzCollapseModule],
+  imports: [RouterModule,ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, Address, NzCollapseModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class Register {
 
-  constructor(private userService: UserService){}
+  constructor(private userService: UserService) { }
 
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
@@ -37,7 +38,7 @@ export class Register {
     confirm: this.fb.control('', [this.confirmValidator]),
     phone: this.fb.control('', [Validators.required, Validators.pattern(/^0[1-9]\d{7,8}$/)]),
     firstName: this.fb.control(''),
-    lastName: this.fb.control('',[Validators.required]),
+    lastName: this.fb.control('', [Validators.required]),
     address: this.fb.control<CreateAddress | null>(null, [Validators.required]),
   });
 
@@ -59,8 +60,10 @@ export class Register {
         console.log('User registered successfully:', user);
       }
     });
+    this.resetForm(new MouseEvent('click'));
+
   }
-  
+
   addAddress(newAddress: CreateAddress): void {
     console.log("newAddress", newAddress);
     this.validateForm.controls.address.setValue(newAddress);

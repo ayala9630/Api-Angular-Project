@@ -17,7 +17,7 @@ namespace ChineseSaleApi.Dto
         [Required]
         public int Price { get; set; }
         [Required]
-        public int LoterryId { get; set; }
+        public int LotteryId { get; set; }
     }
     public class CreatePackageDto
     {
@@ -31,7 +31,7 @@ namespace ChineseSaleApi.Dto
         [Required]
         public int Price { get; set; }
         [Required]
-        public int LoterryId { get; set; }
+        public int LotteryId { get; set; }
     }
     public class UpdatePackageDto
     {
@@ -43,6 +43,6 @@ namespace ChineseSaleApi.Dto
         public string? Description { get; set; }
         public int? NumOfCards { get; set; }
         public int? Price { get; set; }
-        public int? LoterryId { get; set; }
+        public int? LotteryId { get; set; }
     }
 }

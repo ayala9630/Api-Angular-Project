@@ -19,6 +19,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { GlobalService } from '../../services/global/global.service';
 import { CookieService } from 'ngx-cookie-service';
+import { getClaim } from '../../utils/token.util';
 
 
 @Component({
@@ -26,10 +27,10 @@ import { CookieService } from 'ngx-cookie-service';
   imports: [NzAvatarModule, NzCardModule, NzIconModule, FormsModule, NzInputNumberModule, NzButtonModule, NzModalModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule],
   templateUrl: './package.html',
   styleUrl: './package.scss',
-})
+})  
 export class Package {
   constructor(private packageService: PackageService, private modal: NzModalService, private global: GlobalService, private cookieService: CookieService) { }
-
+  
   allPackages: PackageModel[] = [];
   admin: boolean = false;
   value = 0;
@@ -37,7 +38,18 @@ export class Package {
   isConfirmLoading = false;
   currentLotteryId = signal(0);
   packageCart: PackageCarts[] = [];
-
+  token: string = '';
+  isLogin = false;
+  
+  ngOnInit() {
+    this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
+    this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
+    this.token = this.cookieService.get('auth_token') || '';
+    this.admin = getClaim(this.token, 'IsAdmin') ==='true';
+    console.log(this.admin);
+    this.isLogin = this.token !== '';
+  }
+  
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
 
@@ -47,46 +59,46 @@ export class Package {
     description: [''],
     numOfCards: [0, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    loterryId: [this.currentLotteryId(), [Validators.required]],
-  });
+    LotteryId: [this.currentLotteryId(), [Validators.required]],
+  });  
 
   packageData: CreatePackage = {
     name: '',
     description: '',
     numOfCards: 0,
     price: 0,
-    loterryId: this.currentLotteryId(),
-  }
+    LotteryId: this.currentLotteryId(),
+  }  
 
   private lotteryEffect = effect(() => {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     const lottery = this.global.currentLottery();
     this.uploadData();
-  });
+  });  
 
   uploadData() {
     this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
       this.allPackages = packages;
-    });
-  }
+    });  
+  }  
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
+  }  
 
   submitForm(): void {
     console.log('submit', this.validateForm.value);
-  }
+  }  
 
   resetForm(e: MouseEvent): void {
     e.preventDefault();
     this.validateForm.reset();
-  }
+  }  
 
   showModal2(): void {
     this.isVisible = true;
-  };
+  };  
 
   handleOk(): void {
     this.packageData = {
@@ -94,27 +106,22 @@ export class Package {
       description: this.validateForm.value.description || '',
       numOfCards: this.validateForm.value.numOfCards || 0,
       price: this.validateForm.value.price || 0,
-      loterryId: this.currentLotteryId(),
-    }
+      LotteryId: this.currentLotteryId(),
+    }  
     this.resetForm(new MouseEvent('click'));
     this.isConfirmLoading = true;
     this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
       console.log('New package added with ID:', newPackageId);
       // Optionally, refresh the package list or perform other actions
       this.uploadData();
-    });
+    });  
     this.isVisible = false;
     this.isConfirmLoading = false;
-  }
+  }  
 
   handleCancel(): void {
     this.isVisible = false;
-  }
-
-  ngOnInit() {
-    this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
-    this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
-  }
+  }  
 
 
   updatePackage(packageId: number, qty: number): void {

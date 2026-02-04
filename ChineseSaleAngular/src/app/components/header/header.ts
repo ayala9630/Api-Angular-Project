@@ -7,10 +7,11 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { LotteryService } from '../../services/lottery/lottery.service';
 import { Lottery } from '../../models';
 import { GlobalService } from '../../services/global/global.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [NzIconModule, NzMenuModule,FormsModule, NzSelectModule],
+  imports: [RouterModule,NzIconModule, NzMenuModule,FormsModule, NzSelectModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

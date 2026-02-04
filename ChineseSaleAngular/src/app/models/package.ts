@@ -4,7 +4,7 @@ export interface Package {
   description?: string;
   numOfCards: number;
   price: number;
-  loterryId: number;
+  LotteryId: number;
 }
 
 export interface CreatePackage {
@@ -12,7 +12,7 @@ export interface CreatePackage {
   description?: string;
   numOfCards: number;
   price: number;
-  loterryId: number;
+  LotteryId: number;
 }
 
 export interface UpdatePackage {
@@ -21,5 +21,5 @@ export interface UpdatePackage {
   description?: string;
   numOfCards?: number;
   price?: number;
-  loterryId?: number;
+  LotteryId?: number;
 }
