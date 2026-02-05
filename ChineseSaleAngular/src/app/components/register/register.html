@@ -1,0 +1,83 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם משתמש</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="מאמת..." [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="userName" placeholder="שם משתמש" />
+            <ng-template #userErrorTpl let-control>
+                @if (control.errors?.['required']) {
+                בבקשה להזין שם משתמש!
+                }
+                @if (control.errors?.['duplicated']) {
+                שם המשתמש כבר קיים!
+                }
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>מייל</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+            <input nz-input formControlName="email" placeholder="מייל" type="email" />
+            <ng-template #emailErrorTpl let-control>
+                @if (control.errors?.['email']) {
+                אימייל לא חוקי!
+                }
+                @if (control.errors?.['required']) {
+                בבקשה להזין מייל!
+                }
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>סיסמה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין סיסמה!">
+            <input nz-input type="password" formControlName="password" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>אימות סיסמה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+            <input nz-input type="password" formControlName="confirm" placeholder="אימות סיסמה" />
+            <ng-template #passwordErrorTpl let-control>
+                @if (control.errors?.['required']) {
+                בבקשה להזין סיסמה!
+                }
+                @if (control.errors?.['confirm']) {
+                סיסמה לא תואמת!
+                }
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם פרטי</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין שם פרטי!">
+            <input nz-input formControlName="firstName" placeholder="שם פרטי" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם משפחה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין שם משפחה!">
+            <input nz-input formControlName="lastName" placeholder="שם משפחה" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>מספר טלפון</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+            <input nz-input formControlName="phone" placeholder="מספר טלפון" />
+            <ng-template #phoneErrorTpl let-control>
+                @if (control.errors?.['required']) {
+                בבקשה להזין מספר טלפון!
+                }
+                @if (control.errors?.['pattern']) {
+                מספר טלפון לא חוקי!
+                }
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <app-address (addressChanged)="addAddress($event)"></app-address>
+    <nz-form-item>
+        <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary" [disabled]="!validateForm.valid">אישור</button>
+            <button nz-button (click)="resetForm($event)">ביטול</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

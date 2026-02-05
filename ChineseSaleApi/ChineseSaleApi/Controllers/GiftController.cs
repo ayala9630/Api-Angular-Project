@@ -124,12 +124,22 @@ namespace ChineseSaleApi.Controllers
                 var createdGiftId = await _service.AddGift(gift);
                 return CreatedAtAction(nameof(GetGiftById), new { id = createdGiftId }, gift);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to add gift for lottery {LotteryId}.", gift?.LotteryId);
-                return StatusCode(500, "An unexpected error occurred while adding the gift.");
-            }
-        }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException dbEx)
+    {
+        _logger.LogError(dbEx, "Database error while adding gift for lottery {LotteryId}. Inner: {Inner}", gift?.LotteryId, dbEx.InnerException?.Message);
+        return StatusCode(503, "Database error. See server logs.");
+    }
+    catch (ArgumentException argEx)
+    {
+        _logger.LogWarning(argEx, "Invalid request when adding gift for lottery {LotteryId}.", gift?.LotteryId);
+        return BadRequest(argEx.Message);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Failed to add gift for lottery {LotteryId}.", gift?.LotteryId);
+        return StatusCode(500, "An unexpected error occurred while adding the gift.");
+    }
+}
 
         //update
         [HttpPut]

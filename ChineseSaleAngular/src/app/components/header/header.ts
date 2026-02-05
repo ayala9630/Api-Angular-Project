@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { FormsModule } from '@angular/forms';
+
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { LotteryService } from '../../services/lottery/lottery.service';
 import { Lottery } from '../../models';
@@ -14,22 +15,25 @@ import { GlobalService } from '../../services/global/global.service';
   styleUrl: './header.scss',
 })
 export class Header {
-  constructor(private lotteryService: LotteryService,private global:GlobalService) {}
-  
-  lotteryData :Lottery[] = [];
-  selectedLottery :Lottery|null = null;
+
+constructor(private lotteryService: LotteryService, private global: GlobalService) {}
+
+  lotteryData: Lottery[] = [];
+  selectedLottery:Lottery | undefined;
 
   ngOnInit() {
-    this.lotteryService.getAllLotteries().subscribe((lotteries) => {
-      this.lotteryData = lotteries;
-      this.selectedLottery=this.lotteryData[this.lotteryData.length-1];
-      this.global.setCurrentLottery(this.selectedLottery);
+    this.lotteryService.getAllLotteries().subscribe((data: Lottery[]) => {
+      this.lotteryData = data;
+      this.selectedLottery = this.lotteryData[this.lotteryData.length -1];
+      this.global.currentLottery.set(this.selectedLottery);
     });
   }
-
+  
   lotteryChange(value: Lottery): void {
     this.selectedLottery = value;
-    this.global.setCurrentLottery(this.selectedLottery);
+    this.global.currentLottery.set(this.selectedLottery);
+    console.log(this.global.currentLottery());
+    console.log(this.global.currentLotteryId());
+    
   }
-  
 }

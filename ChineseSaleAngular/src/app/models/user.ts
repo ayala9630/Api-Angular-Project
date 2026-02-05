@@ -1,4 +1,4 @@
-import { Address, CreateAddressForUser } from './address';
+import { Address, CreateAddress } from './address';
 
 export interface CreateUser {
   username: string;
@@ -7,7 +7,7 @@ export interface CreateUser {
   lastName: string;
   email: string;
   phone?: string;
-  address?: CreateAddressForUser;
+  address?: CreateAddress;
 }
 
 export interface User {

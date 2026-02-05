@@ -19,6 +19,7 @@ export class GiftService {
     pageNumber?: number,
     pageSize?: number,
     name?: string,
+    price?: number,
     donor?: string
   ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
     let queryParams = `?lotteryId=${lotteryId}`;
@@ -26,6 +27,7 @@ export class GiftService {
     if (pageNumber !== undefined && pageSize !== undefined)
        queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
     if (name !== undefined) queryParams += `&name=${name}`;
+    if (price !== undefined) queryParams += `&price=${price}`;
     if (donor !== undefined) queryParams += `&donor=${donor}`;
     return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination`);
   }
@@ -44,5 +46,9 @@ export class GiftService {
 
   deleteGift(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  isGiftEligible(gift: Gift): boolean {
+    return gift.price == null || gift.price <= 10;
   }
 }

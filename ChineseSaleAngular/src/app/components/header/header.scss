@@ -1,8 +1,6 @@
-
 ul {
     text-align: center;
 }
-
 
 * {
     margin: 0;
@@ -11,14 +9,12 @@ ul {
     direction: rtl;
 }
 
-
 nz-select {
     direction: ltr;
     margin-right: 8px;
     min-width: 80px;
     display: inline-block;
 }
-
 
 ::ng-deep .ant-select-selector {
     width: 25vh !important;
@@ -31,7 +27,6 @@ nz-select {
     background-color: transparent !important;
 }
 
-
 ::ng-deep .ant-select-selection-item,
 ::ng-deep .ant-select-selection-placeholder {
     white-space: nowrap !important;
@@ -39,22 +34,18 @@ nz-select {
     text-overflow: clip !important;
 }
 
-
 ::ng-deep .ant-select-dropdown {
     min-width: unset !important;
     text-align: end !important;
 }
-
 
 ::ng-deep .ant-select-focused .ant-select-selector {
     border: none !important;
     box-shadow: none !important;
 }
 
-
 .header-container {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
 }
-

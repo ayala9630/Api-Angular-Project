@@ -4,6 +4,7 @@ using ChineseSaleApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChineseSaleApi.Controllers
 {
@@ -63,6 +64,11 @@ namespace ChineseSaleApi.Controllers
             {
                 var id = await _service.AddPackage(createPackageDto);
                 return CreatedAtAction(nameof(GetPackageById), new { id = id }, id);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database unavailable while adding package for lottery {LotteryId}.", createPackageDto?.LoterryId);
+                return StatusCode(503, "Database temporarily unavailable. Try again later.");
             }
             catch (Exception ex)
             {

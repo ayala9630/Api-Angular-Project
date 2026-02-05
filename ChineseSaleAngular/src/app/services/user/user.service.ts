@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User, CreateUser, UpdateUser } from '../../models';
+import { User, CreateUser, UpdateUser, LoginRequest, LoginResponse } from '../../models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,8 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.url}/login`, {
-      userName: username,
-      password: password
-    });
+  login(login:LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.url}/login`, login);
   }
 
   getUserById(id: number): Observable<User> {

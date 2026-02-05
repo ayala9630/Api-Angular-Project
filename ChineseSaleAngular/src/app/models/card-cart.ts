@@ -11,3 +11,7 @@ export interface CreateCardCart {
   userId: number;
   giftId: number;
 }
+export interface CardCarts {
+  giftId: number;
+  quantity: number;
+}

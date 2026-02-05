@@ -1,0 +1,31 @@
+<form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>עיר</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין עיר!">
+            <input nz-input formControlName="city" placeholder="עיר" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>רחוב</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין רחוב!">
+            <input nz-input formControlName="street" placeholder="רחוב" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">מספר בית</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין מספר בית!">
+            <input nz-input formControlName="number" placeholder="מספר בית" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">מיקוד</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="מיקוד לא חוקי!">
+            <input nz-input formControlName="zipCode" placeholder="מיקוד" />
+            <ng-template #zipCodeErrorTpl let-control>
+                @if (control.errors?.["min"] || control.errors?.["max"]) {
+                המיקוד חייב להיות בן 7 ספרות
+                }
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+</form>

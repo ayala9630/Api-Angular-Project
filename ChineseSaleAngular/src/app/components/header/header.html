@@ -1,22 +1,25 @@
 <div class="header-container">
     <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
-        @for (l of lotteryData; track l.id) {
-        <nz-option [nzValue]="l" [nzLabel]="l.name"></nz-option>
+        @for (p of lotteryData; track p.id) {
+        <nz-option [nzValue]="p" [nzLabel]="p.name"></nz-option>
         }
     </nz-select>
     <ul nz-menu nzMode="horizontal">
         <li nz-menu-item>
-            <a href="" rel="noopener noreferrer">הבית</a>
-        </li>
-        <li nz-menu-item>
             <a href="" rel="noopener noreferrer">חבילות</a>
         </li>
+        <!-- target="_blank" אם רוצים לשלוח לדף חדש להוסיף  -->
+
         <li nz-menu-item>
             <a href="" rel="noopener noreferrer">מתנות</a>
         </li>
         <li nz-menu-item>
+            <a href="" rel="noopener noreferrer">בית</a>
+        </li>
+        <li nz-menu-item>
             <a href="" rel="noopener noreferrer">יציאה</a>
         </li>
+
         <li nz-menu-item>
             <a href="" rel="noopener noreferrer">יצירת קשר</a>
         </li>
