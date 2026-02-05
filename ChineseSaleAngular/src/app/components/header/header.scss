@@ -1,0 +1,51 @@
+ul {
+    text-align: center;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    direction: rtl;
+}
+
+nz-select {
+    direction: ltr;
+    margin-right: 8px;
+    min-width: 80px;
+    display: inline-block;
+}
+
+::ng-deep .ant-select-selector {
+    width: 25vh !important;
+    text-align: end !important;
+    display: inline-flex !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+}
+
+::ng-deep .ant-select-selection-item,
+::ng-deep .ant-select-selection-placeholder {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
+::ng-deep .ant-select-dropdown {
+    min-width: unset !important;
+    text-align: end !important;
+}
+
+::ng-deep .ant-select-focused .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.header-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+}

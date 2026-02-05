@@ -265,7 +265,7 @@ namespace ChineseSaleApi.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("LoterryId")
+                    b.Property<int>("LotteryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -281,7 +281,7 @@ namespace ChineseSaleApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoterryId");
+                    b.HasIndex("LotteryId");
 
                     b.ToTable("Packages");
                 });
@@ -460,7 +460,7 @@ namespace ChineseSaleApi.Migrations
                 {
                     b.HasOne("ChineseSaleApi.Models.Lottery", "Lottery")
                         .WithMany("Packages")
-                        .HasForeignKey("LoterryId")
+                        .HasForeignKey("LotteryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -6,17 +6,16 @@ export interface Address {
   zipCode?: number;
 }
 
-export interface CreateAddressForUser {
+export interface CreateAddress {
   city: string;
   street: string;
-  number?: number;
-  zipCode?: number;
-  userId: number;
+  number?: number | null;
+  zipCode?: number | null;
 }
 
 export interface CreateAddressForDonor {
   city: string;
   street: string;
-  number?: number;
-  zipCode?: number;
+  number?: number | null;
+  zipCode?: number | null;
 }

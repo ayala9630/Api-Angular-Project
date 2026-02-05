@@ -60,8 +60,8 @@ namespace ChineseSaleApi.Services
                     AddressId = idAddress
                 };
 
-                // send welcome email (synchronous method in your EmailService)
-                _emailService.SendEmail(new EmailRequestDto()
+                //send welcome email(synchronous method in your EmailService)
+                   _emailService.SendEmail(new EmailRequestDto()
                 {
                     To = createUserDto.Email,
                     Subject = "ברוכים הבאים ל‑Chinese Sale — הרשמתך להגרלה",
@@ -241,7 +241,7 @@ namespace ChineseSaleApi.Services
                     return null;
                 }
 
-                var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName);
+                var token = _tokenService.GenerateToken(user.Id, user.Email, user.FirstName, user.LastName, user.IsAdmin);
                 var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 60);
 
                 // send login notification

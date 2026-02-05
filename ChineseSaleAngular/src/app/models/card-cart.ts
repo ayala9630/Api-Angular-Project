@@ -5,6 +5,11 @@ export interface CardCart {
   giftId: number;
 }
 
+export interface CardCarts {
+  giftId: number;
+  quantity: number;
+}
+
 export interface CreateCardCart {
   id: number;
   quantity: number;

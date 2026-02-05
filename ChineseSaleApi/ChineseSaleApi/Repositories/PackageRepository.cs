@@ -22,7 +22,7 @@ namespace ChineseSaleApi.Repositories
         //read
         public async Task<IEnumerable<Package>> GetAllPackages(int lotteryId)
         {
-            return await _context.Packages.Where(l=>l.LoterryId==lotteryId).ToListAsync();
+            return await _context.Packages.Where(l=>l.LotteryId==lotteryId).ToListAsync();
         }
         public async Task<Package?> GetPackageById(int id)
         {

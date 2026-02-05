@@ -1,10 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Gift } from './components/gift/gift';
+// import { GiftComponent } from './components/gift/gift';
+// import { Gift2Component } from './components/gift2/gift2/gift2';
+import { Package } from './components/package/package';
+import { Container } from './components/container/container';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Gift],
+  imports: [RouterOutlet, Package, Container],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

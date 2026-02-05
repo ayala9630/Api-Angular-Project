@@ -158,6 +158,7 @@ app.UseCors("AllowAllOrigins");
     }
 
     app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
     app.UseAuthentication();
     app.UseAuthorization();

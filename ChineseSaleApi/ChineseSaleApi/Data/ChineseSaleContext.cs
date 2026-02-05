@@ -46,7 +46,7 @@ namespace ChineseSaleApi.Data
             modelBuilder.Entity<Package>()
                 .HasOne(p => p.Lottery)
                 .WithMany(l => l.Packages)
-                .HasForeignKey(p => p.LoterryId)
+                .HasForeignKey(p => p.LotteryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Gift relationships

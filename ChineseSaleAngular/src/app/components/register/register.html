@@ -1,0 +1,94 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+  <h2 class="form-title">הרשמה</h2>
+  <nz-collapse nzAccordion>
+    <nz-collapse-panel nzHeader="פרטי משתמש" nzActive="true" nzShowArrow="true">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם משתמש</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
+          <input nz-input formControlName="userName" placeholder="שם משתמש" />
+          <ng-template #userErrorTpl let-control>
+            @if (control.errors?.['required']) {
+            !בבקשה הזן את שם המשתמש שלך
+            }
+            @if (control.errors?.['duplicated']) {
+            !שם המשתמש כבר קיים
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>אימייל</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" placeholder="אימייל" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            @if (control.errors?.['email']) {
+            !הקלט אינו דואר אלקטרוני חוקי
+            }
+            @if (control.errors?.['required']) {
+            !בבקשה הזן את הדואר האלקטרוני שלך
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>סיסמה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את הסיסמה שלך!">
+          <input nz-input type="password" formControlName="password" placeholder="סיסמה" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>אימות סיסמה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+          <input nz-input type="password" formControlName="confirm" placeholder="אמת את הסיסמה שלך" />
+          <ng-template #passwordErrorTpl let-control>
+            @if (control.errors?.['required']) {
+            בבקשה אמת את הסיסמה שלך!
+            }
+            @if (control.errors?.['confirm']) {
+            הסיסמה אינה תואמת!
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-collapse-panel>
+    <nz-collapse-panel nzHeader="פרטים אישיים" nzShowArrow="true">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>מספר טלפון</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+          <input nz-input formControlName="phone" placeholder="מספר טלפון" />
+          <ng-template #phoneErrorTpl let-control>
+            @if (control.errors?.['required']) {
+            !בבקשה הזן את מספר הטלפון שלך
+            }
+            @if (control.errors?.['pattern']) {
+            !מספר הטלפון אינו חוקי
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את השם הפרטי שלך!">
+          <input nz-input formControlName="firstName" placeholder="שם פרטי" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם משפחה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את שם המשפחה שלך!">
+          <input nz-input formControlName="lastName" placeholder="שם משפחה" />
+        </nz-form-control>
+      </nz-form-item>
+    </nz-collapse-panel>
+    <nz-collapse-panel nzHeader="כתובת" nzShowArrow="true">
+      <app-address (addressChanged)="addAddress($event)"></app-address>
+    </nz-collapse-panel>
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+        <button nz-button nzType="primary" [disabled]="!validateForm.valid">אישור</button>
+        <button nz-button (click)="resetForm($event)">איפוס</button>
+      </nz-form-control>
+    </nz-form-item>
+  </nz-collapse>
+    <a routerLink="/login">יש לך חשבון? התחבר עכשיו!</a>
+
+</form>

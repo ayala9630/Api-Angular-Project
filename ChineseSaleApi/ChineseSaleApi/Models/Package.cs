@@ -17,7 +17,7 @@ namespace ChineseSaleApi.Models
         public int Price { get; set; }
         //forigen key
         [Required]
-        public int LoterryId { get; set; }
+        public int LotteryId { get; set; }
         public Lottery? Lottery { get; set; }
         //ICollection
         public ICollection<PackageCart> PackageCart { get; set; } = new List<PackageCart>();

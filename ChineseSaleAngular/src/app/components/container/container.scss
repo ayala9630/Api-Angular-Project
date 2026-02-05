@@ -1,0 +1,92 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  text-align: center;
+}
+
+nz-header,
+nz-footer {
+  text-align: center;
+  // background: #4096ff;
+  color: #fff;
+}
+
+nz-header {
+  height: 64px;
+  padding-inline: 48px;
+  line-height: 64px;
+}
+
+nz-sider {
+  text-align: center;
+  // background: #1677ff;
+  color: #fff;
+  line-height: 120px;
+}
+
+app-package {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: #f0f2f5;
+}
+
+app-gift {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: #f0f2f5;
+}
+
+nz-content {
+  text-align: center;
+  // background: #0958d9;
+  color: #fff;
+  min-height: calc(100vh - 64px - 48px); /* גובה מסך מלא פחות header ו-footer */
+  line-height: normal;
+  max-height: none; /* הסרת הגבלת גובה */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  scroll-behavior: smooth;
+}
+
+:host>nz-layout {
+  width: calc(100vw);
+  max-width: calc(100vw);
+  min-height: 100vh; /* שינוי מ-height ל-min-height */
+  // border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-layout-header {
+  background: #ffffff;
+}
+
+nz-footer {
+  height: 48px;
+  line-height: 48px;
+}
+
+nz-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+nz-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+nz-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+nz-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

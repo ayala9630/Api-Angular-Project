@@ -5,6 +5,12 @@ export interface PackageCart {
   packageId: number;
 }
 
+export interface PackageCarts {
+  packageId: number;
+  quantity: number;
+}
+
+
 export interface CreatePackageCart {
   quantity: number;
   userId: number;

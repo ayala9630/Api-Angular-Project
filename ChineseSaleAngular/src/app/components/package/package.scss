@@ -1,0 +1,35 @@
+.cart-with-plus {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+
+  nz-icon:first-child {
+    font-size: 18px;
+  }
+
+  nz-icon.plus-icon {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+}
+
+
+  [nz-form] {
+        max-width: 600px;
+      }
+
+      button {
+        margin-left: 8px;
+      }
+      

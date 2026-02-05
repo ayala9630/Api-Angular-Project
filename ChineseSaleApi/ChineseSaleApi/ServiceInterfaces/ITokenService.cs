@@ -2,6 +2,6 @@
 {
     public interface ITokenService
     {
-        string GenerateToken(int userId, string email, string firstName, string lastName);
+        string GenerateToken(int userId, string email, string firstName, string lastName, bool? isAdmin);
     }
 }
