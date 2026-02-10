@@ -116,6 +116,14 @@ input {
     color: #40a9ff;
 }
 
+// כפתורי איפוס - הצמדה לצד ללא מרווחים
+::ng-deep nz-collapse-panel button.ant-btn:not(.ant-btn-primary) {
+    margin: 0 !important;
+    display: block;
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+}
+
 // Collapse
 ::ng-deep .ant-collapse {
     border-radius: 8px;

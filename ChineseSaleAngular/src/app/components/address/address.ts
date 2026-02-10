@@ -50,6 +50,4 @@ export class Address {
     e.preventDefault();
     this.validateForm.reset();
   }
-
-
 }

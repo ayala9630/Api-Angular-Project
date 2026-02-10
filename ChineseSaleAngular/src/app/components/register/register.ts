@@ -6,8 +6,8 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { Observable, Observer, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Observer, Subject, of } from 'rxjs';
+import { takeUntil, map, catchError } from 'rxjs/operators';
 
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -27,13 +27,11 @@ import { RouterModule } from '@angular/router';
 })
 export class Register {
 
-  constructor(private userService: UserService) { }
-
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
   validateForm = this.fb.group({
-    userName: this.fb.control('', [Validators.required], [this.userNameAsyncValidator]),
-    email: this.fb.control('', [Validators.email, Validators.required]),
+    userName: this.fb.control('', [Validators.required], [this.userNameAsyncValidator.bind(this)]),
+    email: this.fb.control('', [Validators.email, Validators.required], [this.emailAsyncValidator.bind(this)]),
     password: this.fb.control('', [Validators.required]),
     confirm: this.fb.control('', [this.confirmValidator]),
     phone: this.fb.control('', [Validators.required, Validators.pattern(/^0[1-9]\d{7,8}$/)]),
@@ -41,6 +39,8 @@ export class Register {
     lastName: this.fb.control('', [Validators.required]),
     address: this.fb.control<CreateAddress | null>(null, [Validators.required]),
   });
+
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.validateForm.controls.password.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -54,14 +54,13 @@ export class Register {
   }
 
   submitForm(): void {
-    // console.log('submit', this.validateForm.value);
     this.userService.registerUser(this.validateForm.value as CreateUser).subscribe({
       next: (user) => {
         console.log('User registered successfully:', user);
       }
     });
-    this.resetForm(new MouseEvent('click'));
-
+    this.resetForm1(new MouseEvent('click'));
+    this.resetForm2(new MouseEvent('click'));
   }
 
   addAddress(newAddress: CreateAddress): void {
@@ -69,25 +68,52 @@ export class Register {
     this.validateForm.controls.address.setValue(newAddress);
   }
 
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
-    this.validateForm.reset();
+  resetForm1(e: MouseEvent): void {
+    this.validateForm.controls.userName.reset('');
+    this.validateForm.controls.email.reset('');
+    this.validateForm.controls.password.reset('');
+    this.validateForm.controls.confirm.reset('');
+  }
+
+  resetForm2(e: MouseEvent): void {
+    this.validateForm.controls.phone.reset('');
+    this.validateForm.controls.firstName.reset('');
+    this.validateForm.controls.lastName.reset('');
   }
 
   userNameAsyncValidator(control: AbstractControl): Observable<ValidationErrors | null> {
-    return new Observable((observer: Observer<ValidationErrors | null>) => {
-      setTimeout(() => {
-        if (control.value === 'JasonWood') {
-          // you have to return `{error: true}` to mark it as an error event
-          observer.next({ error: true, duplicated: true });
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-      }, 1000);
-    });
+    if (!control.value) {
+      return of(null);
+    }
+    console.log('Checking username:', control.value);
+    return this.userService.isUserNameExists(control.value).pipe(
+      map(exists => {
+        console.log('Username exists:', exists);
+        return exists ? { error: true, duplicated: true } : null;
+      }),
+      catchError((error) => {
+        console.error('Error checking username:', error);
+        return of(null);
+      })
+    );
   }
 
+  emailAsyncValidator(control: AbstractControl): Observable<ValidationErrors | null> {
+    if (!control.value) {
+      return of(null);
+    }
+    console.log('Checking email:', control.value);
+    return this.userService.isEmailExists(control.value).pipe(
+      map(exists => {
+        console.log('Email exists:', exists);
+        return exists ? { error: true, duplicated: true } : null;
+      }),
+      catchError((error) => {
+        console.error('Error checking email:', error);
+        return of(null);
+      })
+    );
+  }
   confirmValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
       return { error: true, required: true };
