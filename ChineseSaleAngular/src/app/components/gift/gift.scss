@@ -32,3 +32,10 @@
 button {
     margin-left: 8px;
 }
+.giftList{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px; /* רווח בין הכרטיסים, ניתן לשנות */
+    justify-content: flex-start; /* או center/space-between לפי הצורך */
+
+}

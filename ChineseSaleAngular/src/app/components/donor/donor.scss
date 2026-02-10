@@ -1,0 +1,39 @@
+.donor-card {
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.donor-cover {
+  height: 160px;
+  background-size: no-repeat;
+  background-position: center;
+  background-color: #f0f2f5;
+}
+
+.card-section {
+  padding: 16px;
+}
+
+.loading-text {
+  padding: 16px;
+  text-align: center;
+}
+.nz-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+.section-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.gift-qty {
+  font-weight: 600;
+  color: #1677ff;
+}
+
+.empty-gifts {
+  color: #8c8c8c;
+}

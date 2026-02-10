@@ -1,7 +1,24 @@
-      [nz-form] {
-          max-width: 600px;
-      }
+[nz-form] {
+    max-width: 600px;
+}
 
-      button {
-          margin-left: 8px;
-      }
+button {
+    margin-left: 8px;
+}
+
+nz-form-item {
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+nz-form-label {
+    text-align: left;
+    direction: rtl;
+}
+
+input{
+  text-align: center;
+}

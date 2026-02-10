@@ -30,26 +30,12 @@ export class Gift {
     private cookieService: CookieService) { }
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
-  admin: boolean = false;
+  admin: boolean = true;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible = false;
   isConfirmLoading = false;
   private fb = inject(NonNullableFormBuilder)
-
-
-  // giftData: CreateGift = {
-  //   name: '',
-  //   description: '',
-  //   price: 0,
-  //   giftValue: 0,
-  //   imageUrl: '',
-  //   isPackageAble: false,
-  //   donorId: 0,
-  //   categoryId: 0,
-  //   lotteryId: this.currentLotteryId,
-  // }
-
 
   validateForm = this.fb.group({
     name: ['', [Validators.required]],

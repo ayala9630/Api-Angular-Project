@@ -1,0 +1,78 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <h2 class="form-title">הוספת תורם</h2>
+    <nz-collapse nzAccordion>
+        <nz-collapse-panel nzHeader="פרטי התורם" nzActive="true" nzShowArrow="true">
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input formControlName="firstName" placeholder="שם פרטי" />
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input formControlName="lastName" placeholder="שם משפחה" />
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7">שם משפחה</nz-form-label>
+            </nz-form-item>
+        </nz-collapse-panel>
+
+        <nz-collapse-panel nzHeader="פרטי החברה" nzShowArrow="true">
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyNameErrorTpl">
+                    <input nz-input formControlName="companyName" placeholder="שם חברה" />
+                    <ng-template #companyNameErrorTpl let-control>
+                        @if (control.errors?.['required']) {
+                            בבקשה הזן את שם החברה!
+                        }
+                    </ng-template>
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7" nzRequired>שם החברה</nz-form-label>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyPhoneErrorTpl">
+                    <input nz-input formControlName="companyPhone" placeholder="טלפון חברה" />
+                    <ng-template #companyPhoneErrorTpl let-control>
+                        @if (control.errors?.['pattern']) {
+                            נא להזין מספר טלפון תקין בין 9 ל-10 ספרות!
+                        }
+                    </ng-template>
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7" nzRequired>טלפון חברה</nz-form-label>
+            </nz-form-item>
+            
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input formControlName="companyIcon" placeholder="קישור לאייקון החברה" />
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7">אייקון חברה</nz-form-label>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyEmailErrorTpl">
+                    <input nz-input formControlName="companyEmail" placeholder="אימייל חברה" type="email" />
+                    <ng-template #companyEmailErrorTpl let-control>
+                        @if (control.errors?.['email']) {
+                            הקלט אינו דואר אלקטרוני חוקי
+                        }
+                        @if (control.errors?.['required']) {
+                            בבקשה הזן את הדואר האלקטרוני של החברה
+                        }
+                    </ng-template>
+                </nz-form-control>
+                <nz-form-label [nzSpan]="7" nzRequired>אימייל חברה</nz-form-label>
+            </nz-form-item>
+        </nz-collapse-panel>
+
+        <nz-collapse-panel nzHeader="כתובת החברה" nzShowArrow="true">
+            <app-address (addressChanged)="addAddress($event)"></app-address>
+        </nz-collapse-panel>
+
+        <nz-form-item >
+            <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                <button nz-button nzType="primary" [disabled]="!validateForm.valid">אישור</button>
+                <button nz-button (click)="resetForm($event)">איפוס</button>
+            </nz-form-control>
+        </nz-form-item>
+    </nz-collapse>
+</form>

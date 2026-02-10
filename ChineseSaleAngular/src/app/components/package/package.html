@@ -1,5 +1,6 @@
-@for(package of allPackages; track package.id) {
-<nz-card style="width:300px;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
+<div class="giftList">
+  @for(package of allPackages; track package.id) {
+    <nz-card style="width:300px;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
   <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
 </nz-card>
 <ng-template #avatarTemplate>
@@ -10,7 +11,7 @@
 </ng-template>
 <ng-template #rightAction>
   @if(admin){
-  <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
+    <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
   }
   @else {
     <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
@@ -22,29 +23,29 @@
   }
   <!-- @if(!admin){
     <div class="cart-with-plus">
-        <nz-icon nzType="shopping-cart" nzTheme="outline" nzTwotoneColor="#52c41a" [nzRotate]="0">
-        </nz-icon>
-        <nz-icon nzType="plus" nzTheme="outline" class="plus-icon" nzTwotoneColor="#52c41a" [nzRotate]="0">
-        </nz-icon>
+      <nz-icon nzType="shopping-cart" nzTheme="outline" nzTwotoneColor="#52c41a" [nzRotate]="0">
+      </nz-icon>
+      <nz-icon nzType="plus" nzTheme="outline" class="plus-icon" nzTwotoneColor="#52c41a" [nzRotate]="0">
+      </nz-icon>
     </div>
     } -->
-</ng-template>
-<ng-template #leftAction>
-  @if(admin){
-  <nz-icon nzType="edit" />
-  }
-  @else {
+  </ng-template>
+  <ng-template #leftAction>
+    @if(admin){
+      <nz-icon nzType="edit" />
+    }
+    @else {
       <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
-
-  }
-</ng-template>
+      
+    }
+  </ng-template>
 }
-
-
-
+</div>
+@if(admin){
 <button nz-button nzType="primary" (click)="showModal2()">
-  <span>הוסף קטגוריה</span>
+  <span>הוסף חבילה</span>
 </button>
+}
 
 <nz-modal [(nzVisible)]="isVisible" nzTitle="הוספת חבילה" (nzOnCancel)="handleCancel()">
   <div *nzModalContent>
