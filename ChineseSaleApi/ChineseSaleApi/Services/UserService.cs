@@ -144,6 +144,17 @@ namespace ChineseSaleApi.Services
             }
         }
 
+        public async Task<bool> IsUserNameExists(string userName)
+        {
+            return await _repository.IsUserNameExists(userName);
+        }
+
+        public async Task<bool> IsEmailExists(string email)
+        {
+            return await _repository.IsEmailExists(email);
+        }
+
+
         // pagination
         public async Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams)
         {

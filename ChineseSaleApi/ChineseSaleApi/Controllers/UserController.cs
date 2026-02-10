@@ -107,7 +107,34 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while registering the user.");
             }
         }
-
+        [HttpGet("userName/{userName}")]
+        public async Task<IActionResult> IsUserNameExists(string userName)
+        {
+            try
+            {
+                var exists = await _service.IsUserNameExists(userName);
+                return Ok(exists);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check if username exists: {UserName}", userName);
+                return StatusCode(500, "An unexpected error occurred while checking username.");
+            }
+        }
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> IsEmailExists(string email)
+        {
+            try
+            {
+                var exists = await _service.IsEmailExists(email);
+                return Ok(exists);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check if email exists: {Email}", email);
+                return StatusCode(500, "An unexpected error occurred while checking email.");
+            }
+        }
         //update
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto)

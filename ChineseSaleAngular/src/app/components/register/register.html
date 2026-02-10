@@ -8,24 +8,27 @@
           <input nz-input formControlName="userName" placeholder="שם משתמש" />
           <ng-template #userErrorTpl let-control>
             @if (control.errors?.['required']) {
-            !בבקשה הזן את שם המשתמש שלך
+            בבקשה הזן את שם המשתמש שלך!
             }
             @if (control.errors?.['duplicated']) {
-            !שם המשתמש כבר קיים
+            שם המשתמש כבר קיים!
             }
           </ng-template>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>אימייל</nz-form-label>
-        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="emailErrorTpl">
           <input nz-input formControlName="email" placeholder="אימייל" type="email" />
           <ng-template #emailErrorTpl let-control>
             @if (control.errors?.['email']) {
-            !הקלט אינו דואר אלקטרוני חוקי
+            הקלט אינו דואר אלקטרוני חוקי!
             }
             @if (control.errors?.['required']) {
-            !בבקשה הזן את הדואר האלקטרוני שלך
+            בבקשה הזן את הדואר האלקטרוני שלך!
+            }
+            @if (control.errors?.['duplicated']) {
+            הדואר האלקטרוני כבר קיים!
             }
           </ng-template>
         </nz-form-control>
@@ -50,8 +53,21 @@
           </ng-template>
         </nz-form-control>
       </nz-form-item>
+      <button nz-button (click)="resetForm1($event)">איפוס</button>
     </nz-collapse-panel>
     <nz-collapse-panel nzHeader="פרטים אישיים" nzShowArrow="true">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את השם הפרטי שלך!">
+          <input nz-input formControlName="firstName" placeholder="שם פרטי" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>שם משפחה</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את שם המשפחה שלך!">
+          <input nz-input formControlName="lastName" placeholder="שם משפחה" />
+        </nz-form-control>
+      </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>מספר טלפון</nz-form-label>
         <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="phoneErrorTpl">
@@ -66,18 +82,7 @@
           </ng-template>
         </nz-form-control>
       </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
-        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את השם הפרטי שלך!">
-          <input nz-input formControlName="firstName" placeholder="שם פרטי" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="7" nzRequired>שם משפחה</nz-form-label>
-        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את שם המשפחה שלך!">
-          <input nz-input formControlName="lastName" placeholder="שם משפחה" />
-        </nz-form-control>
-      </nz-form-item>
+      <button nz-button (click)="resetForm2($event)">איפוס</button>
     </nz-collapse-panel>
     <nz-collapse-panel nzHeader="כתובת" nzShowArrow="true">
       <app-address (addressChanged)="addAddress($event)"></app-address>
@@ -85,10 +90,9 @@
     <nz-form-item>
       <nz-form-control [nzOffset]="7" [nzSpan]="12">
         <button nz-button nzType="primary" [disabled]="!validateForm.valid">אישור</button>
-        <button nz-button (click)="resetForm($event)">איפוס</button>
       </nz-form-control>
     </nz-form-item>
   </nz-collapse>
-    <a routerLink="/login">יש לך חשבון? התחבר עכשיו!</a>
+  <a routerLink="/login">יש לך חשבון? התחבר עכשיו!</a>
 
 </form>
