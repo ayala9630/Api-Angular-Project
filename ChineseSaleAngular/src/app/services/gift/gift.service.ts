@@ -24,7 +24,7 @@ export class GiftService {
     let queryParams = `?lotteryId=${lotteryId}`;
     if (userId !== undefined) queryParams += `&userId=${userId}`;
     if (pageNumber !== undefined && pageSize !== undefined)
-       queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
+      queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
     if (name !== undefined) queryParams += `&name=${name}`;
     if (donor !== undefined) queryParams += `&donor=${donor}`;
     return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination`);

@@ -45,4 +45,5 @@ export interface GiftWithOldPurchase {
   imageUrl?: string;
   isPackageAble?: boolean;
   oldPurchaseCount: number;
+  categoryName?: string;
 }
