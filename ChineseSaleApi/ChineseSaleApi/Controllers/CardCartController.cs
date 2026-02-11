@@ -35,7 +35,7 @@ namespace ChineseSaleApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, "Failed to get card carts for user {UserId}.", userId);
-                return StatusCode(500, "An unexpected error occurred while retrieving card carts.");
+                return StatusCode(500, ex+"An unexpected error occurred while retrieving card carts.");
             }
         }
 

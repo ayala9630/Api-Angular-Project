@@ -53,6 +53,8 @@ namespace ChineseSaleApi.Dto
         public string? CompanyLogoUrl { get; set; }
         public string? CategoryName { get; set; }
         public int LotteryId { get; set; }
+        public string? winner { get; set; }
+
     }
     public class GiftWithOldPurchaseDto
     {
@@ -68,6 +70,7 @@ namespace ChineseSaleApi.Dto
         public bool? IsPackageAble { get; set; }
         public int OldPurchaseCount { get; set; }
         public string? CategoryName { get; set; }
+        public string? winner { get; set; }
     }
 
 }

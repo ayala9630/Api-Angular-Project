@@ -113,11 +113,11 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create card for gift {GiftId}.", createCardDto?.GiftId);
-                return StatusCode(500, "An unexpected error occurred while creating the card.");
+                return StatusCode(500, ex+"\nAn unexpected error occurred while creating the card.");
             }
         }
 
-        [HttpPut]
+        [HttpPut("resetWinners")]
         public async Task<IActionResult> ResetWinnersByLotteryId(int lotteryId)
         {
             try

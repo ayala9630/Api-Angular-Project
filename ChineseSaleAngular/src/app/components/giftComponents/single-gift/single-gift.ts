@@ -14,6 +14,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { CardCarts } from '../../../models';
+import { GlobalService } from '../../../services/global/global.service';
 
 @Component({
   selector: 'app-single-gift',
@@ -38,12 +39,16 @@ export class SingleGift implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private giftService: GiftService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private global: GlobalService
   ) { }
 
   giftId: number = 0;
   gift?: Gift;
   cart: CardCarts[] = [];
+  lotteryStarted: boolean = false;
+  lotteryfinished: boolean = false;
+  
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -52,10 +57,10 @@ export class SingleGift implements OnInit {
       this.gift = data;
     });
     this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+     this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
+    this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
   }
   updateGift(giftId: number, qty: number): void {
-    console.log("dfh");
-    
     const existingCartItem = this.cart.find(item => item.giftId === giftId);
     if (existingCartItem) {
       existingCartItem.quantity += qty;

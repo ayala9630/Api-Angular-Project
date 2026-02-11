@@ -10,34 +10,26 @@
 
     <div class="gift-content">
         <nz-card [nzCover]="coverTemplate" [nzActions]="[actionPlus,number,  actionMinus]">
-            <nz-card-meta 
-                [nzTitle]="gift?.name || '' " 
-                [nzDescription]="gift?.description || '' ">
+            <nz-card-meta [nzTitle]="gift?.name || '' " [nzDescription]="gift?.description || '' ">
             </nz-card-meta>
-            
+
             <nz-divider></nz-divider>
 
             <nz-descriptions nzBordered [nzColumn]="1">
                 <nz-descriptions-item nzTitle="מחיר">
-                    <nz-statistic 
-                        [nzValue]="gift?.price" 
-                        [nzPrefix]="'₪'" 
-                        [nzValueStyle]="{ color: '#cf1322' }">
+                    <nz-statistic [nzValue]="gift?.price" [nzPrefix]="'₪'" [nzValueStyle]="{ color: '#cf1322' }">
                     </nz-statistic>
                 </nz-descriptions-item>
-                
+
                 <nz-descriptions-item nzTitle="שווי המתנה">
-                    <nz-statistic 
-                        [nzValue]="gift?.giftValue" 
-                        [nzPrefix]="'₪'"
-                        [nzValueStyle]="{ color: '#3f8600' }">
+                    <nz-statistic [nzValue]="gift?.giftValue" [nzPrefix]="'₪'" [nzValueStyle]="{ color: '#3f8600' }">
                     </nz-statistic>
                 </nz-descriptions-item>
-                
+
                 <nz-descriptions-item nzTitle="קטגוריה">
                     <nz-tag nzColor="blue">{{gift?.categoryName}}</nz-tag>
                 </nz-descriptions-item>
-                
+
                 <nz-descriptions-item nzTitle="תורם">
                     <span nz-icon nzType="shop" nzTheme="outline"></span>
                     {{gift?.companyName}}
@@ -52,9 +44,28 @@
 </ng-template>
 
 <ng-template #actionPlus>
-    <div (click)="updateGift(giftId, 1)" >+</div>
+    @if(lotteryStarted && !lotteryfinished){
+    <div (click)="updateGift(giftId, 1)">+</div>}
 </ng-template>
 <ng-template #actionMinus>
-    <div (click)="updateGift(giftId, -1)">-</div>
+    @if(lotteryStarted && !lotteryfinished){
+    <div (click)="updateGift(giftId, -1)">-</div>}
 </ng-template>
-<ng-template #number>{{ getGiftQuantity(giftId) }}</ng-template>
+<ng-template #number>
+        @if(lotteryStarted && !lotteryfinished){
+        {{ getGiftQuantity(giftId) }}
+        }
+        @else {
+            @if(lotteryfinished){
+        @if(gift?.winner != " ") {
+        {{`הזוכה במתנה :  ${gift?.winner} ` }}
+        }
+        @else {
+        {{`מתנה זו עדיין לא הוגרלה`}}
+        }
+        }
+        @else {
+        {{"עדיין לא ניתן לרכוש"}}
+        }
+        }
+    </ng-template>
