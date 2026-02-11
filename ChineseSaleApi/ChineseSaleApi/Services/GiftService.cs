@@ -99,7 +99,8 @@ namespace ChineseSaleApi.Services
                     GiftValue = gifts.GiftValue,
                     ImageUrl = gifts.ImageUrl,
                     IsPackageAble = gifts.IsPackageAble,
-                    OldPurchaseCount = gifts.Cards?.Where(x => x.UserId == userId).Count() ?? 0
+                    OldPurchaseCount = gifts.Cards?.Where(x => x.UserId == userId).Count() ?? 0,
+                    CategoryName = gifts.Category?.Name ?? "jjj"
                 }).ToList();
             }
             catch (Exception ex)
@@ -154,7 +155,8 @@ namespace ChineseSaleApi.Services
                     GiftValue = gift.GiftValue,
                     ImageUrl = gift.ImageUrl,
                     IsPackageAble = gift.IsPackageAble,
-                    OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0
+                    OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0,
+                    CategoryName = gift.Category?.Name ?? "",
                 }).ToList();
                 return new PaginatedResultDto<GiftWithOldPurchaseDto>
                 {

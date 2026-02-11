@@ -67,6 +67,7 @@ namespace ChineseSaleApi.Dto
         public string? ImageUrl { get; set; }
         public bool? IsPackageAble { get; set; }
         public int OldPurchaseCount { get; set; }
+        public string? CategoryName { get; set; }
     }
 
 }

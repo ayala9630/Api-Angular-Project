@@ -49,3 +49,50 @@ nz-select {
     grid-template-columns: auto 1fr auto;
     align-items: center;
 }
+
+.user-info {
+    padding: 10px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    direction: rtl;
+
+    span {
+        color: #595959;
+        font-size: 14px;
+        font-weight: 400;
+        
+        &::before {
+            content: "👤 ";
+            margin-left: 6px;
+        }
+    }
+
+    button {
+        color: #8c8c8c !important;
+        font-weight: 400;
+        font-size: 14px;
+        padding: 0;
+        height: auto;
+        background: transparent;
+        border: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #1890ff !important;
+            text-decoration: underline;
+        }
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .user-info {
+        padding: 8px 20px;
+
+        span, button {
+            font-size: 13px;
+        }
+    }
+}

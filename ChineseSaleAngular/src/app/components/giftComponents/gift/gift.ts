@@ -1,23 +1,19 @@
 import { Component, effect, inject, SimpleChanges } from '@angular/core';
-import { GiftService } from '../../services/gift/gift.service';
-import { GlobalService } from '../../services/global/global.service';
-import { CreateGift, Gift as GiftModel, GiftWithOldPurchase } from '../../models/gift';
+import { GiftService } from '../../../services/gift/gift.service';
+import { GlobalService } from '../../../services/global/global.service';
+import { Gift as GiftModel, GiftWithOldPurchase } from '../../../models/gift';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CardCarts, PaginatedResult } from '../../models';
+import { CardCarts, PaginatedResult } from '../../../models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CookieService } from 'ngx-cookie-service';
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { RouterLink, RouterOutlet } from "@angular/router";
 // import { getClaim } from 'src/app/utils/token.util';
 @Component({
   selector: 'app-gift',
-  imports: [NzAvatarModule, NzCardModule, NzIconModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, FormsModule, ReactiveFormsModule],
+  imports: [NzAvatarModule, NzCardModule, NzIconModule, NzButtonModule, RouterLink, RouterOutlet],
   templateUrl: './gift.html',
   styleUrl: './gift.scss',
 })
@@ -28,13 +24,14 @@ export class Gift {
     private giftService: GiftService,
     private global: GlobalService,
     private cookieService: CookieService) { }
+
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
   admin: boolean = false;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible = false;
-  isConfirmLoading = false;
+ 
   private fb = inject(NonNullableFormBuilder)
 
 
@@ -101,10 +98,7 @@ export class Gift {
     this.uploadData()
   }
 
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
-    this.validateForm.reset();
-  }
+  
 
 
   private lotteryEffect = effect(() => {
@@ -153,30 +147,4 @@ export class Gift {
   }
 
 
-  handleOk(): void {
-    // this.giftData = {
-    //   name: this.validateForm.value.name || '',
-    //   description: this.validateForm.value.description || '',
-    //   price: this.validateForm.value.price || 0,
-    //   giftValue: this.validateForm.value.giftValue || 0,
-    //   imageUrl: this.validateForm.value.imageUrl || '',
-    //   isPackageAble: this.validateForm.value.isPackageAble || false,
-    //   donorId: this.validateForm.value.donorId || 0,
-    //   categoryId: this.validateForm.value.categoryId || 0,
-    //   lotteryId: this.currentLotteryId,
-    // }
-    this.resetForm(new MouseEvent('click'));
-    this.isConfirmLoading = true;
-    this.giftService.createGift(this.validateForm.value as CreateGift).subscribe((newGift: GiftModel) => {
-      this.uploadData();
-      console.log(newGift);
-    });
-    this.isVisible = false;
-    this.isConfirmLoading = false;
-  }
-
-
-  handleCancel(): void {
-    this.isVisible = false;
-  }
 }
