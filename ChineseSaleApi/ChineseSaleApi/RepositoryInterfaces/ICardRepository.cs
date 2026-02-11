@@ -10,6 +10,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
          Task<(IEnumerable<Card> items, int totalCount)> GetCardsWithPagination(int lotteryId, int pageNumber, int pageSize);
         Task UpdateCardToWin(Card card);
         Task<bool> ResetWinnersByLotteryId(int lotteryId);
+        Task<IEnumerable<Card>> GetWinnerCards(int lotteryId);
          //Task<(IEnumerable<Card>, int totalCount)> GetCardsWithPaginationSortByValue(int lotteryId, int pageNumber, int pageSize, bool ascending);
     }
 }

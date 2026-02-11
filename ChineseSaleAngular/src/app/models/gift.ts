@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface CreateGift {
   name: string;
   description?: string;
@@ -35,6 +37,7 @@ export interface Gift {
   companyLogoUrl?: string;
   categoryName?: string;
   lotteryId: number;
+  winner?: string;
 }
 
 export interface GiftWithOldPurchase {
@@ -46,4 +49,5 @@ export interface GiftWithOldPurchase {
   isPackageAble?: boolean;
   oldPurchaseCount: number;
   categoryName?: string;
+  winner?: string;
 }

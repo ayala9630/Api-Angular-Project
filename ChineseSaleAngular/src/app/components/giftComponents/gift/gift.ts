@@ -23,31 +23,32 @@ export class Gift {
   constructor(
     private giftService: GiftService,
     private global: GlobalService,
-    private cookieService: CookieService) { }
+    private cookieService: CookieService
+  ) { }
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
   admin: boolean = false;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
-  isVisible = false;
- 
+  isVisible:boolean = false;
+  lotteryStarted: boolean = false;
+  lotteryfinished: boolean = false;
+  
   private fb = inject(NonNullableFormBuilder)
 
 
-  // giftData: CreateGift = {
-  //   name: '',
-  //   description: '',
-  //   price: 0,
-  //   giftValue: 0,
-  //   imageUrl: '',
-  //   isPackageAble: false,
-  //   donorId: 0,
-  //   categoryId: 0,
-  //   lotteryId: this.currentLotteryId,
-  // }
+  ngOnInit(): void {
+    this.currentLotteryId = this.global.currentLotteryId();
+    const token = this.cookieService.get('authToken') || '';
+    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
+    // this.cookieService.set('cardCart', [], 7);
+    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+    this.uploadData()
+    
+  }
 
-
+  
   validateForm = this.fb.group({
     name: ['', [Validators.required]],
     description: [''],
@@ -60,7 +61,7 @@ export class Gift {
     lotteryId: [this.currentLotteryId, [Validators.required]],
   });
 
-
+  
   uploadData(): void {
     this.giftService.getGifts(this.currentLotteryId).subscribe((gifts) => {
       console.log(gifts);
@@ -68,7 +69,7 @@ export class Gift {
       this.allGifts = this.paginatedGifts.items.flat();
     });
   }
-
+  
   edit() {
     this.validateForm.patchValue({
       name: this.validateForm.value.name,
@@ -84,29 +85,22 @@ export class Gift {
 
   }
 
-  showModal2(): void {
-    this.isVisible = true;
-  };
-
-
-  ngOnInit(): void {
-    this.currentLotteryId = this.global.currentLotteryId();
-    const token = this.cookieService.get('authToken') || '';
-    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
-    // this.cookieService.set('cardCart', [], 7);
-    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
-    this.uploadData()
-  }
-
-  
-
-
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
+    
+    if (this.global.currentLottery() != null) {
+       console.log("lottery effect", this.global.currentLottery());
+      //  console.log(new Date(this.global.currentLottery()?.endDate || new Date()));
+      //  console.log(new Date(this.global.currentLottery()?.startDate || new Date()));
+       
+      this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
+      this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
+    }
+    console.log("started", this.lotteryStarted, "finished", this.lotteryfinished);  
   });
-
-
+  
+  
   updateGift(giftId: number, qty: number): void {
     const existingCartItem = this.cart.find(item => item.giftId === giftId);
     if (existingCartItem) {
@@ -133,6 +127,7 @@ export class Gift {
   ngOnChanges(c: SimpleChanges): void {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
+  
     // this.validateForm = new FormGroup({
     //   name: this.fb.group(['', [Validators.required]]),
     //   description:this.fb.group( ['']),

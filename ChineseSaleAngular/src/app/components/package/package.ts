@@ -48,6 +48,7 @@ export class Package {
     this.admin = getClaim(this.token, 'IsAdmin') ==='true';
     console.log(this.admin);
     this.isLogin = this.token !== '';
+    this.uploadData();
   }
   
   private fb = inject(NonNullableFormBuilder);
@@ -79,6 +80,8 @@ export class Package {
   uploadData() {
     this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
       this.allPackages = packages;
+      console.log(this.allPackages);
+      
     });  
   }  
 
