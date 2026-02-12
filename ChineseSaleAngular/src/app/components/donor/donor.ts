@@ -54,7 +54,6 @@ export class Donor {
   viewLoading: boolean = false;
   addModalVisible = false;
   selectedDonorId: number | null = null;
-
   msg: NzMessageService = inject(NzMessageService);
   constructor(
     private donorService: DonorService,
@@ -101,8 +100,8 @@ export class Donor {
     this.uploadData(page);
   }
 
-  edit(item: any): void {
-    this.msg.success(item.email);
+  edit(item: any): void {;
+    this.router.navigate([`/donors/edit/${item.id}`]);
   }
 
   delete(id: number): void {
@@ -166,7 +165,6 @@ export class Donor {
   add(): void {
     this.getAllDonorsForAdd();
     console.log(this.allDonorsForAdd);
-    
     this.selectedDonorId = null;
     this.addModalVisible = true;
   }

@@ -1,11 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+  flex: 1 1 100%;
+}
+
+.demo-loadmore-list,
+nz-list {
+  width: 100%;
+}
+
 .donor-card {
   border-radius: 12px;
   overflow: hidden;
   text-align: center;
 }
 
+.add-donor-button{
+  background-color: black;
+  border-radius: 50%;
+  width: 3vw;
+  height: 3vw;
+}
+
 .donor-cover {
   height: 160px;
+  width: 100%;
   background-size: no-repeat;
   background-position: center;
   background-color: #f0f2f5;

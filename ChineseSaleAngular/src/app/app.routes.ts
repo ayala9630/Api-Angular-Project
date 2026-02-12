@@ -16,6 +16,6 @@ export const routes: Routes = [
         {path: 'packages', component: Package},
         {path:'donors', component: Donor},
         {path: 'donors/add',component: PostDonor},
+        {path:'donors/edit/:id', component: PostDonor},
         {path:'donors/:id', component: SingleDonor},
-        {path:'donors/:id/edit', component: PostDonor},
 ];

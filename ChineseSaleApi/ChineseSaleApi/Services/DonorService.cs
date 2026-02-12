@@ -96,7 +96,34 @@ namespace ChineseSaleApi.Services
                 throw;
             }
         }
+        public async Task<DonorDto?> GetDonorByIdSimple(int id, int lotteryId)
+        {
+            try
+            {
+                var donor = await _repository.GetDonorById(id);
+                if (donor == null)
+                {
+                    return null;
+                }
+                return new DonorDto
+                {
+                    Id = donor.Id,
+                    CompanyAddressId = donor.CompanyAddressId,
+                    CompanyEmail = donor.CompanyEmail,
+                    CompanyIcon = donor.CompanyIcon,
+                    CompanyName = donor.CompanyName,
+                    CompanyPhone = donor.CompanyPhone,
+                    FirstName = donor.FirstName,
+                    LastName = donor.LastName
+                };
 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get donor by id {DonorId} for lottery {LotteryId}.", id, lotteryId);
+                throw;
+            }
+        }
         private async Task<IEnumerable<Models.Card>> GetAllCards_Fallback(int lotteryId)
         {
             try

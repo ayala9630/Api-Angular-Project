@@ -10,6 +10,7 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(int lottery, PaginationParamsDto paginationParams);
         Task<IEnumerable<DonorDto?>> GetDonorByLotteryId(int lottery);
         Task<SingelDonorDto?> GetDonorById(int id, int lottery, PaginationParamsDto paginationParamsdto);
+        Task<DonorDto?> GetDonorByIdSimple(int id, int lotteryId);
         Task<PaginatedResultDto<DonorDto>> GetDonorsNameSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
         Task<PaginatedResultDto<DonorDto>> GetDonorsEmailSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
 

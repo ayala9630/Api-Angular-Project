@@ -1,5 +1,5 @@
 <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-    <h2 class="form-title">הוספת תורם</h2>
+    <h2 class="form-title">{{titel}}</h2>
     <nz-collapse nzAccordion>
         <nz-collapse-panel nzHeader="פרטי התורם" nzActive="true" nzShowArrow="true">
             <nz-form-item>
@@ -65,7 +65,7 @@
         </nz-collapse-panel>
 
         <nz-collapse-panel nzHeader="כתובת החברה" nzShowArrow="true">
-            <app-address (addressChanged)="addAddress($event)"></app-address>
+            <app-address [addressId]="addressId" (addressChanged)="addAddress($event)"></app-address>
         </nz-collapse-panel>
 
         <nz-form-item >

@@ -22,7 +22,9 @@ export class DonorService {
       .set('pageSize', pageSize);
     return this.http.get<Donor>(`${this.url}/${lotteryId}/${id}`, { params });
   }
-
+  getDonorByIdSimple(id: number, lotteryId: number) {
+    return this.http.get<Donor>(`${this.url}/lottery:${lotteryId}/${id}`)
+  }
   getDonorByLotteryId(lotteryId: number): Observable<Donor[]> {
     return this.http.get<Donor[]>(`${this.url}/${lotteryId}`);
   }
