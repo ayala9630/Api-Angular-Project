@@ -33,8 +33,6 @@ export class GiftService {
       }    
       if (sortType !== undefined && ascendingOrder !== undefined)
         queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
-      console.log("queryParams", queryParams);
-      
       return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
     }
 

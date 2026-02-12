@@ -11,11 +11,13 @@ namespace ChineseSaleApi.Controllers
     public class LotteryController : ControllerBase
     {
         private readonly ILotteryService _service;
+        private readonly IFileExportService _exportService;
         private readonly ILogger<LotteryController> _logger;
 
-        public LotteryController(ILotteryService service, ILogger<LotteryController> logger)
+        public LotteryController(ILotteryService service, IFileExportService exportService, ILogger<LotteryController> logger)
         {
             _service = service;
+            _exportService = exportService;
             _logger = logger;
         }
 
@@ -51,6 +53,74 @@ namespace ChineseSaleApi.Controllers
             {
                 _logger.LogError(ex, "Failed to get lottery by id {LotteryId}.", id);
                 return StatusCode(500, "An unexpected error occurred while retrieving the lottery.");
+            }
+        }
+
+        [HttpGet("{id}/report")]
+        public async Task<IActionResult> GetLotteryReport(int id)
+        {
+            try
+            {
+                var report = await _service.GetLotteryReport(id);
+                if (report == null)
+                {
+                    return NotFound($"Lottery with ID {id} not found.");
+                }
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to generate lottery report for lottery {LotteryId}.", id);
+                return StatusCode(500, "An unexpected error occurred while generating the lottery report.");
+            }
+        }
+
+        [HttpGet("{id}/report/export")]
+        public async Task<IActionResult> ExportLotteryReport(int id, [FromQuery] string format = "csv")
+        {
+            try
+            {
+                var report = await _service.GetLotteryReport(id);
+                if (report == null)
+                {
+                    return NotFound($"Lottery with ID {id} not found.");
+                }
+
+                byte[] fileContent;
+                string fileName;
+                string contentType;
+
+                switch (format.ToLower())
+                {
+                    case "csv":
+                        fileContent = _exportService.ExportReportToCsv(report);
+                        fileName = _exportService.GetFileName(id, "csv");
+                        contentType = _exportService.GetContentType("csv");
+                        break;
+
+                    case "json":
+                        fileContent = _exportService.ExportReportToJson(report);
+                        fileName = _exportService.GetFileName(id, "json");
+                        contentType = _exportService.GetContentType("json");
+                        break;
+
+                    case "pdf":
+                    case "html":
+                        fileContent = _exportService.ExportReportToPdf(report);
+                        fileName = _exportService.GetFileName(id, "html");
+                        contentType = _exportService.GetContentType("html");
+                        break;
+
+                    default:
+                        return BadRequest("Unsupported format. Please use 'csv', 'json', or 'pdf'.");
+                }
+
+                return File(fileContent, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to export lottery report for lottery {LotteryId}.", id);
+                return StatusCode(500, "An unexpected error occurred while exporting the lottery report.");
             }
         }
 
