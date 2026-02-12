@@ -43,6 +43,10 @@ app-gift {
   background: #f0f2f5;
 }
 
+app-donor {
+  width: 100%;
+}
+
 nz-content {
   text-align: center;
   // background: #0958d9;
@@ -54,6 +58,11 @@ nz-content {
   overflow-x: hidden;
   padding: 20px;
   scroll-behavior: smooth;
+  display: flex;
+  justify-content: center;
+  // align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 :host>nz-layout {

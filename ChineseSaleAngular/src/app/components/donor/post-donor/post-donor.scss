@@ -1,0 +1,54 @@
+[nz-form] {
+  max-width: 600px;
+}
+
+button {
+  margin-left: 8px;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  direction: ltr;
+}
+
+.ant-collapse-content-box {
+  padding: 16px;
+  height: 40vh;
+  align-items: center;
+}
+
+nz-form-item {
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+nz-form-label {
+  text-align: left;
+  direction: rtl;
+}
+input{
+  text-align: center;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+form {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.form-title {
+  text-align: center;
+}
+
+nz-collapse {
+  width: 100%;
+}

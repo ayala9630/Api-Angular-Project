@@ -60,7 +60,25 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
-        [HttpGet("{lotteryId}")]
+        [HttpGet("lottery:{lotteryId}/{id}")]
+        public async Task<IActionResult> GetDonorByIdSimple(int id, int lotteryId)
+        {
+            try
+            {
+                var donor = await _service.GetDonorByIdSimple(id, lotteryId);
+                if (donor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(donor);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get donor {DonorId} for lottery {LotteryId}.", id, lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving donor details.");
+            }
+        }
+            [HttpGet("{lotteryId}")]
         public async Task<IActionResult> GetDonorByLotteryId(int lotteryId)
         {
             try
