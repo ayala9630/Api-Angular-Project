@@ -15,6 +15,7 @@ import { NzIconDirective } from "ng-zorro-antd/icon";
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 const count = 5;
@@ -59,7 +60,6 @@ export class Donor {
   addModalVisible = false;
   selectedDonorId: number | null = null;
   searchText: string = '';
-  filterdDonors: DonorModel[] = [];
   searchType: 'name' | 'email' = 'name';
   placeholderText: 'חיפוש לפי שם' | 'חיפוש לפי אימייל' = 'חיפוש לפי שם';
 

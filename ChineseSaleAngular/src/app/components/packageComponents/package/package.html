@@ -5,9 +5,11 @@
   </div>
   @for(package of allPackages; track package.id) {
   <nz-card style="width:100%;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
-    <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
-    <div>כמות כרטיסים: {{package.numOfCards}}</div>
-    <div>מחיר: ₪{{package.price}}</div>
+    <a routerLink="package/{{package.id}}">
+      <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
+      <div>כמות כרטיסים: {{package.numOfCards}}</div>
+      <div>מחיר: ₪{{package.price}}</div>
+    </a>
   </nz-card>
 
   <ng-template #coverTemplate>

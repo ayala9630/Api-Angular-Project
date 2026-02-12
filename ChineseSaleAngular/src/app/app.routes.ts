@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Register } from './components/register/register';
 import { Gift } from './components/giftComponents/gift/gift';
-import { Package } from './components/package/package';
+import { Package } from './components/packageComponents/package/package';
 import { Login } from './components/login/login';
 import { Donor } from './components/donor/donor';
 import { SingleDonor } from './components/donor/single-donor/single-donor';
@@ -9,6 +9,8 @@ import { PostDonor } from './components/donor/post-donor/post-donor';
 import { SingleGift } from './components/giftComponents/single-gift/single-gift';
 import { AddGift } from './components/giftComponents/add-gift/add-gift';
 import { Home } from './components/home/home';
+import { single } from 'rxjs';
+import { SinglePackage } from './components/packageComponents/single-package/single-package';
 
 
 export const routes: Routes = [
@@ -19,6 +21,7 @@ export const routes: Routes = [
         {path: 'gifts/gift/:id', component: SingleGift},
         {path:'gifts/add', component: AddGift},
         {path: 'packages', component: Package},
+        {path: 'packages/package/:id', component: SinglePackage},
         {path:'donors', component: Donor},
         {path: 'donors/add',component: PostDonor},
         {path:'donors/edit/:id', component: PostDonor},
