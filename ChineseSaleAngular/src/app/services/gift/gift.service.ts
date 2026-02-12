@@ -13,22 +13,28 @@ export class GiftService {
 
   constructor(private http: HttpClient) { }
 
-  getGifts(
-    lotteryId: number,
-    userId?: number,
-    pageNumber?: number,
-    pageSize?: number,
-    name?: string,
-    donor?: string
-  ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
-    let queryParams = `?lotteryId=${lotteryId}`;
-    if (userId !== undefined) queryParams += `&userId=${userId}`;
-    if (pageNumber !== undefined && pageSize !== undefined)
-      queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
-    if (name !== undefined) queryParams += `&name=${name}`;
-    if (donor !== undefined) queryParams += `&donor=${donor}`;
-    return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination`);
-  }
+    getGifts(
+      lotteryId: number,
+      userId?: number,
+      pageNumber?: number,
+      pageSize?: number,
+      searchText?: string,
+      searchType?: 'name' | 'donor',
+      sortType?: 'name' | 'category' | 'price',
+      ascendingOrder?: boolean
+    ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
+      let queryParams = `?lotteryId=${lotteryId}`;
+      if (userId !== undefined) queryParams += `&userId=${userId}`;
+      if (pageNumber !== undefined && pageSize !== undefined)
+        queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
+      if (searchText !== undefined && searchType !== undefined) {
+        if (searchType === 'name') queryParams += `&name=${searchText}`;
+        else if (searchType === 'donor') queryParams += `&donor=${searchText}`;
+      }    
+      if (sortType !== undefined && ascendingOrder !== undefined)
+        queryParams += `&sortBy=${sortType}&ascending=${ascendingOrder}`;
+      return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
+    }
 
   getGiftById(id: number): Observable<Gift> {
     return this.http.get<Gift>(`${this.url}/${id}`);

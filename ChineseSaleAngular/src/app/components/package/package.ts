@@ -29,7 +29,7 @@ import { getClaim } from '../../utils/token.util';
   styleUrl: './package.scss',
 })  
 export class Package {
-  constructor(private packageService: PackageService, private modal: NzModalService, private global: GlobalService, private cookieService: CookieService) { }
+  constructor(private packageService: PackageService, private modal: NzModalService, public global: GlobalService, private cookieService: CookieService) { }
   
   allPackages: PackageModel[] = [];
   admin: boolean = false;

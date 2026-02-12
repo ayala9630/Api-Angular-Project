@@ -17,6 +17,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconDirective } from "ng-zorro-antd/icon";
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 const count = 5;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
@@ -33,6 +34,7 @@ const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,
     NzCardModule,
     NzDescriptionsModule,
     NzSelectModule,
+    NzInputModule,
     NzIconDirective,
     RouterModule
   ],
@@ -45,6 +47,7 @@ export class Donor {
   data: PaginatedResult<DonorModel> = null as any;
   list: Array<{ loading: boolean; name: any }> = [];
   allDonors: DonorModel[] = [];
+  filteredDonors: DonorModel[] = [];
   allDonorsForAdd: DonorModel[] = [];
   currentLotteryId: number = 0;
   pageNumber: number = 1;
@@ -54,11 +57,16 @@ export class Donor {
   viewLoading: boolean = false;
   addModalVisible = false;
   selectedDonorId: number | null = null;
+  searchText: string = '';
   msg: NzMessageService = inject(NzMessageService);
+
+
   private lotteryEffect = effect(()=>{
     this.currentLotteryId = this.globalService.currentLotteryId()
     this.uploadData(this.pageNumber)
   })
+
+
   constructor(
     private donorService: DonorService,
     private globalService: GlobalService,
@@ -70,6 +78,8 @@ export class Donor {
   ngOnInit(): void {
     this.currentLotteryId = this.globalService.currentLotteryId();
     this.pageNumber = 1;
+    console.log("init");
+    
     this.uploadData(this.pageNumber);
 
     this.route.queryParams.subscribe(params => {
@@ -84,16 +94,25 @@ export class Donor {
   uploadData(page: number): void {
     this.donorService.getDonorsWithPagination(this.currentLotteryId, page, this.pageSize).subscribe((donors) => {
       this.data = donors;
+      this.filteredDonors = this.data.items;  
       this.allDonors = this.data.items;
       this.pageNumber = page;
       this.loadingMore = false;
     });
   }
+
   getAllDonorsForAdd(): void {
     this.donorService.getAllDonors().subscribe((donors) => {
       this.allDonorsForAdd = donors;
     });
   }
+
+
+  // private lotteryEffect = effect(() => {
+  //   this.currentLotteryId = this.globalService.currentLotteryId()
+  //   this.uploadData(this.pageNumber)
+  // })
+
 
   onLoadMore(page: number): void {
     this.loadingMore = true;
@@ -195,5 +214,20 @@ export class Donor {
   goToAddDonor(): void {
     this.addModalVisible = false;
     this.router.navigate(['/donors/add']);
+  }
+
+  onSearchChange(searchValue: string): void {
+    if (!searchValue) {
+      this.filteredDonors = this.allDonors;
+    } else {
+      const searchLower = searchValue.toLowerCase();
+      this.filteredDonors = this.allDonors.filter(donor =>
+        donor.firstName?.toLowerCase().includes(searchLower) ||
+        donor.lastName?.toLowerCase().includes(searchLower) ||
+        donor.companyName?.toLowerCase().includes(searchLower) ||
+        donor.companyEmail?.toLowerCase().includes(searchLower) ||
+        donor.companyPhone?.toLowerCase().includes(searchLower)
+      );
+    }
   }
 }

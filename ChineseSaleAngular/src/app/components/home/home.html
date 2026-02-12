@@ -1,1 +1,110 @@
-<p style="color: black;">home works!</p>
+<div class="home-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-title">ברוכים הבאים להגרלה הגדולה</h1>
+    <p class="hero-subtitle">הזדמנות יוצאת דופן לזכות במתנות מדהימות</p>
+    <div class="hero-buttons">
+      <button nz-button nzType="primary" nzSize="large" routerLink="/gifts">
+        <span nz-icon nzType="gift"></span>
+        <span>צפה במתנות</span>
+      </button>
+      <button nz-button nzSize="large" routerLink="/packages">
+        <span nz-icon nzType="shopping"></span>
+        <span>חבילות מיוחדות</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="stats-section">
+    <nz-row [nzGutter]="[24, 24]">
+      <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
+        <nz-statistic 
+          [nzValue]="150" 
+          [nzTitle]="'מתנות מדהימות'"
+          [nzPrefix]="giftIcon">
+        </nz-statistic>
+      </nz-col>
+      <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
+        <nz-statistic 
+          [nzValue]="2500" 
+          [nzTitle]="'משתתפים'"
+          [nzPrefix]="userIcon">
+        </nz-statistic>
+      </nz-col>
+      <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
+        <nz-statistic 
+          [nzValue]="50" 
+          [nzTitle]="'תורמים'"
+          [nzPrefix]="heartIcon">
+        </nz-statistic>
+      </nz-col>
+      <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
+        <nz-statistic 
+          [nzValue]="30" 
+          [nzTitle]="'ימים להגרלה'"
+          [nzPrefix]="calendarIcon">
+        </nz-statistic>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <h2 class="section-title">למה לבחור בנו?</h2>
+    <nz-row [nzGutter]="[24, 24]">
+      <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-card class="feature-card">
+          <div class="feature-icon">
+            <span nz-icon nzType="safety" nzTheme="outline"></span>
+          </div>
+          <h3>בטוח ואמין</h3>
+          <p>מערכת מאובטחת לחלוטין עם שקיפות מלאה</p>
+        </nz-card>
+      </nz-col>
+      <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-card class="feature-card">
+          <div class="feature-icon">
+            <span nz-icon nzType="gift" nzTheme="outline"></span>
+          </div>
+          <h3>מתנות איכותיות</h3>
+          <p>מגוון רחב של מתנות ערך מתורמים מובילים</p>
+        </nz-card>
+      </nz-col>
+      <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-card class="feature-card">
+          <div class="feature-icon">
+            <span nz-icon nzType="like" nzTheme="outline"></span>
+          </div>
+          <h3>קל ונוח</h3>
+          <p>רכישה מהירה ופשוטה במספר קליקים</p>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="cta-section">
+    <nz-card class="cta-card">
+      <h2>מוכנים להתחיל?</h2>
+      <p>הצטרפו אלינו עכשיו וקחו חלק בהגרלה המרגשת!</p>
+      <button nz-button nzType="primary" nzSize="large" routerLink="/register">
+        <span nz-icon nzType="user-add"></span>
+        <span>הרשמה עכשיו</span>
+      </button>
+    </nz-card>
+  </div>
+</div>
+
+<ng-template #giftIcon>
+  <span nz-icon nzType="gift" style="color: #1890ff;"></span>
+</ng-template>
+<ng-template #userIcon>
+  <span nz-icon nzType="user" style="color: #52c41a;"></span>
+</ng-template>
+<ng-template #heartIcon>
+  <span nz-icon nzType="heart" style="color: #f5222d;"></span>
+</ng-template>
+<ng-template #calendarIcon>
+  <span nz-icon nzType="calendar" style="color: #fa8c16;"></span>
+</ng-template>

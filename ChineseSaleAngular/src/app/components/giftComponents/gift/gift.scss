@@ -1,7 +1,9 @@
 // מיכל ראשי מרכזי
 :host {
     display: block;
-    max-width: 1400px;
+    position: relative;
+    min-height: 100vh;
+    // max-width: 1400px;
     margin: 40px auto;
     padding: 30px;
     background: white;
@@ -14,15 +16,20 @@
     direction: rtl;
 }
 
+
 // כותרת הדף
 .page-title {
     text-align: center;
+    margin-bottom: 30px;
+    position: relative;
     font-size: 28px;
     font-weight: 600;
     color: #262626;
-    margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // הסבר מתחת לכותרת
@@ -44,6 +51,8 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
     margin-bottom: 30px;
+    padding-bottom: 80px;
+    flex: 1;
 }
 
 // עיצוב כרטיסי המתנות
@@ -113,6 +122,55 @@ button[nz-button] {
         transform: translateY(-2px);
     }
 }
+
+// עמוד
+// .nz-pagination {
+//   position: sticky;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   background-color: white;
+//   padding: 15px 0;
+//   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+//   z-index: 1000;
+//   display: flex;
+//   justify-content: center;
+//   margin-top: auto;
+//   direction: ltr;
+// }
+
+/* Sticky pagination - bottom center */
+.nz-pagination.sticky-pagination {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  direction: ltr;
+}
+
+/* ריווח לתוכן כדי שלא יסתיר את הפריטים בתחתית */
+.demo-loadmore-list,
+nz-list {
+  padding-bottom: 96px; /* להתאים לפי גובה הפגינציה + מרווח */
+}
+
+/* התאמה למסכים קטנים */
+@media (max-width: 480px) {
+  .nz-pagination.sticky-pagination {
+    bottom: 12px;
+    padding: 2px 6px;
+  }
+  .demo-loadmore-list,
+  nz-list {
+    padding-bottom: 112px;
+  }
+}
+
 
 // מודל הוספת מתנה
 ::ng-deep .ant-modal-header {
@@ -241,4 +299,106 @@ input[nz-input] {
         justify-content: center;
         z-index: 1;
     }
+}
+
+.add-button {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: normal;
+  background: transparent !important;
+  border: none !important;
+  color: #1890ff;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  box-shadow: none;
+}
+.search{
+    width: 40%;
+}
+.search-sort{
+    display: flex;
+    justify-content: space-evenly;
+}
+.add-button:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.05);
+}
+
+.add-button span[nz-icon] {
+  font-size: 14px;
+}
+
+.search-sort-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.sort-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.sort-group nz-input-group {
+  width: 200px;
+}
+
+.sort-select {
+  width: 100%;
+  border: none;
+}
+
+nz-select{
+    direction: ltr;
+}
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  background: #f5f5f5;
+  border-radius: 16px;
+  transition: background 0.3s;
+}
+
+.switch-wrapper:hover {
+  background: #e8e8e8;
+}
+
+.switch-label {
+  font-size: 12px;
+  color: #666;
+  min-width: 30px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .search-sort-container {
+    flex-direction: column;
+  }
+  
+  .search-group,
+  .sort-group {
+    width: 100%;
+  }
+  
+  .sort-group {
+    justify-content: space-between;
+  }
 }
