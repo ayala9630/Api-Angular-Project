@@ -15,9 +15,8 @@ import { NzIconDirective } from "ng-zorro-antd/icon";
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 const count = 5;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 
@@ -60,7 +59,7 @@ export class Donor {
   addModalVisible = false;
   selectedDonorId: number | null = null;
   searchText: string = '';
-  filteredDonors: DonorModel[] = [];
+  filterdDonors: DonorModel[] = [];
   searchType: 'name' | 'email' = 'name';
   placeholderText: 'חיפוש לפי שם' | 'חיפוש לפי אימייל' = 'חיפוש לפי שם';
 
