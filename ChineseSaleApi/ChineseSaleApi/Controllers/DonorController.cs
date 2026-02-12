@@ -53,7 +53,7 @@ namespace ChineseSaleApi.Controllers
                 }
                 return Ok(donor);
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
                 _logger.LogError(ex, "Failed to get donor {DonorId} for lottery {LotteryId}.", id, lotteryId);
                 return StatusCode(500, "An unexpected error occurred while retrieving donor details.");

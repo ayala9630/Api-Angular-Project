@@ -58,11 +58,6 @@ nz-content {
   overflow-x: hidden;
   padding: 20px;
   scroll-behavior: smooth;
-  display: flex;
-  justify-content: center;
-  // align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 :host>nz-layout {

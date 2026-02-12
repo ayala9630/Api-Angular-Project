@@ -1,1 +1,137 @@
-<p style="color: black;">home works!</p>
+<!-- Home - Vibrant / Persuasive Design -->
+<div class="home-page">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="brand">Chinese<span class="accent">Sale</span> Lottery</h1>
+        <p class="pitch">הגרלות מעשירות קהילה — ניהול חכם, שקיפות מלאה, והרבה רגעי שמחה.</p>
+
+        <div class="hero-ctas">
+          <button nz-button nzType="primary" class="cta-primary" (click)="goTo('/donors')">
+            הצטרפו עכשיו
+            <i nz-icon nzType="rocket" nzTheme="outline"></i>
+          </button>
+
+          <button nz-button nzType="default" class="cta-ghost" (click)="goTo('/donors/add')">
+            הוספת תורם
+            <i nz-icon nzType="user-add" nzTheme="outline"></i>
+          </button>
+        </div>
+
+        <ul class="hero-benefits">
+          <li>ניהול הגרלות בקלות</li>
+          <li>דוחות וניתוחים בזמן אמת</li>
+          <li>קהילה גדולה ותמיכה</li>
+        </ul>
+      </div>
+
+      <div class="hero-visual">
+        <div class="featured-card">
+          <div class="badge">הגרלה חמה</div>
+          <div class="featured-body">
+            <img src="assets/images/lottery-hero.png" alt="lottery" class="featured-img" />
+            <div class="featured-info">
+              <div class="featured-title">הגרלה: חבילת פרסים פברואר</div>
+              <div class="featured-sub">כמות כניסות: {{featuredLottery.entries}}</div>
+              <div class="featured-actions">
+                <button nz-button nzType="primary" (click)="goTo('/lotteries')">הצטרף</button>
+                <button nz-button nzType="default" (click)="goTo('/lotteries/1')">פרטים</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card" *ngFor="let s of statsList">
+            <div class="stat-icon" [style.background]="s.bg">
+              <i nz-icon [nzType]="s.icon"></i>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number">{{ s.animatedValue }}</div>
+              <div class="stat-label">{{ s.label }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- decorative waves -->
+    <svg class="wave" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0 C300,120 900,0 1200,100 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.12)"/></svg>
+  </section>
+
+  <!-- Quick actions -->
+  <section class="quick-actions container">
+    <nz-row nzGutter="16">
+      <nz-col nzXs="24" nzSm="12" nzMd="8" *ngFor="let a of actions">
+        <nz-card nzHoverable class="action-card" (click)="goTo(a.route)">
+          <div class="action-top">
+            <div class="action-badge" [style.background]="a.bg">
+              <i nz-icon [nzType]="a.icon"></i>
+            </div>
+            <div class="action-title">{{ a.title }}</div>
+          </div>
+          <div class="action-sub">{{ a.sub }}</div>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </section>
+
+  <!-- Recent winners + testimonials -->
+  <section class="content container">
+    <div class="left-col">
+      <nz-card nzTitle="זוכים אחרונים" nzBordered="false" class="winners-card">
+        <nz-list [nzDataSource]="recentWinners">
+          <ng-template #item let-winner>
+            <nz-list-item>
+              <nz-list-item-meta
+                nzTitle="{{winner.name}}"
+                nzDescription="{{winner.details}}">
+                <nz-avatar nz-list-avatar *ngIf="winner.avatar; else initials" [nzSrc]="winner.avatar"></nz-avatar>
+                <ng-template #initials><nz-avatar nz-list-avatar>{{ winner.name[0] }}</nz-avatar></ng-template>
+              </nz-list-item-meta>
+              <div class="winner-right">
+                <div class="winner-date">{{ winner.date }}</div>
+                <button nz-button nzType="link" (click)="viewWinner(winner)">פרטים</button>
+              </div>
+            </nz-list-item>
+          </ng-template>
+        </nz-list>
+      </nz-card>
+
+      <nz-card nzBordered="false" class="testimonial-card">
+        <div class="testimonials">
+          <h3>מה הם אומרים</h3>
+          <div *ngFor="let t of testimonials" class="testimonial">
+            <nz-avatar [nzSrc]="t.avatar" *ngIf="t.avatar; else init2"></nz-avatar>
+            <ng-template #init2><nz-avatar>{{ t.name[0] }}</nz-avatar></ng-template>
+            <div class="t-body">
+              <div class="t-name">{{ t.name }}</div>
+              <div class="t-text">“{{ t.text }}”</div>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <div class="right-col">
+      <nz-card nzTitle="נהל הגרלה חדשה" nzBordered="false" class="create-card">
+        <div class="create-body">
+          <p>צור הגרלה תוך דקות, בחר מתנות וקבע כללים פשוטים.</p>
+          <div class="create-cta">
+            <button nz-button nzType="primary" (click)="goTo('/lotteries/new')">צור עכשיו</button>
+            <button nz-button nzType="default" (click)="goTo('/lotteries')">הצג קיים</button>
+          </div>
+        </div>
+      </nz-card>
+
+      <nz-card nzBordered="false" class="insights-card">
+        <h3>תובנות אחרונות</h3>
+        <ul>
+          <li *ngFor="let insight of insights">{{ insight }}</li>
+        </ul>
+      </nz-card>
+    </div>
+  </section>
+</div>

@@ -48,7 +48,8 @@ namespace ChineseSaleApi.Repositories
         }
         public async Task<(IEnumerable<Donor> items, int totalcount)> GetDonorsNameSearchedPagination(int lottery, int pageNumber, int pageSize, string textSearch)
         {
-            var query = _context.Donors.Where(d => d.Lotteries.Any(l => l.Id == lottery)).Where(t=>t.FirstName.Contains(textSearch) || t.LastName.Contains(textSearch)).AsQueryable();
+            var query = _context.Donors.Where(d => d.Lotteries.Any(l => l.Id == lottery)).Where(t => (t.FirstName + " " + t.LastName).Contains(textSearch)).AsQueryable();
+
             var totalCount = await query.CountAsync();
             var donors = await query
                 .Skip((pageNumber - 1) * pageSize)

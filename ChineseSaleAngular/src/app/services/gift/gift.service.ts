@@ -27,7 +27,7 @@ export class GiftService {
       queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
     if (name !== undefined) queryParams += `&name=${name}`;
     if (donor !== undefined) queryParams += `&donor=${donor}`;
-    return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination`);
+    return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
   }
 
   getGiftById(id: number): Observable<Gift> {

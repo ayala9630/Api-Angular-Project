@@ -49,7 +49,7 @@ namespace ChineseSaleApi.Repositories
             return (gifts, totalCount);
         }
 
-        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsSearchPagination(int lotteryId, int pageNumber, int pageSize,string? textSearch ,string? type)
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsSearchPagination(int lotteryId, int pageNumber, int pageSize, string? textSearch, string? type, string? sortType, bool? ascendingOrder)
         {
             IQueryable<Gift> query;
 
@@ -63,6 +63,21 @@ namespace ChineseSaleApi.Repositories
                     break;
                 default:
                     query = _context.Gifts.Include(x => x.Cards).Include(x => x.Category).Where(l => l.LotteryId == lotteryId).AsQueryable();
+                    break;
+            }
+            switch(sortType)
+            {
+                case "name":
+                    query = ascendingOrder == true ? query.OrderBy(g => g.Name) : query.OrderByDescending(g => g.Name);
+                    break;
+                case "price":
+                    query = ascendingOrder == true ? query.OrderBy(g => g.Price) : query.OrderByDescending(g => g.Price);
+                    break;
+                case "category":
+                    query = ascendingOrder == true ? query.OrderBy(g => g.Category.Name) : query.OrderByDescending(g => g.GiftValue);
+                    break;
+                default:
+                    query = ascendingOrder == true ? query.OrderBy(g => g.Id) : query.OrderByDescending(g => g.Id);
                     break;
             }
             var totalCount = await query.CountAsync();
