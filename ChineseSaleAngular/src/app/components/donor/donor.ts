@@ -1,8 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -19,6 +16,8 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { CommonModule } from '@angular/common';
 const count = 5;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 
@@ -36,7 +35,10 @@ const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,
     NzSelectModule,
     NzInputModule,
     NzIconDirective,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    NzInputModule,
+    CommonModule
   ],
   templateUrl: './donor.html',
   styleUrl: './donor.scss',
@@ -51,28 +53,29 @@ export class Donor {
   allDonorsForAdd: DonorModel[] = [];
   currentLotteryId: number = 0;
   pageNumber: number = 1;
-  pageSize: number = 2;
+  pageSize: number = 5;
   currentDonor: SingleDonor | null = null;
   viewDonor: boolean = false;
   viewLoading: boolean = false;
   addModalVisible = false;
   selectedDonorId: number | null = null;
   searchText: string = '';
-  msg: NzMessageService = inject(NzMessageService);
+  filteredDonors: DonorModel[] = [];
+  searchType: 'name' | 'email' = 'name';
+  placeholderText: 'חיפוש לפי שם' | 'חיפוש לפי אימייל' = 'חיפוש לפי שם';
 
-
-  private lotteryEffect = effect(()=>{
+  private lotteryEffect = effect(() => {
     this.currentLotteryId = this.globalService.currentLotteryId()
     this.uploadData(this.pageNumber)
   })
-
 
   constructor(
     private donorService: DonorService,
     private globalService: GlobalService,
     private modal: NzModalService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private msg: NzMessageService
   ) { }
 
   ngOnInit(): void {
@@ -81,7 +84,6 @@ export class Donor {
     console.log("init");
     
     this.uploadData(this.pageNumber);
-
     this.route.queryParams.subscribe(params => {
       if (params['reopenAddModal'] === 'true') {
         this.getAllDonorsForAdd();
@@ -90,12 +92,15 @@ export class Donor {
       }
     });
   }
-
-  uploadData(page: number): void {
-    this.donorService.getDonorsWithPagination(this.currentLotteryId, page, this.pageSize).subscribe((donors) => {
+  onSearchChange(searchValue: string): void {
+        this.uploadData(this.pageNumber,searchValue);
+  }
+  uploadData(page: number, searchText?: string): void {
+    this.donorService.getDonorsSearchPagination(this.currentLotteryId, page, this.pageSize, searchText, this.searchType).subscribe((donors) => {
       this.data = donors;
       this.filteredDonors = this.data.items;  
       this.allDonors = this.data.items;
+      this.filteredDonors = this.allDonors;
       this.pageNumber = page;
       this.loadingMore = false;
     });
@@ -106,24 +111,13 @@ export class Donor {
       this.allDonorsForAdd = donors;
     });
   }
-
-
-  // private lotteryEffect = effect(() => {
-  //   this.currentLotteryId = this.globalService.currentLotteryId()
-  //   this.uploadData(this.pageNumber)
-  // })
-
-
-  onLoadMore(page: number): void {
-    this.loadingMore = true;
-    this.uploadData(page);
+  searchtypeChange(value: 'name' | 'email'): void {
+    this.placeholderText = value === 'name' ? 'חיפוש לפי שם' : 'חיפוש לפי אימייל';
+    this.searchType = value;
+    this.onSearchChange(this.searchText);
   }
 
-  onPageChange(page: number): void {
-    this.uploadData(page);
-  }
-
-  edit(item: any): void {;
+  edit(item: any): void {
     this.router.navigate([`/donors/edit/${item.id}`]);
   }
 
@@ -214,20 +208,5 @@ export class Donor {
   goToAddDonor(): void {
     this.addModalVisible = false;
     this.router.navigate(['/donors/add']);
-  }
-
-  onSearchChange(searchValue: string): void {
-    if (!searchValue) {
-      this.filteredDonors = this.allDonors;
-    } else {
-      const searchLower = searchValue.toLowerCase();
-      this.filteredDonors = this.allDonors.filter(donor =>
-        donor.firstName?.toLowerCase().includes(searchLower) ||
-        donor.lastName?.toLowerCase().includes(searchLower) ||
-        donor.companyName?.toLowerCase().includes(searchLower) ||
-        donor.companyEmail?.toLowerCase().includes(searchLower) ||
-        donor.companyPhone?.toLowerCase().includes(searchLower)
-      );
-    }
   }
 }

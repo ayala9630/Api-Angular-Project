@@ -67,9 +67,8 @@
   height: 200px;
   object-fit: cover;
 }
-
-.donor-placeholder {
-  height: 200px;
+.nz-pagination {
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,37 +162,35 @@
   text-align: center;
   font-size: 16px;
   color: #8c8c8c;
-  padding: 40px;
-  background: #fafafa;
-  border-radius: 8px;
 }
 
-// עמוד
-.nz-pagination {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
+/* Sticky pagination - bottom center */
+.nz-pagination.sticky-pagination {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 }
 
-// מודל
-.donor-select {
-  margin-bottom: 20px;
+/* ריווח לתוכן כדי שלא יסתיר את הפריטים בתחתית */
+.demo-loadmore-list,
+nz-list {
+  padding-bottom: 96px; /* להתאים לפי גובה הפגינציה + מרווח */
+}
 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #262626;
+/* התאמה למסכים קטנים */
+@media (max-width: 480px) {
+  .nz-pagination.sticky-pagination {
+    bottom: 12px;
+    padding: 2px 6px;
   }
-
-  nz-select {
-    width: 100%;
+  .demo-loadmore-list,
+  nz-list {
+    padding-bottom: 112px;
   }
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
 }

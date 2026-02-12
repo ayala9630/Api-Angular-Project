@@ -150,12 +150,12 @@ namespace ChineseSaleApi.Services
         }
 
 
-        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type)
+        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType,bool? ascendingOrder)
         {
             try
             {
                 var winners = await _cardRepository.GetWinnerCards(lotteryId);
-                var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, textSearch, type);
+                var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, textSearch, type,sortType,ascendingOrder);
                 var giftsWithWinners = gifts.GroupJoin(
                     winners,
                     gift => gift.Id,

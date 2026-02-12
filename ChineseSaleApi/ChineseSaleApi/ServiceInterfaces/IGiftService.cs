@@ -1,5 +1,6 @@
 ﻿using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChineseSaleApi.ServiceInterfaces
 {
@@ -12,6 +13,6 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<IEnumerable<GiftWithOldPurchaseDto>> GetAllGifts(int lotteryId, int userId);
         Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto);
         Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams,dynamic request);
-        Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type);
+        Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType, bool? ascendingOrder);
     }
 }

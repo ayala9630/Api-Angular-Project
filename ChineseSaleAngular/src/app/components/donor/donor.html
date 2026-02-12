@@ -1,16 +1,21 @@
-<h2 class="page-title">תורמים</h2>
-
-<nz-input-group [nzPrefix]="prefixIconSearch" style="margin-bottom: 20px;">
-  <input 
-    type="text" 
-    nz-input 
-    placeholder="חפש תורם..." 
+<button class="add-donor-button" (click)="add()">
+    <nz-icon nzType="user-add" nzTheme="outline" />
+</button>
+<nz-input-group [nzSuffix]="suffixIconSearch" style="margin-bottom: 20px;">
+    <input 
+    type="text"
+    nz-input
+    placeholder={{placeholderText}}
     [(ngModel)]="searchText"
     (ngModelChange)="onSearchChange($event)"
-  />
+    />
 </nz-input-group>
-<ng-template #prefixIconSearch>
-  <span nz-icon nzType="search"></span>
+<ng-template #suffixIconSearch>
+    <nz-icon nzType="search"/>
+    <nz-select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" (ngModelChange)="searchtypeChange($event)">
+        <nz-option nzValue="name" nzLabel="שם תורם"></nz-option>
+        <nz-option nzValue="email" nzLabel="אימייל תורם"></nz-option>
+    </nz-select>
 </ng-template>
 
 <nz-modal [(nzVisible)]="addModalVisible" [nzTitle]="'הוספת תורם להגרלה'" [nzFooter]="null"
@@ -38,47 +43,24 @@
     </ng-container>
 </nz-modal>
 
-<div class="donors-grid">
-    <div class="page-description">
-        רשימת התורמים להגרלה
-    </div>
-    
-    @for (donor of allDonors; track donor.id) {
-    <nz-card style="width:100%;" [nzCover]="coverTemplate" [nzActions]="[editAction, deleteAction]">
-        <a [routerLink]="['/donors', donor.id]">
-            <nz-card-meta 
-                [nzTitle]="donor.firstName + ' ' + donor.lastName" 
-                [nzDescription]="donor.companyName">
-            </nz-card-meta>
-            <div class="donor-details">
-                @if(donor.companyEmail) {
-                <div><strong>אימייל:</strong> {{donor.companyEmail}}</div>
-                }
-                @if(donor.companyPhone) {
-                <div><strong>טלפון:</strong> {{donor.companyPhone}}</div>
-                }
-            </div>
-        </a>
-    </nz-card>
-
-    <ng-template #coverTemplate>
-        @if(donor.companyIcon) {
-        <img alt="{{donor.companyName}}" src="{{donor.companyIcon}}" />
-        }
-        @else {
-        <div class="donor-placeholder">
-            <span nz-icon nzType="user" nzTheme="outline"></span>
-        </div>
-        }
-    </ng-template>
-
-    <ng-template #editAction>
-        <span nz-icon nzType="edit" nzTheme="outline" (click)="edit(donor)"></span>
-    </ng-template>
-
-    <ng-template #deleteAction>
-        <span nz-icon nzType="delete" nzTheme="outline" (click)="delete(donor.id)"></span>
-    </ng-template>
+<nz-list class="demo-loadmore-list" [nzLoading]="initLoading">
+    @for (donor of filteredDonors; track donor.id) {
+    <nz-list-item>
+        <ng-container>
+            <nz-list-item-meta nzAvatar="http://localhost:5025/images/{{donor.companyIcon}}" nzDescription="{{ donor.companyName }}">
+                <nz-list-item-meta-title>
+                    <a class="donor-name" [routerLink]="['/donors', donor.id]">
+                        {{ donor.firstName }} {{ donor.lastName }}
+                    </a>
+                </nz-list-item-meta-title>
+            </nz-list-item-meta>
+            content
+            <ul nz-list-item-actions>
+                <nz-list-item-action><a (click)="edit(donor)">עריכה</a></nz-list-item-action>
+                <nz-list-item-action><a (click)="delete(donor.id)">מחיקה</a></nz-list-item-action>
+            </ul>
+        </ng-container>
+    </nz-list-item>
     }
 
     @if (filteredDonors.length === 0) {
@@ -94,4 +76,7 @@
     <span>הוסף תורם</span>
 </button>
 
+    <nz-pagination class="nz-pagination sticky-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
+        [nzPageSize]="pageSize" (nzPageIndexChange)="uploadData($event)" />
+</nz-list>
 <router-outlet></router-outlet>
