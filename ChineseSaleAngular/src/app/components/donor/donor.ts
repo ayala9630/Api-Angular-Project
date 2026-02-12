@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -55,6 +55,10 @@ export class Donor {
   addModalVisible = false;
   selectedDonorId: number | null = null;
   msg: NzMessageService = inject(NzMessageService);
+  private lotteryEffect = effect(()=>{
+    this.currentLotteryId = this.globalService.currentLotteryId()
+    this.uploadData(this.pageNumber)
+  })
   constructor(
     private donorService: DonorService,
     private globalService: GlobalService,
