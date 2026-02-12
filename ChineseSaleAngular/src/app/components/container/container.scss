@@ -16,11 +16,13 @@ nz-header {
   height: 64px;
   padding-inline: 48px;
   line-height: 64px;
+  border-bottom-left-radius: 50px;
+  width: 100%;
 }
 
 nz-sider {
   text-align: center;
-  // background: #1677ff;
+  background: #000000;
   color: #fff;
   line-height: 120px;
 }
@@ -58,6 +60,12 @@ nz-content {
   overflow-x: hidden;
   padding: 20px;
   scroll-behavior: smooth;
+  // display: flex;
+  // justify-content: center;
+  // // align-items: center;
+  // height: 100%;
+  // width: 100%;
+  
 }
 
 :host>nz-layout {
@@ -66,6 +74,7 @@ nz-content {
   min-height: 100vh; /* שינוי מ-height ל-min-height */
   // border-radius: 8px;
   overflow: hidden;
+  background: #000000;
 }
 
 .ant-layout-header {
@@ -79,6 +88,11 @@ nz-footer {
 
 nz-content::-webkit-scrollbar {
   width: 8px;
+
+}
+
+app-donor {
+  width: 100%;
 }
 
 nz-content::-webkit-scrollbar-track {

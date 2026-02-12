@@ -59,7 +59,7 @@ namespace ChineseSaleApi.Repositories
                     query = _context.Gifts.Include(x => x.Cards).Include(x=>x.Category).Where(l => l.LotteryId == lotteryId && l.Name.Contains(textSearch)).AsQueryable();
                     break;
                 case "donor":
-                    query = _context.Gifts.Include(x => x.Cards).Include(x=>x.Category).Include(x => x.Donor).Where(l => l.LotteryId == lotteryId && (l.Donor.CompanyName.Contains(textSearch) || l.Donor.FirstName.Contains(textSearch) || l.Donor.LastName.Contains(textSearch))).AsQueryable();
+                    query = _context.Gifts.Include(x => x.Cards).Include(x=>x.Category).Include(x => x.Donor).Where(l => l.LotteryId == lotteryId && ((l.Donor.CompanyName+" " + l.Donor.FirstName+" " + l.Donor.LastName).Contains(textSearch))).AsQueryable();
                     break;
                 default:
                     query = _context.Gifts.Include(x => x.Cards).Include(x => x.Category).Where(l => l.LotteryId == lotteryId).AsQueryable();

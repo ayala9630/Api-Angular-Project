@@ -14,6 +14,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconDirective } from "ng-zorro-antd/icon";
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { CommonModule } from '@angular/common';
@@ -32,6 +33,7 @@ const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,
     NzCardModule,
     NzDescriptionsModule,
     NzSelectModule,
+    NzInputModule,
     NzIconDirective,
     RouterModule,
     FormsModule,
@@ -47,6 +49,7 @@ export class Donor {
   data: PaginatedResult<DonorModel> = null as any;
   list: Array<{ loading: boolean; name: any }> = [];
   allDonors: DonorModel[] = [];
+  filteredDonors: DonorModel[] = [];
   allDonorsForAdd: DonorModel[] = [];
   currentLotteryId: number = 0;
   pageNumber: number = 1;
@@ -78,6 +81,8 @@ export class Donor {
   ngOnInit(): void {
     this.currentLotteryId = this.globalService.currentLotteryId();
     this.pageNumber = 1;
+    console.log("init");
+    
     this.uploadData(this.pageNumber);
     this.route.queryParams.subscribe(params => {
       if (params['reopenAddModal'] === 'true') {
@@ -93,12 +98,14 @@ export class Donor {
   uploadData(page: number, searchText?: string): void {
     this.donorService.getDonorsSearchPagination(this.currentLotteryId, page, this.pageSize, searchText, this.searchType).subscribe((donors) => {
       this.data = donors;
+      this.filteredDonors = this.data.items;  
       this.allDonors = this.data.items;
       this.filteredDonors = this.allDonors;
       this.pageNumber = page;
       this.loadingMore = false;
     });
   }
+
   getAllDonorsForAdd(): void {
     this.donorService.getAllDonors().subscribe((donors) => {
       this.allDonorsForAdd = donors;

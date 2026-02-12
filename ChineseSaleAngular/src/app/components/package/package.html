@@ -15,25 +15,35 @@
   </ng-template>
 
   <ng-template #rightAction>
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
     @if(admin){
     <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
     }
     @else {
-      <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
+    <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
+    }
     }
   </ng-template>
   <ng-template #middleAction>
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
+
     @if(!admin){
-      {{getPackageQuantity(package.id)}}
+    {{getPackageQuantity(package.id)}}
+    }
+    }
+    @else {
+    {{"לא ניתן לרכוש חבילות"}}
     }
   </ng-template>
   <ng-template #leftAction>
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
+
     @if(admin){
     <nz-icon nzType="edit" />
     }
     @else {
-        <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
-    }
+    <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
+    }}
   </ng-template>
   }
 </div>

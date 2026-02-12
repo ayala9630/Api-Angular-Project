@@ -67,7 +67,7 @@ export class AddGift {
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
     this.validateForm.patchValue({ lotteryId: this.currentLotteryId });
-    this.donorService.getAllDonors().subscribe((donors: Donor[]) => {
+    this.donorService.getDonorByLotteryId(this.currentLotteryId).subscribe((donors: Donor[]) => {
       this.donorData = donors;
     });
     this.categoryService.getAllCategories().subscribe((categories: Category[]) => {

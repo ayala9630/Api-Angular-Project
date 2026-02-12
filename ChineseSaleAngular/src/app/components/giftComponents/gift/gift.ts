@@ -1,19 +1,41 @@
 import { Component, effect, inject, SimpleChanges } from '@angular/core';
 import { GiftService } from '../../../services/gift/gift.service';
 import { GlobalService } from '../../../services/global/global.service';
-import { Gift as GiftModel, GiftWithOldPurchase } from '../../../models/gift';
+import { GiftWithOldPurchase } from '../../../models/gift';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CardCarts, PaginatedResult } from '../../../models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CookieService } from 'ngx-cookie-service';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { RouterLink, RouterOutlet } from "@angular/router";
-// import { getClaim } from 'src/app/utils/token.util';
+import { FormsModule, NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from "@angular/router";
+import { CommonModule } from '@angular/common';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzTransferModule } from 'ng-zorro-antd/transfer';
+import { NzSelectModule } from "ng-zorro-antd/select";
+import { NzOptionComponent } from "ng-zorro-antd/select";
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSwitchComponent } from "ng-zorro-antd/switch";
+
 @Component({
   selector: 'app-gift',
-  imports: [NzAvatarModule, NzCardModule, NzIconModule, NzButtonModule, RouterLink, RouterOutlet],
+  imports: [
+    NzAvatarModule,
+    NzCardModule,
+    NzIconModule,
+    NzButtonModule,
+    NzTransferModule,
+    NzSelectModule,
+    RouterLink,
+    FormsModule,
+    NzInputModule,
+    CommonModule,
+    ReactiveFormsModule,
+    NzOptionComponent,
+    NzPaginationModule,
+    NzSwitchComponent
+  ],
   templateUrl: './gift.html',
   styleUrl: './gift.scss',
 })
@@ -22,7 +44,7 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 export class Gift {
   constructor(
     private giftService: GiftService,
-    private global: GlobalService,
+    public global: GlobalService,
     private cookieService: CookieService
   ) { }
 
@@ -31,12 +53,35 @@ export class Gift {
   admin: boolean = true;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
-  isVisible:boolean = false;
-  lotteryStarted: boolean = false;
-  lotteryfinished: boolean = false;
-  
+  isVisible: boolean = false;
+  pageNumber: number = 1;
+  pageSize: number = 3;
+
+  searchText: string = '';
+  filteredGifts: GiftWithOldPurchase[] = [];
+  searchType: 'name' | 'donor' = 'name';
+  placeholderText: 'חפש מתנה...' | 'חפש תורם...' = 'חפש מתנה...';
+  sortType: 'price' | 'category' | 'name' = 'price';
+  ascendingOrder: boolean = true;
+
   private fb = inject(NonNullableFormBuilder)
 
+
+  onSearchChange(searchValue: string): void {
+    // console.log("onSearchChange");
+    this.uploadData();
+    // console.log(this.searchText);
+  }
+
+  searchTypeChange(value: 'name' | 'donor'): void {
+    this.searchType = value;
+    this.onSearchChange(this.searchText);
+    if (value === 'name') {
+      this.placeholderText = 'חפש מתנה...';
+    } else {
+      this.placeholderText = 'חפש תורם...';
+    }
+  }
 
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
@@ -45,10 +90,10 @@ export class Gift {
     // this.cookieService.set('cardCart', [], 7);
     this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
     this.uploadData()
-    
+
   }
 
-  
+
   validateForm = this.fb.group({
     name: ['', [Validators.required]],
     description: [''],
@@ -61,15 +106,30 @@ export class Gift {
     lotteryId: [this.currentLotteryId, [Validators.required]],
   });
 
-  
+
   uploadData(): void {
-    this.giftService.getGifts(this.currentLotteryId).subscribe((gifts) => {
-      console.log(gifts);
+    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder).subscribe((gifts) => {
       this.paginatedGifts = gifts;
       this.allGifts = this.paginatedGifts.items.flat();
     });
   }
-  
+
+  onPageChange(page: number): void {
+    page = page || 1;
+    this.pageNumber = page;
+    this.uploadData();
+  }
+
+  onSortChange(type: 'name' | 'category' | 'price'): void {
+    this.sortType = type;
+    this.uploadData();
+  }
+
+  onSortOrderChange(ascending: boolean): void {
+    this.ascendingOrder = ascending;
+    this.uploadData();
+  }
+
   edit() {
     this.validateForm.patchValue({
       name: this.validateForm.value.name,
@@ -88,19 +148,14 @@ export class Gift {
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
-    
-    if (this.global.currentLottery() != null) {
-       console.log("lottery effect", this.global.currentLottery());
-      //  console.log(new Date(this.global.currentLottery()?.endDate || new Date()));
-      //  console.log(new Date(this.global.currentLottery()?.startDate || new Date()));
-       
-      this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
-      this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
-    }
-    console.log("started", this.lotteryStarted, "finished", this.lotteryfinished);  
+    // if (this.global.currentLottery() != null) {
+    // this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
+    // this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
+    // }    
+    // console.log("started", this.global.lotteryStarted(), "finished", this.global.lotteryFinished());  
   });
-  
-  
+
+
   updateGift(giftId: number, qty: number): void {
     const existingCartItem = this.cart.find(item => item.giftId === giftId);
     if (existingCartItem) {
@@ -127,7 +182,7 @@ export class Gift {
   ngOnChanges(c: SimpleChanges): void {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
-  
+
     // this.validateForm = new FormGroup({
     //   name: this.fb.group(['', [Validators.required]]),
     //   description:this.fb.group( ['']),
@@ -140,6 +195,9 @@ export class Gift {
     //   lotteryId: this.fb.group([this.currentLotteryId, [Validators.required]]),
     // });
   }
+
+
+
 
 
 }
