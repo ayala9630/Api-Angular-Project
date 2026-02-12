@@ -88,12 +88,7 @@ export class Gift {
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
-    
     if (this.global.currentLottery() != null) {
-       console.log("lottery effect", this.global.currentLottery());
-      //  console.log(new Date(this.global.currentLottery()?.endDate || new Date()));
-      //  console.log(new Date(this.global.currentLottery()?.startDate || new Date()));
-       
       this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
       this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
     }
