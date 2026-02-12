@@ -89,6 +89,12 @@ builder.Services.AddScoped<IDonorService, DonorService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+// Export Services
+builder.Services.AddScoped<ChineseSaleApi.Services.Exporters.CsvExporter>();
+builder.Services.AddScoped<ChineseSaleApi.Services.Exporters.JsonExporter>();
+builder.Services.AddScoped<ChineseSaleApi.Services.Exporters.PdfExporter>();
+builder.Services.AddScoped<IFileExportService, FileExportService>();
+
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService,EmailService>();
 //builder.Services.AddTransient<EmailService>(); // Register your EmailService for injection
@@ -145,7 +151,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
 
 // הפעלת CORS
 app.UseCors("AllowAllOrigins");

@@ -66,10 +66,9 @@
     @if (filteredDonors.length === 0) {
     <div class="empty-message">לא נמצאו תורמים</div>
     }
-</div>
 
 <nz-pagination class="nz-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
-    [nzPageSize]="pageSize" (nzPageIndexChange)="onPageChange($event)" nzSimple />
+    [nzPageSize]="pageSize" (nzPageIndexChange)="uploadData($event)" nzSimple />
 
 <button class="add-donor-button" nz-button nzType="primary" (click)="add()">
     <span nz-icon nzType="user-add" nzTheme="outline"></span>
