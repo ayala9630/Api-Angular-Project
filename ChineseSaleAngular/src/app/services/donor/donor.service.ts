@@ -36,13 +36,19 @@ export class DonorService {
     return this.http.get<any>(`${this.url}/lottery/${lotteryId}/pagination`, { params });
   }
 
-  getDonorsSearchPagination(lotteryId: number, pageNumber: number, pageSize: number, name?: string, email?: string): Observable<any> {
-    let params = new HttpParams()
-      .set('pageNumber', pageNumber)
-      .set('pageSize', pageSize);
-    if (name) params = params.set('name', name);
-    if (email) params = params.set('email', email);
-    return this.http.get<any>(`${this.url}/lottery/${lotteryId}/search`, { params });
+  getDonorsSearchPagination(lotteryId: number, pageNumber: number, pageSize: number, searchText?: string, searchType?: 'name' | 'email'): Observable<any> {
+    let queryParams = `?lotteryId=${lotteryId}`;
+    queryParams += `&pageNumber=${pageNumber}`;
+    queryParams += `&pageSize=${pageSize}`;
+    if (searchText) {
+      if (searchType === 'email') {
+        queryParams += `&email=${searchText}`;
+      }
+      else {
+        queryParams += `&name=${searchText}`;
+      }
+    }
+    return this.http.get<any>(`${this.url}/lottery/${lotteryId}/search${queryParams}`);
   }
 
   addDonor(donor: CreateDonor): Observable<number> {

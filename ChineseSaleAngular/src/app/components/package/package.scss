@@ -4,10 +4,10 @@
   max-width: 1400px;
   margin: 40px auto;
   padding: 30px;
-  background: white;
+  background: rgb(221, 221, 221);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  direction: rtl;
+  direction:  rtl;
 }
 
 * {
@@ -96,7 +96,6 @@
   }
 }
 
-// כפתור הוספת חבילה
 button[nz-button] {
   min-width: 160px;
   height: 44px;
@@ -114,7 +113,6 @@ button[nz-button] {
   }
 }
 
-// מודל הוספת חבילה
 ::ng-deep .ant-modal-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -135,7 +133,6 @@ button[nz-button] {
   border-radius: 8px;
 }
 
-// טופס בתוך המודל
 [nz-form] {
   max-width: 100%;
   padding: 20px 0;
@@ -216,7 +213,6 @@ input[nz-input] {
   }
 }
 
-// עיצוב אייקונים מיוחדים
 .cart-with-plus {
   position: relative;
   display: inline-flex;

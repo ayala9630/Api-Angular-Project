@@ -50,7 +50,9 @@ namespace ChineseSaleApi.Repositories
         }
 
 
-        //public async Task<(IEnumerable<Card> items, int totalCount)> GetCardsWithPaginationSortByValue(int lotteryId, int pageNumber, int pageSize, bool ascending)
+        //public async Task<(IEnumerable<Card> items, int totalCount)> GetCardsWithPagination
+        //
+        //ByValue(int lotteryId, int pageNumber, int pageSize, bool ascending)
         //{
         //    var query = ascending? _context.Cards.Include(p => p.Gift).OrderBy(x => x.Gift.GiftValue).Where(x => x.Gift.LotteryId == lotteryId).AsQueryable():
         //    _context.Cards.Include(p => p.Gift).OrderByDescending(x => x.Gift.GiftValue).Where(x => x.Gift.LotteryId == lotteryId).AsQueryable();
