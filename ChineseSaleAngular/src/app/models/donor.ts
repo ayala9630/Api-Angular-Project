@@ -1,4 +1,4 @@
-import { Address, CreateAddressForDonor } from './address';
+import { Address, CreateAddress } from './address';
 
 export interface Donor {
   id: number;
@@ -27,7 +27,7 @@ export interface CreateDonor {
   companyEmail: string;
   companyPhone?: string;
   companyIcon?: string;
-  companyAddress: CreateAddressForDonor;
+  companyAddress: CreateAddress;
 }
 
 export interface UpdateDonor {

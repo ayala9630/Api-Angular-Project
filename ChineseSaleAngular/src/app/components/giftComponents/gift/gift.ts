@@ -28,7 +28,7 @@ export class Gift {
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
-  admin: boolean = false;
+  admin: boolean = true;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible:boolean = false;

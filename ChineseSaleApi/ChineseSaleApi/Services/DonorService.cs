@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -61,24 +62,24 @@ namespace ChineseSaleApi.Services
         {
             try
             {
-                Dictionary<string, int> dict = new();
-
                 var donor = await _repository.GetDonorById(id);
                 if (donor == null)
                 {
                     return null;
                 }
-                var cards = await _cardRepository.GetCardsWithPagination(lotteryId, paginationParamsdto.PageNumber, paginationParamsdto.PageSize);
-                var donorGifts = cards.items.Where(x => x.Gift.DonorId == id).GroupBy(g => new { g.GiftId, g.Gift.Name })
-                                 .Select(x => new
-                                 {
-                                     GiftName = x.Key.Name,
-                                     Count = x.Count(),
-                                 });
-                foreach (var item in donorGifts)
+
+                var cards = await GetAllCards_Fallback(lotteryId);
+
+                Dictionary<string, int> dict = new();
+
+                var donorGifts = donor.Gifts?.Where(g => g.DonorId == id && g.LotteryId == lotteryId) ?? Enumerable.Empty<Gift>();
+
+                foreach (var gift in donorGifts)
                 {
-                    dict.Add(item.GiftName, item.Count);
+                    var count = cards.Count(c => c.GiftId == gift.Id);
+                    dict[gift.Name ?? string.Empty] = count;
                 }
+
                 return new SingelDonorDto
                 {
                     Id = donor.Id,
@@ -93,6 +94,45 @@ namespace ChineseSaleApi.Services
             {
                 _logger.LogError(ex, "Failed to get donor by id {DonorId} for lottery {LotteryId}.", id, lotteryId);
                 throw;
+            }
+        }
+        public async Task<DonorDto?> GetDonorByIdSimple(int id, int lotteryId)
+        {
+            try
+            {
+                var donor = await _repository.GetDonorById(id);
+                if (donor == null)
+                {
+                    return null;
+                }
+                return new DonorDto
+                {
+                    Id = donor.Id,
+                    CompanyAddressId = donor.CompanyAddressId,
+                    CompanyEmail = donor.CompanyEmail,
+                    CompanyIcon = donor.CompanyIcon,
+                    CompanyName = donor.CompanyName,
+                    CompanyPhone = donor.CompanyPhone,
+                    FirstName = donor.FirstName,
+                    LastName = donor.LastName
+                };
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get donor by id {DonorId} for lottery {LotteryId}.", id, lotteryId);
+                throw;
+            }
+        }
+        private async Task<IEnumerable<Models.Card>> GetAllCards_Fallback(int lotteryId)
+        {
+            try
+            {
+                return await _cardRepository.GetAllCards(lotteryId);
+            }
+            catch
+            {
+                return Enumerable.Empty<Models.Card>();
             }
         }
 

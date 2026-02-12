@@ -1,0 +1,56 @@
+<button class="add-donor-button" (click)="add()">
+    <nz-icon nzType="user-add" nzTheme="outline" />
+</button>
+
+<nz-modal [(nzVisible)]="addModalVisible" [nzTitle]="'הוספת תורם להגרלה'" [nzFooter]="null"
+    (nzOnCancel)="closeAddModal()">
+    <ng-container *nzModalContent>
+        <nz-card nzTitle="הוספת תורם קיים" nzBordered="false">
+            <div class="donor-select">
+                <label>בחר תורם קיים</label>
+                <nz-select nzShowSearch nzPlaceHolder="בחר תורם" [(ngModel)]="selectedDonorId">
+                    @for (donor of allDonorsForAdd; track donor.id) {
+                    <nz-option [nzValue]="donor.id"
+                        [nzLabel]="(donor.firstName || '') + ' ' + (donor.lastName || '') + ' - ' + donor.companyName"></nz-option>
+                    }
+                </nz-select>
+            </div>
+            <div class="modal-actions">
+                <button nz-button (click)="closeAddModal()">סגור</button>
+                <button nz-button nzType="primary" [disabled]="!selectedDonorId"
+                    (click)="confirmAddDonor()">אישור</button>
+            </div>
+        </nz-card>
+        <nz-card nzTitle="הוספת תורם חדש" nzBordered="false">
+            <button nz-button nzType="default" (click)="goToAddDonor()">הוסף תורם חדש</button>
+        </nz-card>
+    </ng-container>
+</nz-modal>
+
+<nz-list class="demo-loadmore-list" [nzLoading]="initLoading">
+    @for (donor of allDonors; track donor.id) {
+    <nz-list-item>
+        <ng-container>
+            <nz-list-item-meta nzAvatar="{{donor.companyIcon}}" nzDescription="{{ donor.companyName }}">
+                <nz-list-item-meta-title>
+                    <a class="donor-name" [routerLink]="['/donors', donor.id]">
+                        {{ donor.firstName }} {{ donor.lastName }}
+                    </a>
+                </nz-list-item-meta-title>
+            </nz-list-item-meta>
+            content
+            <ul nz-list-item-actions>
+                <nz-list-item-action><a (click)="edit(donor)">עריכה</a></nz-list-item-action>
+                <nz-list-item-action><a (click)="delete(donor.id)">מחיקה</a></nz-list-item-action>
+            </ul>
+        </ng-container>
+    </nz-list-item>
+    }
+    @if (allDonors.length === 0) {
+    <div class="empty-message">אין תורמים</div>
+    }
+
+    <nz-pagination class="nz-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
+        [nzPageSize]="pageSize" (nzPageIndexChange)="onPageChange($event)" nzSimple />
+</nz-list>
+<router-outlet></router-outlet>
