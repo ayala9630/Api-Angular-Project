@@ -6,7 +6,6 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
 .form-title {
     text-align: center;
     font-size: 28px;
@@ -122,6 +121,48 @@ input {
     display: block;
     margin-inline-start: auto;
     margin-inline-end: 0;
+}
+
+// Select - עיצוב משופר
+::ng-deep .ant-select {
+    width: 100%;
+    text-align: right;
+}
+
+::ng-deep .ant-select-selector {
+    height: 40px !important;
+    border-radius: 4px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    border: 1px solid #d9d9d9 !important;
+}
+
+::ng-deep .ant-select-selection-item {
+    text-align: right !important;
+    padding-right: 0 !important;
+    line-height: 38px !important;
+}
+
+::ng-deep .ant-select-selection-placeholder {
+    text-align: right !important;
+    padding-right: 0 !important;
+    line-height: 38px !important;
+}
+
+::ng-deep .ant-select-arrow {
+    left: 12px !important;
+    right: auto !important;
+}
+
+::ng-deep .ant-select-focused .ant-select-selector {
+    border-color: #40a9ff !important;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+// Switch - עיצוב משופר
+::ng-deep nz-switch {
+    display: inline-block;
 }
 
 // Collapse

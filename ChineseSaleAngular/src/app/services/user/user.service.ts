@@ -38,4 +38,10 @@ export class UserService {
   updateUser(user: UpdateUser): Observable<void> {
     return this.http.put<void>(this.url, user);
   }
+  isUserNameExists(userName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.url}/userName/${userName}`);
+  }
+  isEmailExists(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.url}/email/${email}`);
+  }
 }

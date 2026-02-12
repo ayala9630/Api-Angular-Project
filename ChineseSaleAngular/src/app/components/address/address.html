@@ -1,36 +1,37 @@
- <form nz-form [formGroup]="validateForm">
-        <nz-form-item>
-          <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את העיר!">
+<form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>עיר</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את העיר!">
             <input nz-input formControlName="city" placeholder="עיר" />
-          </nz-form-control>
-          <nz-form-label [nzSpan]="7" nzRequired>עיר</nz-form-label>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את הרחוב!">
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>רחוב</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה הזן את הרחוב!">
             <input nz-input formControlName="street" placeholder="רחוב" />
-          </nz-form-control>
-          <nz-form-label [nzSpan]="7" nzRequired>רחוב</nz-form-label>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="numberErrorTpl">
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">מספר</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="numberErrorTpl">
             <input nz-input type="number" formControlName="number" placeholder="מספר" />
             <ng-template #numberErrorTpl let-control>
               @if (control.errors?.['min']) {
                 מספר חייב להיות גדול מ-0!
               }
             </ng-template>
-          </nz-form-control>
-          <nz-form-label [nzSpan]="7">מספר</nz-form-label>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="zipCodeErrorTpl">
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">מיקוד</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="zipCodeErrorTpl">
             <input nz-input type="number" formControlName="zipCode" placeholder="מיקוד" />
             <ng-template #zipCodeErrorTpl let-control>
               @if (control.errors?.['min'] || control.errors?.['max']) {
                 מיקוד חייב להיות בן 7 ספרות!
               }
             </ng-template>
-          </nz-form-control>  
-          <nz-form-label [nzSpan]="7">מיקוד</nz-form-label>
-        </nz-form-item>
-    </form>
+        </nz-form-control>
+    </nz-form-item>
+    <button nz-button (click)="resetForm($event)">איפוס</button>
+</form>

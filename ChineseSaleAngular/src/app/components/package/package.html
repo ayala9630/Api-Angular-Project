@@ -1,51 +1,47 @@
-<div class="giftList">
+<h2 class="page-title">חבילות</h2>
+<div class="packages-grid">
+  <div class="page-description">
+    חבילות משתלמות לרכישת כרטיסים במחיר מיוחד.
+  </div>
   @for(package of allPackages; track package.id) {
-    <nz-card style="width:300px;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
-  <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
-</nz-card>
-<ng-template #avatarTemplate>
-  <nz-avatar nzSrc="http://localhost:5025/images/gift.png"></nz-avatar>
-</ng-template>
-<ng-template #coverTemplate>
-  <img alt="example" src="http://localhost:5025/images/gift.png" />
-</ng-template>
-<ng-template #rightAction>
-  @if(admin){
+  <nz-card style="width:100%;" [nzCover]="coverTemplate" [nzActions]="[rightAction, middleAction, leftAction]">
+    <nz-card-meta nzTitle={{package.name}} nzDescription="{{package.description}}"></nz-card-meta>
+    <div>כמות כרטיסים: {{package.numOfCards}}</div>
+    <div>מחיר: ₪{{package.price}}</div>
+  </nz-card>
+
+  <ng-template #coverTemplate>
+    <img alt="example" src="http://localhost:5025/images/gift.png" />
+  </ng-template>
+
+  <ng-template #rightAction>
+    @if(admin){
     <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
-  }
-  @else {
-    <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
-  }
-</ng-template>
-<ng-template #middleAction>
-  @if(!admin){
-    {{getPackageQuantity(package.id)}}
-  }
-  <!-- @if(!admin){
-    <div class="cart-with-plus">
-      <nz-icon nzType="shopping-cart" nzTheme="outline" nzTwotoneColor="#52c41a" [nzRotate]="0">
-      </nz-icon>
-      <nz-icon nzType="plus" nzTheme="outline" class="plus-icon" nzTwotoneColor="#52c41a" [nzRotate]="0">
-      </nz-icon>
-    </div>
-    } -->
+    }
+    @else {
+      <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
+    }
+  </ng-template>
+  <ng-template #middleAction>
+    @if(!admin){
+      {{getPackageQuantity(package.id)}}
+    }
   </ng-template>
   <ng-template #leftAction>
     @if(admin){
-      <nz-icon nzType="edit" />
+    <nz-icon nzType="edit" />
     }
     @else {
-      <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
-      
+        <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
     }
   </ng-template>
-}
+  }
 </div>
-@if(admin){
+
 <button nz-button nzType="primary" (click)="showModal2()">
   <span>הוסף חבילה</span>
 </button>
-}
+
 
 <nz-modal [(nzVisible)]="isVisible" nzTitle="הוספת חבילה" (nzOnCancel)="handleCancel()">
   <div *nzModalContent>
@@ -56,7 +52,7 @@
           <input nz-input formControlName="name" />
           <ng-template #userErrorTpl let-control>
             @if (control.errors?.['required']) {
-            Please input your username!
+            בבקשה להזין שם!
             }
           </ng-template>
         </nz-form-control>
@@ -69,13 +65,13 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>מחיר</nz-form-label>
-        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input price!">
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין מחיר!">
           <input nz-input formControlName="price" />
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>כמות כרטיסים</nz-form-label>
-        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input number of cards!">
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="בבקשה להזין כמות כרטיסים!">
           <input nz-input formControlName="numOfCards" />
         </nz-form-control>
       </nz-form-item>

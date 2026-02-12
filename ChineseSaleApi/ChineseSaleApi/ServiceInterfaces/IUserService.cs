@@ -12,5 +12,7 @@ namespace ChineseSaleApi.Services
         Task<List<UserDto>> GetAllUsers();
         Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams);
         Task<bool?> UpdateUser(UpdateUserDto userDto);
+        Task<bool> IsEmailExists(string email);
+        Task<bool> IsUserNameExists(string userName);
     }
 }

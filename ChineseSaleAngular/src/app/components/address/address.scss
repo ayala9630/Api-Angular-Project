@@ -22,3 +22,17 @@ nz-form-label {
 input{
   text-align: center;
 }
+
+button {
+    margin-left: 8px;
+    min-width: 120px;
+    height: 40px;
+}
+
+::ng-deep button.ant-btn:not(.ant-btn-primary) {
+    margin: 0 !important;
+    display: block;
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+}
+

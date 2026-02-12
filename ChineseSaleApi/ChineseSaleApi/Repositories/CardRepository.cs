@@ -41,6 +41,14 @@ namespace ChineseSaleApi.Repositories
             return (cards, totalCount);
         }
 
+        public async Task<IEnumerable<Card>> GetWinnerCards(int lotteryId)
+        {
+            return await _context.Cards.Include(p => p.Gift)
+                                       .Include(u => u.User)
+                                       .Where(x => x.Gift.LotteryId == lotteryId && x.IsWin == true)
+                                       .ToListAsync();
+        }
+
 
         //public async Task<(IEnumerable<Card> items, int totalCount)> GetCardsWithPaginationSortByValue(int lotteryId, int pageNumber, int pageSize, bool ascending)
         //{

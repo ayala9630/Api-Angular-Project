@@ -1,0 +1,74 @@
+<div class="add-gift-container">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+        <h2 class="form-title">הוספת מתנה</h2>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>שם</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
+                [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="name" />
+                <ng-template #userErrorTpl let-control>
+                    @if (control.errors?.['required']) {
+                    בבקשה הזן שם!
+                    }
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">תאור</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="description" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>מחיר</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input price!">
+                <input nz-input formControlName="price" type="number" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>שווי המתנה</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input gift value!">
+                <input nz-input formControlName="giftValue" type="number" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">תמונה</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="imageUrl" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>תורם</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please select donor!">
+                <nz-select [(ngModel)]="selectedDonor" [ngModelOptions]="{standalone: true}" (ngModelChange)="donorChange($event)">
+                    @for (d of donorData; track d.id) {
+                    <nz-option [nzValue]="d.id" [nzLabel]="d.firstName + ' ' + d.lastName"></nz-option>
+                    }
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>קטגוריה</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please select category!">
+                <nz-select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" (ngModelChange)="categoryChange($event)">
+                        @for (c of categoryData; track c.id) {
+                    <nz-option [nzValue]="c.id" [nzLabel]="c.name"></nz-option>
+                    }
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>ניתן לצירוף לחבילה?</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <nz-switch formControlName="isPackageAble"></nz-switch>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                <button nz-button nzType="primary" [disabled]="!validateForm.valid" type="submit"
+                    [nzLoading]="isConfirmLoading">אישור</button>
+                <button nz-button nzType="default" (click)="cancel()">ביטול</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>

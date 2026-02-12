@@ -7,7 +7,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { UserService } from '../../services/user/user.service';
 import { LoginRequest } from '../../models';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -17,7 +17,11 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './login.scss',
 })
 export class Login {
-  constructor(private userService: UserService, private cookieService:CookieService) {}
+  constructor(
+    private userService: UserService,
+     private cookieService:CookieService,
+     private router: Router
+    ) {}
 
   private fb = inject(NonNullableFormBuilder);
   validateForm = this.fb.group({
@@ -32,6 +36,8 @@ export class Login {
         next: (user) => {
           console.log('User logged in successfully:', user);
           this.cookieService.set('auth_token', user.token);
+          this.cookieService.set('user', JSON.stringify(user.user));
+          this.router.navigate(['/home']);
         }
     });
     // } else {

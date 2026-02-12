@@ -12,5 +12,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task<User?> GetUserByUserName(string userName);
         Task UpdateUser(User user);
         Task<bool> IsUserNameExists(string userName);
+        Task<bool> IsEmailExists(string email);
+
     }
 }

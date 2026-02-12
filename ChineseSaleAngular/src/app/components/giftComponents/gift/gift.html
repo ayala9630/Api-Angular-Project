@@ -1,0 +1,148 @@
+<h2 class="page-title">מתנות</h2>
+<div class="gifts-grid">
+    <div class="page-description">
+        מתנות אלו לא ניתן לצרף לחבילה, אך ניתן לרכוש אותן בנפרד.
+    </div>
+    @for(gift of allGifts; track gift.id) {
+    @if(!gift.isPackageAble) {
+    <nz-card style="width:100%;" [nzCover]="coverTemplate" [nzExtra]="extraTemplate"
+        [nzActions]="[rightAction, middleAction, leftAction]">
+        <a routerLink="gift/{{gift.id}}">
+            <nz-card-meta nzTitle={{gift.name}} nzDescription=" שווי המתנה: ₪{{gift.giftValue}} "></nz-card-meta>
+            <div>עלות כרטיס: ₪{{gift.price}}</div>
+            <div>רכישות קודמות: {{gift.oldPurchaseCount}}</div>
+        </a>
+    </nz-card>
+    }
+
+    <ng-template #extraTemplate>
+        <div>{{gift.categoryName}}</div>
+    </ng-template>
+
+
+    <ng-template #coverTemplate>
+        <img alt="example" src="http://localhost:5025/images/{{gift.imageUrl}}" />
+    </ng-template>
+
+    <ng-template #rightAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(admin){
+        <nz-icon nzType="delete" nzTheme="outline" />
+        }
+        @else {
+        <nz-icon nzType="minus" nzTheme="outline" (click)="updateGift(gift.id, -1)"></nz-icon>
+        }
+        }
+    </ng-template>
+
+
+    <ng-template #middleAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(!admin){
+        {{
+        getGiftQuantity(gift.id)
+        }}
+        }
+        }
+        @else{
+        @if(lotteryfinished){
+        @if(gift.winner != " ") {
+        {{`הזוכה במתנה :  ${gift.winner} ` }}
+        }
+        @else {
+        {{`מתנה זו עדיין לא הוגרלה`}}
+        }
+        }
+        @else {
+        {{"עדיין לא ניתן לרכוש"}}
+        }
+        }
+    </ng-template>
+
+    <ng-template #leftAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(admin){
+        <nz-icon nzType="edit" />
+        }
+        @else {
+        <nz-icon nzType="plus" nzTheme="outline" (click)="updateGift(gift.id, 1)"></nz-icon>
+        }
+        }
+    </ng-template>
+    }
+    <div class="page-description">
+        מתנות אלו ניתן לצרף לחבילה.
+    </div>
+    @for(gift of allGifts; track gift.id) {
+    @if(gift.isPackageAble)
+    {
+    <nz-card style="width:100%;" [nzExtra]="extraTemplate" [nzCover]="coverTemplate"
+        [nzActions]="[rightAction, middleAction, leftAction]">
+        <a routerLink="gift/{{gift.id}}">
+            <nz-card-meta nzTitle={{gift.name}} nzDescription=" שווי המתנה: ₪{{gift.giftValue}} "></nz-card-meta>
+            <div>רכישות קודמות: {{gift.oldPurchaseCount}}</div>
+        </a>
+    </nz-card>
+    }
+    <ng-template #extraTemplate>
+        <div>{{gift.categoryName}}</div>
+    </ng-template>
+
+
+    <ng-template #coverTemplate>
+        <img alt="example" src="http://localhost:5025/images/{{gift.imageUrl}}" />
+    </ng-template>
+
+   
+    <ng-template #rightAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(admin){
+        <nz-icon nzType="delete" nzTheme="outline" />
+        }
+        @else {
+        <nz-icon nzType="minus" nzTheme="outline" (click)="updateGift(gift.id, -1)"></nz-icon>
+        }
+        }
+    </ng-template>
+
+
+    <ng-template #middleAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(!admin){
+        {{
+        getGiftQuantity(gift.id)
+        }}
+        }
+        }
+        @else{
+        @if(lotteryfinished){
+        @if(gift.winner != " ") {
+        {{`הזוכה במתנה :  ${gift.winner} ` }}
+        }
+        @else {
+        {{`מתנה זו עדיין לא הוגרלה`}}
+        }
+        }
+        @else {
+        {{"עדיין לא ניתן לרכוש"}}
+        }
+        }
+    </ng-template>
+
+    <ng-template #leftAction>
+        @if(lotteryStarted && !lotteryfinished){
+        @if(admin){
+        <nz-icon nzType="edit" />
+        }
+        @else {
+        <nz-icon nzType="plus" nzTheme="outline" (click)="updateGift(gift.id, 1)"></nz-icon>
+        }
+        }
+    </ng-template>
+    
+    }
+</div>
+
+<a nz-button nzType="primary" routerLink="add">
+    <span>הוסף מתנה</span>
+</a>

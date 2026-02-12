@@ -51,7 +51,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get packages for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500, "An unexpected error occurred while retrieving packages.");
+                return StatusCode(500,ex+ "An unexpected error occurred while retrieving packages.");
             }
         }
 

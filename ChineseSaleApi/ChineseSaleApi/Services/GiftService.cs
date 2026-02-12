@@ -1,23 +1,28 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ChineseSaleApi.Dto;
+﻿using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace ChineseSaleApi.Services
 {
     public class GiftService : IGiftService
     {
         private readonly IGiftRepository _repository;
+        private readonly ICardRepository _cardRepository;
         private readonly ILotteryRepository _lotteryRepository;
         private readonly ILogger<GiftService> _logger;
 
-        public GiftService(IGiftRepository repository, ILotteryRepository lotteryRepository, ILogger<GiftService> logger)
+        public GiftService(ICardRepository cardRepository, IGiftRepository repository, ILotteryRepository lotteryRepository, ILogger<GiftService> logger)
         {
             _repository = repository;
+            _cardRepository = cardRepository;
             _lotteryRepository = lotteryRepository;
             _logger = logger;
         }
@@ -64,6 +69,8 @@ namespace ChineseSaleApi.Services
                 {
                     return null;
                 }
+                var tmp = await _cardRepository.GetWinnerCards(gift.LotteryId);
+                var winner = tmp.FirstOrDefault(x => x.GiftId == gift.Id);
                 return new GiftDto
                 {
                     Id = gift.Id,
@@ -77,6 +84,7 @@ namespace ChineseSaleApi.Services
                     CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
                     CategoryName = gift.Category?.Name ?? "",
                     LotteryId = gift.LotteryId,
+                    winner = winner?.User?.FirstName + " " + winner?.User?.LastName
                 };
             }
             catch (Exception ex)
@@ -99,7 +107,8 @@ namespace ChineseSaleApi.Services
                     GiftValue = gifts.GiftValue,
                     ImageUrl = gifts.ImageUrl,
                     IsPackageAble = gifts.IsPackageAble,
-                    OldPurchaseCount = gifts.Cards?.Where(x => x.UserId == userId).Count() ?? 0
+                    OldPurchaseCount = gifts.Cards?.Where(x => x.UserId == userId).Count() ?? 0,
+                    CategoryName = gifts.Category?.Name ?? ""
                 }).ToList();
             }
             catch (Exception ex)
@@ -145,17 +154,32 @@ namespace ChineseSaleApi.Services
         {
             try
             {
+                var winners = await _cardRepository.GetWinnerCards(lotteryId);
                 var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, textSearch, type);
-                var giftDto = gifts.Select(gift => new GiftWithOldPurchaseDto
+                var giftsWithWinners = gifts.GroupJoin(
+                    winners,
+                    gift => gift.Id,
+                    winner => winner.GiftId,
+                    (gift, winner) => new { gift, winner }
+                ).SelectMany(x => x.winner.DefaultIfEmpty(),
+                (x, winner) => new
                 {
-                    Id = gift.Id,
-                    Name = gift.Name,
-                    Price = gift.Price,
-                    GiftValue = gift.GiftValue,
-                    ImageUrl = gift.ImageUrl,
-                    IsPackageAble = gift.IsPackageAble,
-                    OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0
+                    gift = x.gift,
+                    winner = winner != null ? winner : null
+                });
+                var giftDto = giftsWithWinners.Select((x) => new GiftWithOldPurchaseDto
+                {
+                    Id = x.gift.Id,
+                    Name = x.gift.Name,
+                    Price = x.gift.Price,
+                    GiftValue = x.gift.GiftValue,
+                    ImageUrl = x.gift.ImageUrl,
+                    IsPackageAble = x.gift.IsPackageAble,
+                    OldPurchaseCount = userId != null ? x.gift.Cards.Count(x => x.UserId == userId) : 0,
+                    CategoryName = x.gift.Category?.Name ?? "",
+                    winner = x.winner?.User?.FirstName + " "    +x.winner?.User?.LastName
                 }).ToList();
+                Console.WriteLine(giftDto);
                 return new PaginatedResultDto<GiftWithOldPurchaseDto>
                 {
                     Items = giftDto,

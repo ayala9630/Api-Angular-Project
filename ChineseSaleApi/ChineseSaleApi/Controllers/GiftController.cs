@@ -119,7 +119,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to add gift for lottery {LotteryId}.", gift?.LotteryId);
-                return StatusCode(500, "An unexpected error occurred while adding the gift.");
+                return StatusCode(500, ex + "An unexpected error occurred while adding the gift.");
             }
         }
 
@@ -137,7 +137,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update gift {GiftId}.", gift?.Id);
-                return StatusCode(500, "An unexpected error occurred while updating the gift.");
+                return StatusCode(500, ex + "An unexpected error occurred while updating the gift.");
             }
         }
 
