@@ -2,8 +2,8 @@ import { Component, effect, signal } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { PackageService } from '../../services/package/package.service';
-import { Package as PackageModel, CreatePackage, PackageCarts } from '../../models';
+import { PackageService } from '../../../services/package/package.service';
+import { Package as PackageModel, CreatePackage, PackageCarts } from '../../../models';
 import { FormsModule } from '@angular/forms';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -17,14 +17,15 @@ import {
 import { Subject } from 'rxjs';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { GlobalService } from '../../services/global/global.service';
+import { GlobalService } from '../../../services/global/global.service';
 import { CookieService } from 'ngx-cookie-service';
-import { getClaim } from '../../utils/token.util';
+import { getClaim } from '../../../utils/token.util';
+import { RouterLink } from "@angular/router";
 
 
 @Component({
   selector: 'app-package',
-  imports: [NzAvatarModule, NzCardModule, NzIconModule, FormsModule, NzInputNumberModule, NzButtonModule, NzModalModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule],
+  imports: [NzAvatarModule, NzCardModule, NzIconModule, FormsModule, NzInputNumberModule, NzButtonModule, NzModalModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, RouterLink],
   templateUrl: './package.html',
   styleUrl: './package.scss',
 })  

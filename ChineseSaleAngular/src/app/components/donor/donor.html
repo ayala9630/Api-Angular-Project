@@ -2,17 +2,13 @@
     <nz-icon nzType="user-add" nzTheme="outline" />
 </button>
 <nz-input-group [nzSuffix]="suffixIconSearch" style="margin-bottom: 20px;">
-    <input 
-    type="text"
-    nz-input
-    placeholder={{placeholderText}}
-    [(ngModel)]="searchText"
-    (ngModelChange)="onSearchChange($event)"
-    />
+    <input type="text" nz-input placeholder={{placeholderText}} [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange($event)" />
 </nz-input-group>
 <ng-template #suffixIconSearch>
-    <nz-icon nzType="search"/>
-    <nz-select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" (ngModelChange)="searchtypeChange($event)">
+    <nz-icon nzType="search" />
+    <nz-select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}"
+        (ngModelChange)="searchtypeChange($event)">
         <nz-option nzValue="name" nzLabel="שם תורם"></nz-option>
         <nz-option nzValue="email" nzLabel="אימייל תורם"></nz-option>
     </nz-select>
@@ -47,7 +43,8 @@
     @for (donor of filteredDonors; track donor.id) {
     <nz-list-item>
         <ng-container>
-            <nz-list-item-meta nzAvatar="http://localhost:5025/images/{{donor.companyIcon}}" nzDescription="{{ donor.companyName }}">
+            <nz-list-item-meta nzAvatar="http://localhost:5025/images/{{donor.companyIcon}}"
+                nzDescription="{{ donor.companyName }}">
                 <nz-list-item-meta-title>
                     <a class="donor-name" [routerLink]="['/donors', donor.id]">
                         {{ donor.firstName }} {{ donor.lastName }}
@@ -66,15 +63,15 @@
     @if (filteredDonors.length === 0) {
     <div class="empty-message">לא נמצאו תורמים</div>
     }
-</div>
 
-<nz-pagination class="nz-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
-    [nzPageSize]="pageSize" (nzPageIndexChange)="onPageChange($event)" nzSimple />
 
-<button class="add-donor-button" nz-button nzType="primary" (click)="add()">
-    <span nz-icon nzType="user-add" nzTheme="outline"></span>
-    <span>הוסף תורם</span>
-</button>
+    <nz-pagination class="nz-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
+        [nzPageSize]="pageSize" (nzPageIndexChange)="uploadData($event)" nzSimple />
+
+    <button class="add-donor-button" nz-button nzType="primary" (click)="add()">
+        <span nz-icon nzType="user-add" nzTheme="outline"></span>
+        <span>הוסף תורם</span>
+    </button>
 
     <nz-pagination class="nz-pagination sticky-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
         [nzPageSize]="pageSize" (nzPageIndexChange)="uploadData($event)" />

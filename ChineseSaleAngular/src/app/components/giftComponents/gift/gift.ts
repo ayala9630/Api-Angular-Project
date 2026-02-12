@@ -74,6 +74,7 @@ export class Gift {
   }
 
   searchTypeChange(value: 'name' | 'donor'): void {
+    console.log("searchTypeChange", value);
     this.searchType = value;
     this.onSearchChange(this.searchText);
     if (value === 'name') {
@@ -121,12 +122,17 @@ export class Gift {
   }
 
   onSortChange(type: 'name' | 'category' | 'price'): void {
+    console.log("onSortChange", type);
+    
     this.sortType = type;
+    console.log("onSortChange", this.sortType);
     this.uploadData();
   }
 
   onSortOrderChange(ascending: boolean): void {
+    console.log("onSortOrderChange", ascending);
     this.ascendingOrder = ascending;
+    console.log("onSortOrderChange", this.ascendingOrder);
     this.uploadData();
   }
 
