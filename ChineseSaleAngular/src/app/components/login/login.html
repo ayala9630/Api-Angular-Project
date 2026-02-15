@@ -20,6 +20,6 @@
       <input nz-input type="password" formControlName="password" placeholder="סיסמה" />
     </nz-form-control>
   </nz-form-item>
-  <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">אישור</button>
+  <button nz-button class="login-form-button login-form-margin" [disabled]="!validateForm.valid" [nzType]="'primary'" (click)="loadOne()" [nzLoading]="isLoadingOne">אישור</button>
   <a routerLink="/register"> אין לך חשבון? הרשם עכשיו!</a>
 </form>
