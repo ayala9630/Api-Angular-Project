@@ -7,6 +7,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
     {
         Task<int> AddUser(User user);
         Task<IEnumerable<User>> GetAllUsers();
+        Task<int> GetUserCount();
         Task<(IEnumerable<User> items, int totalCount)> GetUsersWithPagination(int pageNumber, int pageSize);
         Task<User?> GetUserById(int id);
         Task<User?> GetUserByUserName(string userName);

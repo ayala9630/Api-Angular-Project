@@ -15,6 +15,9 @@ export class PackageService {
   getPackageById(id: number): Observable<Package> {
     return this.http.get<Package>(`${this.url}/${id}`);
   }
+  getPackageForUpdate(id: number): Observable<UpdatePackage> {
+    return this.http.get<UpdatePackage>(`${this.url}/id/${id}/update`);
+  }
 
   getPackagesByLotteryId(lotteryId: number): Observable<Package[]> {
     return this.http.get<Package[]>(`${this.url}/lottery/${lotteryId}`);

@@ -24,6 +24,10 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Gifts.Include(c=>c.Cards).Where(l=>l.LotteryId==lotteryId).ToListAsync();
         }
+        public async Task<int> GetGiftCountByLotteryId(int lotteryId)
+        {
+            return await _context.Gifts.Where(g => g.LotteryId == lotteryId).CountAsync();
+        }
         public async Task<Gift?> GetGiftById(int id)
         {
             return await _context.Gifts.Include(x=>x.Donor).Include(x=>x.Category).Include(x=>x.Lottery).FirstOrDefaultAsync(x => x.Id == id);
@@ -49,7 +53,7 @@ namespace ChineseSaleApi.Repositories
             return (gifts, totalCount);
         }
 
-        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsSearchPagination(int lotteryId, int pageNumber, int pageSize, string? textSearch, string? type, string? sortType, bool? ascendingOrder)
+        public async Task<(IEnumerable<Gift> items, int totalCount)> GetGiftsSearchPagination(int lotteryId, int pageNumber, int pageSize, string? textSearch, string? type, string? sortType, bool? ascendingOrder, int? categoryId)
         {
             IQueryable<Gift> query;
 
@@ -79,6 +83,10 @@ namespace ChineseSaleApi.Repositories
                 default:
                     query = ascendingOrder == true ? query.OrderBy(g => g.Id) : query.OrderByDescending(g => g.Id);
                     break;
+            }
+            if(categoryId != null)
+            {
+                query = query.Where(g => g.CategoryId == categoryId);
             }
             var totalCount = await query.CountAsync();
             var gifts = await query

@@ -50,6 +50,22 @@
 </ng-template>
 
 <!-- <nz-transfer nzShowSearch></nz-transfer> -->
+<div class="category-container">
+    <div class="category-grid">
+        <div class="category-square"
+            [ngClass]="{ 'selected': selectedCategory === null }"
+            (click)="onCategoryChange(null)">
+            {{'כל המתנות'}}
+        </div>
+        @for(category of allCategories; track category.id) {
+        <div class="category-square"
+            [ngClass]="{ 'selected': selectedCategory === category.id }"
+            (click)="onCategoryChange(category.id)">
+            {{category.name}}
+        </div>
+        }
+    </div>
+</div>
 
 <div class="gifts-grid">
     <div class="page-description">
@@ -77,11 +93,12 @@
     </ng-template>
 
     <ng-template #rightAction>
-        @if(global.lotteryStarted() && !global.lotteryFinished()){
         @if(admin){
+            @if(!global.lotteryStarted()){
         <nz-icon nzType="delete" nzTheme="outline" />
-        }
+        }}
         @else {
+        @if(global.lotteryStarted() && !global.lotteryFinished()){
         <nz-icon nzType="minus" nzTheme="outline" (click)="updateGift(gift.id, -1)"></nz-icon>
         }
         }
@@ -106,17 +123,20 @@
         }
         }
         @else {
+            @if(!admin) {
         {{"עדיין לא ניתן לרכוש"}}
+            }
         }
         }
     </ng-template>
 
     <ng-template #leftAction>
-        @if(global.lotteryStarted() && !global.lotteryFinished()){
         @if(admin){
-        <nz-icon nzType="edit" />
-        }
+        @if(!global.lotteryStarted()){
+            <nz-icon nzType="edit" (click)="edit(gift.id)"></nz-icon>
+        }}
         @else {
+            @if(global.lotteryStarted() && !global.lotteryFinished()){
         <nz-icon nzType="plus" nzTheme="outline" (click)="updateGift(gift.id, 1)"></nz-icon>
         }
         }
@@ -146,12 +166,13 @@
     </ng-template>
 
 
-    <ng-template #rightAction>
-        @if(global.lotteryStarted() && !global.lotteryFinished()){
+  <ng-template #rightAction>
         @if(admin){
+            @if(!global.lotteryStarted()){
         <nz-icon nzType="delete" nzTheme="outline" />
-        }
+        }}
         @else {
+        @if(global.lotteryStarted() && !global.lotteryFinished()){
         <nz-icon nzType="minus" nzTheme="outline" (click)="updateGift(gift.id, -1)"></nz-icon>
         }
         }
@@ -176,17 +197,20 @@
         }
         }
         @else {
+            @if(!admin) {
         {{"עדיין לא ניתן לרכוש"}}
+            }
         }
         }
     </ng-template>
 
     <ng-template #leftAction>
-        @if(global.lotteryStarted() && !global.lotteryFinished()){
         @if(admin){
-        <nz-icon nzType="edit" />
-        }
+        @if(!global.lotteryStarted()){
+            <nz-icon nzType="edit" (click)="edit(gift.id)"></nz-icon>
+        }}
         @else {
+            @if(global.lotteryStarted() && !global.lotteryFinished()){
         <nz-icon nzType="plus" nzTheme="outline" (click)="updateGift(gift.id, 1)"></nz-icon>
         }
         }

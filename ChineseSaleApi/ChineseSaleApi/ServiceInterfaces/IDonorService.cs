@@ -13,6 +13,7 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<DonorDto?> GetDonorByIdSimple(int id, int lotteryId);
         Task<PaginatedResultDto<DonorDto>> GetDonorsNameSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
         Task<PaginatedResultDto<DonorDto>> GetDonorsEmailSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch);
+        Task<int> GetDonorCountByLotteryId(int lotteryId);
 
         Task<bool?> AddLotteryToDonor(int donorId, int lotteryId);
         Task<bool?> UpdateDonor(UpdateDonorDto donor);

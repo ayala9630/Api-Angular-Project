@@ -36,6 +36,10 @@ export class DonorService {
     return this.http.get<any>(`${this.url}/lottery/${lotteryId}/pagination`, { params });
   }
 
+  getDonorCountByLotteryId(lotteryId: number): Observable<number> {
+    return this.http.get<number>(`${this.url}/lottery/${lotteryId}/count`);
+  }
+
   getDonorsSearchPagination(lotteryId: number, pageNumber: number, pageSize: number, searchText?: string, searchType?: 'name' | 'email'): Observable<any> {
     let queryParams = `?lotteryId=${lotteryId}`;
     queryParams += `&pageNumber=${pageNumber}`;

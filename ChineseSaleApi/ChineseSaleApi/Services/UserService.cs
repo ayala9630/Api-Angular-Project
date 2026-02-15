@@ -144,6 +144,19 @@ namespace ChineseSaleApi.Services
             }
         }
 
+          public async Task<int> GetUserCount()
+          {
+            try
+            {
+              return await _repository.GetUserCount();
+            }
+            catch (Exception ex)
+            {
+              _logger.LogError(ex, "Failed to get user count.");
+              throw;
+            }
+          }
+
         public async Task<bool> IsUserNameExists(string userName)
         {
             return await _repository.IsUserNameExists(userName);

@@ -51,10 +51,24 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get packages for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500,ex+ "An unexpected error occurred while retrieving packages.");
+                return StatusCode(500, ex + "An unexpected error occurred while retrieving packages.");
             }
         }
 
+        [HttpGet("id/{id}/update")]
+        public async Task<IActionResult> GetPackagesByIds(int id)
+        {
+            try
+            {
+                var packages = await _service.GetPackageByIdUpdate(id);
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get packages by ids {PackageId}.", string.Join(", ", id));
+                return StatusCode(500, "An unexpected error occurred while retrieving the packages.");
+            }
+        }
         //create
         [HttpPost]
         public async Task<IActionResult> AddPackage([FromBody] CreatePackageDto createPackageDto)

@@ -110,6 +110,23 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
+        [HttpGet("lottery/{lotteryId}/count")]
+        public async Task<IActionResult> GetDonorCountByLotteryId(int lotteryId)
+        {
+            try
+            {
+                if (await _lotteryService.GetLotteryById(lotteryId) == null)
+                    return NotFound();
+                var count = await _service.GetDonorCountByLotteryId(lotteryId);
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get donor count for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving donor count.");
+            }
+        }
+
         [HttpGet("lottery/{lotteryId}/search")]
         public async Task<IActionResult> GetDonorSearchedPagination(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] string? name, [FromQuery] string? email)
         {
