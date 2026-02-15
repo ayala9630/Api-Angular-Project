@@ -31,6 +31,12 @@ namespace ChineseSaleApi.Repositories
                 .Where(d => d.Lotteries.Any(l => l.Id == lottery))
                 .ToListAsync();
         }
+        public async Task<int> GetDonorCountByLotteryId(int lotteryId)
+        {
+            return await _context.Donors
+                .Where(d => d.Lotteries.Any(l => l.Id == lotteryId))
+                .CountAsync();
+        }
         public async Task<Donor?> GetDonorById(int id)
         {
             return await _context.Donors.Include(g => g.Gifts).Include(d=>d.Lotteries)

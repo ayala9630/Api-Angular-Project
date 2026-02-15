@@ -13,6 +13,7 @@ namespace ChineseSaleApi.RepositoryInterfaces
         Task UpdateDonor(Donor donor);
         Task<bool?> UpdateLotteryDonor(int donorId, int lotteryId);
         Task<IEnumerable<Donor>> GetDonorByLotteryId(int lottery);
+        Task<int> GetDonorCountByLotteryId(int lotteryId);
         Task<bool?> DeleteDonor(int id);
         Task<bool?> DeleteLotteryDonor(int donorId, int lotteryId);
     }

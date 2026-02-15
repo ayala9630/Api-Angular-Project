@@ -21,7 +21,8 @@ export class GiftService {
       searchText?: string,
       searchType?: 'name' | 'donor',
       sortType?: 'name' | 'category' | 'price',
-      ascendingOrder?: boolean
+      ascendingOrder?: boolean,
+      categoryId?: number | null
     ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
       let queryParams = `?lotteryId=${lotteryId}`;
       if (userId !== undefined) queryParams += `&userId=${userId}`;
@@ -33,11 +34,22 @@ export class GiftService {
       }    
       if (sortType !== undefined && ascendingOrder !== undefined)
         queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
+      if (categoryId !== null) queryParams += `&categoryId=${categoryId}`;
+      console.log(queryParams);
+      
       return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
     }
 
   getGiftById(id: number): Observable<Gift> {
     return this.http.get<Gift>(`${this.url}/${id}`);
+  }
+
+  getGiftCountByLotteryId(lotteryId: number): Observable<number> {
+    return this.http.get<number>(`${this.url}/lottery/${lotteryId}/count`);
+  }
+
+  getGiftForUpdate(id: number): Observable<UpdateGift> {
+    return this.http.get<UpdateGift>(`${this.url}/id/${id}/update`);
   }
 
   createGift(gift: CreateGift): Observable<Gift> {

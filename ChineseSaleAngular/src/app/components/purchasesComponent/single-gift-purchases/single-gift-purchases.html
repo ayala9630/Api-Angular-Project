@@ -10,6 +10,10 @@
                 <span class="meta-item">סה"כ כרטיסים: <strong>{{ totalTickets }}</strong></span>
             </div>
         </div>
+        <div class="winner-display">
+            <span class="winner-label">הזוכה</span>
+            <span class="winner-name">{{ gift?.winnerName || 'מתנה זו עדיין לא הוגרלה' }}</span>
+        </div>
         <div class="list-title">רשימת רוכשים</div>
         <nz-list class="purchase-list demo-loadmore-list" [nzLoading]="initLoading">
             @for (item of allPurchases; track item.userName) {

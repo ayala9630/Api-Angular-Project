@@ -20,7 +20,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { GlobalService } from '../../../services/global/global.service';
 import { CookieService } from 'ngx-cookie-service';
 import { getClaim } from '../../../utils/token.util';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 
 @Component({
@@ -28,12 +28,18 @@ import { RouterLink } from "@angular/router";
   imports: [NzAvatarModule, NzCardModule, NzIconModule, FormsModule, NzInputNumberModule, NzButtonModule, NzModalModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, RouterLink],
   templateUrl: './package.html',
   styleUrl: './package.scss',
-})  
+})
 export class Package {
-  constructor(private packageService: PackageService, private modal: NzModalService, public global: GlobalService, private cookieService: CookieService) { }
-  
+  constructor(
+    private packageService: PackageService,
+    private modal: NzModalService,
+    public global: GlobalService,
+    private cookieService: CookieService,
+    private router: Router
+  ) { }
+
   allPackages: PackageModel[] = [];
-  admin: boolean = false;
+  admin: boolean = true;
   value = 0;
   isVisible = false;
   isConfirmLoading = false;
@@ -41,91 +47,69 @@ export class Package {
   packageCart: PackageCarts[] = [];
   token: string = '';
   isLogin = false;
-  
+
   ngOnInit() {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
     this.token = this.cookieService.get('auth_token') || '';
-    this.admin = getClaim(this.token, 'IsAdmin') ==='true';
+    // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
     console.log(this.admin);
     this.isLogin = this.token !== '';
     this.uploadData();
   }
-  
+
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
-
-
-  validateForm = this.fb.group({
-    name: ['', [Validators.required]],
-    description: [''],
-    numOfCards: [0, [Validators.required, Validators.min(1)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    LotteryId: [this.currentLotteryId(), [Validators.required]],
-  });  
-
-  packageData: CreatePackage = {
-    name: '',
-    description: '',
-    numOfCards: 0,
-    price: 0,
-    LotteryId: this.currentLotteryId(),
-  }  
 
   private lotteryEffect = effect(() => {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     const lottery = this.global.currentLottery();
     this.uploadData();
-  });  
+  });
 
   uploadData() {
     this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
       this.allPackages = packages;
       console.log(this.allPackages);
-      
-    });  
-  }  
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }  
+  }
 
-  submitForm(): void {
-    console.log('submit', this.validateForm.value);
-  }  
 
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
-    this.validateForm.reset();
-  }  
+  editPackage(packageId: number): void {
+    console.log(packageId);
+    this.router.navigate(['/packages/edit', packageId]);
+  }
+  // showModal2(): void {
+  //   this.isVisible = true;
+  // };  
 
-  showModal2(): void {
-    this.isVisible = true;
-  };  
+  // handleOk(): void {
+  //   this.packageData = {
+  //     name: this.validateForm.value.name || '',
+  //     description: this.validateForm.value.description || '',
+  //     numOfCards: this.validateForm.value.numOfCards || 0,
+  //     price: this.validateForm.value.price || 0,
+  //     LotteryId: this.currentLotteryId(),
+  //   }  
+  //   this.resetForm(new MouseEvent('click'));
+  //   this.isConfirmLoading = true;
+  //   this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
+  //     console.log('New package added with ID:', newPackageId);
+  //     // Optionally, refresh the package list or perform other actions
+  //     this.uploadData();
+  //   });  
+  //   this.isVisible = false;
+  //   this.isConfirmLoading = false;
+  // }  
 
-  handleOk(): void {
-    this.packageData = {
-      name: this.validateForm.value.name || '',
-      description: this.validateForm.value.description || '',
-      numOfCards: this.validateForm.value.numOfCards || 0,
-      price: this.validateForm.value.price || 0,
-      LotteryId: this.currentLotteryId(),
-    }  
-    this.resetForm(new MouseEvent('click'));
-    this.isConfirmLoading = true;
-    this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
-      console.log('New package added with ID:', newPackageId);
-      // Optionally, refresh the package list or perform other actions
-      this.uploadData();
-    });  
-    this.isVisible = false;
-    this.isConfirmLoading = false;
-  }  
-
-  handleCancel(): void {
-    this.isVisible = false;
-  }  
+  // handleCancel(): void {
+  //   this.isVisible = false;
+  // }  
 
 
   updatePackage(packageId: number, qty: number): void {

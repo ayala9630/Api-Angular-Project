@@ -13,6 +13,8 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<IEnumerable<GiftWithOldPurchaseDto>> GetAllGifts(int lotteryId, int userId);
         Task<bool?> UpdateGift(UpdateGiftDto updateGiftDto);
         Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsByUserWithPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams,dynamic request);
-        Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType, bool? ascendingOrder);
+        Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType, bool? ascendingOrder,int? categoryId);
+        Task<UpdateGiftDto> GetGiftsByIdUpdate(int id);
+        Task<int> GetGiftCountByLotteryId(int lotteryId);
     }
 }

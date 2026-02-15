@@ -24,6 +24,10 @@ export class UserService {
     return this.http.get<User[]>(this.url);
   }
 
+  getUserCount(): Observable<number> {
+    return this.http.get<number>(`${this.url}/count`);
+  }
+
   getUsersWithPagination(pageNumber: number, pageSize: number): Observable<any> {
     const params = new HttpParams()
       .set('pageNumber', pageNumber)

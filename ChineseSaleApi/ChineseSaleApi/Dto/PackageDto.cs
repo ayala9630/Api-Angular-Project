@@ -12,6 +12,8 @@ namespace ChineseSaleApi.Dto
         public string Name { get; set; }
         [MaxLength(250)]
         public string? Description { get; set; }
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
         [Required]
         public int NumOfCards { get; set; }
         [Required]
@@ -26,6 +28,8 @@ namespace ChineseSaleApi.Dto
         public string Name { get; set; }
         [MaxLength(250)]
         public string? Description { get; set; }
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
         [Required]
         public int NumOfCards { get; set; }
         [Required]
@@ -41,6 +45,8 @@ namespace ChineseSaleApi.Dto
         public string? Name { get; set; }
         [MaxLength(250)]
         public string? Description { get; set; }
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
         public int? NumOfCards { get; set; }
         public int? Price { get; set; }
         public int? LotteryId { get; set; }

@@ -11,6 +11,8 @@ namespace ChineseSaleApi.Models
         public string Name { get; set; }
         [MaxLength(250)]
         public string? Description { get; set; }
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
         [Required]
         public int NumOfCards { get; set; }
         [Required]
