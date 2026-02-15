@@ -28,6 +28,7 @@ export class Header {
   lotteryData: Lottery[] = [];
   selectedLottery: Lottery | undefined;
   user: User | null = null;
+  admin: boolean = true;
 
   ngOnInit() {
     console.log("header-init");
@@ -38,6 +39,7 @@ export class Header {
       const user = this.cookieService.get('user');
       if (user) {
         this.user = JSON.parse(user);
+        // this.admin = this.user?.isAdmin || false;
       }
     });
   }

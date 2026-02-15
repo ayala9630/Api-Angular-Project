@@ -10,8 +10,8 @@ namespace ChineseSaleApi.ServiceInterfaces
         Task<PaginatedResultDto<ListCardDto>> GetCardsWithPagination(int lotteryId, PaginationParamsDto paginationParams);
         Task<CardDto?> GetCardByGiftId(int id);
         Task<bool> ResetWinnersByLotteryId(int lotteryId);
-        Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByValue(int lotteryId, PaginationParamsDto paginationParams, bool ascending);
-        Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByPurchases(int lotteryId, PaginationParamsDto paginationParams, bool ascending);
+        Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSorted(int lotteryId, PaginationParamsDto paginationParams, string? sortType, bool ascending);
+        //Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByPurchases(int lotteryId, PaginationParamsDto paginationParams, bool ascending);
 
     }
 }

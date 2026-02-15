@@ -27,12 +27,16 @@ export class CardService {
     return this.http.get<any>(`${this.url}/pagination/${lotteryId}`, { params });
   }
 
-  getCardsWithPaginationSortByValue(lotteryId: number, pageNumber: number, pageSize: number, ascending: boolean): Observable<any> {
-    const params = new HttpParams()
-      .set('pageNumber', pageNumber)
-      .set('pageSize', pageSize)
-      .set('ascending', ascending);
-    return this.http.get<any>(`${this.url}/pagination/sortByValue/${lotteryId}`, { params });
+  getCardsWithPaginationSorted(lotteryId: number, pageNumber?: number, pageSize?: number, sortType?: 'value' | 'purchases', ascending?: boolean): Observable<any> {
+    let queryParams = '?';
+    if (sortType !== undefined && ascending !== undefined)
+      queryParams += `&sortType=${sortType}&ascending=${ascending}`;
+    if (pageNumber !== undefined && pageSize !== undefined)
+      queryParams += `&pageNumber=${pageNumber}&pageSize=${pageSize}`;  
+    console.log(queryParams);
+      
+    return this.http.get<any>(`${this.url}/pagination/sorted/${lotteryId}/${queryParams}`,
+    );
   }
 
   getCardsWithPaginationSortByPurchases(lotteryId: number, pageNumber: number, pageSize: number, ascending: boolean): Observable<any> {

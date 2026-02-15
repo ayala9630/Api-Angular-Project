@@ -12,12 +12,14 @@ namespace ChineseSaleApi.Services
 {
     public class CardService : ICardService
     {
+        private readonly IGiftRepository _giftRepository;
         private readonly ICardRepository _repository;
         private readonly ILogger<CardService> _logger;
-        public CardService(ICardRepository repository, ILogger<CardService> logger)
+        public CardService(ICardRepository repository, ILogger<CardService> logger, IGiftRepository giftRepository)
         {
             _repository = repository;
             _logger = logger;
+            _giftRepository = giftRepository;
         }
         //create
         public async Task<int> AddCard(CreateCardDto createCardDto)
@@ -48,13 +50,20 @@ namespace ChineseSaleApi.Services
             try
             {
                 var cards = await _repository.GetAllCards(lotteryId);
+                var winnerByGiftId = cards
+                    .Where(x => x.IsWin == true && x.User != null)
+                    .GroupBy(x => x.GiftId)
+                    .ToDictionary(g => g.Key, g => MapUser(g.First().User!));
                 return cards.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.ImageUrl })
                             .Select(g => new ListCardDto
                             {
                                 GiftId = g.Key.Id,
                                 GiftName = g.Key.Name,
                                 ImageUrl = g.Key?.ImageUrl??"",
-                                Quantity = g.Count()
+                                Quantity = g.Count(),
+                                WinUser = winnerByGiftId.TryGetValue(g.Key.Id, out var winnerUser)
+                                    ? winnerUser
+                                    : null
                             }).ToList();
             }
             catch (Exception ex)
@@ -68,24 +77,36 @@ namespace ChineseSaleApi.Services
         {
             try
             {
+                int pageNumber = paginationParams.PageNumber > 0 ? paginationParams.PageNumber : 1;
+                int pageSize = paginationParams.PageSize > 0 ? paginationParams.PageSize : 10;
                 var items = await _repository.GetAllCards(lotteryId);
                 int totalCount = items.GroupBy(x => x.Gift.Id).Count();
+                var winnerByGiftId = items
+                    .Where(x => x.IsWin == true && x.User != null)
+                    .GroupBy(x => x.GiftId)
+                    .ToDictionary(g => g.Key, g => MapUser(g.First().User!));
+
                 var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.ImageUrl })
                             .Select(g => new ListCardDto
                             {
                                 GiftId = g.Key.Id,
                                 GiftName = g.Key.Name,
                                 ImageUrl = g.Key?.ImageUrl ?? "",
-                                Quantity = g.Count()
+                                Quantity = g.Count(),
+                                WinUser = winnerByGiftId.TryGetValue(g.Key.Id, out var winnerUser)
+                                    ? winnerUser
+                                    : null
                             })
-                            .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
-                            .Take(paginationParams.PageSize)
+                            .Skip((pageNumber - 1) * pageSize)
+                            .Take(pageSize)
                             .ToList();
 
                 return new PaginatedResultDto<ListCardDto>
                 {
                     Items = cardDtos,
-                    TotalCount = totalCount
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
                 };
             }
             catch (Exception ex)
@@ -95,31 +116,79 @@ namespace ChineseSaleApi.Services
             }
         }
 
-        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByValue(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSorted(int lotteryId, PaginationParamsDto paginationParams,string? sortType , bool ascending)
         {
             try
             {
+                int pageNumber = paginationParams.PageNumber > 0 ? paginationParams.PageNumber : 1;
+                int pageSize = paginationParams.PageSize > 0 ? paginationParams.PageSize : 10;
                 var items = await _repository.GetAllCards(lotteryId);
-                int totalCount = items.GroupBy(x => x.Gift.Id).Count();
-                var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name,x.Gift.GiftValue, x.Gift.ImageUrl })
-                            .Select(g => new ListCardDto
-                            {
-                                GiftId = g.Key.Id,
-                                GiftName = g.Key.Name,
-                                ImageUrl = g.Key?.ImageUrl ?? "",
-                                GiftValue = g.Key?.GiftValue,
-                                Quantity = g.Count()
-                            })
-                            .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
-                            .Take(paginationParams.PageSize);
+                var winnerByGiftId = items
+                    .Where(x => x.IsWin == true && x.User != null)
+                    .GroupBy(x => x.GiftId)
+                    .ToDictionary(g => g.Key, g => MapUser(g.First().User!));
+                //int totalCount = items.GroupBy(x => x.Gift.Id).Count();
+                //var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name,x.Gift.GiftValue, x.Gift.ImageUrl })
+                //            .Select(g => new ListCardDto
+                //            {
+                //                GiftId = g.Key.Id,
+                //                GiftName = g.Key.Name,
+                //                ImageUrl = g.Key?.ImageUrl ?? "",
+                //                GiftValue = g.Key?.GiftValue,
+                //                Quantity = g.Count()
+                //            })
+                //            .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                //            .Take(paginationParams.PageSize);
 
-                cardDtos = ascending ? cardDtos.OrderBy(x => x.GiftValue).ToList() : cardDtos.OrderByDescending(x => x.GiftValue).ToList();
 
+                var groupedCards = items.GroupBy(x => new { x.GiftId, x.Gift.Id, x.Gift.Name, x.Gift.GiftValue, x.Gift.ImageUrl }).ToList();
+
+                var allGift = await _giftRepository.GetAllGifts(lotteryId);
+                var giftsWithCards = allGift.GroupJoin(
+                    groupedCards,
+                    gift => gift.Id,
+                    card => card.Key.GiftId,
+                    (gift, card) => new { gift, card }
+                    ).SelectMany(x => x.card.DefaultIfEmpty(),
+                    (x, card) => new
+                    {
+                        card = card,
+                        gift = x != null ? x : null
+                    }).ToList();
+
+                var cardsDto = giftsWithCards
+                    .Where(g => g.gift != null)
+                    .Select(g => new ListCardDto
+                    {
+                        GiftId = g.gift.gift.Id,
+                        GiftName = g.gift.gift.Name,
+                        ImageUrl = g.gift.gift?.ImageUrl ?? "",
+                        GiftValue = g.gift.gift?.GiftValue,
+                        Quantity = g.card != null ? g.card.Count() : 0,
+                        WinUser = winnerByGiftId.TryGetValue(g.gift.gift.Id, out var winnerUser)
+                            ? winnerUser
+                            : null
+                    })
+                    .ToList();
+                    
+
+                if (sortType == "value")
+                    cardsDto = ascending ? cardsDto.OrderBy(x => x.GiftValue).ToList() : cardsDto.OrderByDescending(x => x.GiftValue).ToList();
+                else if (sortType == "purchases")
+                    cardsDto = ascending ? cardsDto.OrderBy(x => x.Quantity).ToList() : cardsDto.OrderByDescending(x => x.Quantity).ToList();
+
+                int totalCount = cardsDto.Count;
+                var pagedCards = cardsDto
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
                 return new PaginatedResultDto<ListCardDto>
-                {
-                    Items = cardDtos,
-                    TotalCount = totalCount
-                };
+                    {
+                        Items = pagedCards,
+                        TotalCount = totalCount,
+                        PageNumber = pageNumber,
+                        PageSize = pageSize
+                    };
             }
             catch (Exception ex)
             {
@@ -128,38 +197,37 @@ namespace ChineseSaleApi.Services
             }
         }
 
-        public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByPurchases(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
-        {
-            try
-            {
-                var items = await _repository.GetAllCards(lotteryId);
-                int totalCount = items.GroupBy(x => x.Gift.Id).Count();
-                var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.GiftValue, x.Gift.ImageUrl })
-                            .Select(g => new ListCardDto
-                            {
-                                GiftId = g.Key.Id,
-                                GiftName = g.Key.Name,
-                                ImageUrl = g.Key?.ImageUrl ?? "",
-                                GiftValue = g.Key?.GiftValue,
-                                Quantity = g.Count()
-                            })
-                            .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
-                            .Take(paginationParams.PageSize);
+        //public async Task<PaginatedResultDto<ListCardDto>> GetCardsWithPaginationSortByPurchases(int lotteryId, PaginationParamsDto paginationParams, bool ascending)
+        //{
+        //    try
+        //    {
+        //        var items = await _repository.GetAllCards(lotteryId);
+        //        int totalCount = items.GroupBy(x => x.Gift.Id).Count();
+        //        var cardDtos = items.GroupBy(x => new { x.Gift.Id, x.Gift.Name, x.Gift.GiftValue, x.Gift.ImageUrl })
+        //                    .Select(g => new ListCardDto
+        //                    {
+        //                        GiftId = g.Key.Id,
+        //                        GiftName = g.Key.Name,
+        //                        ImageUrl = g.Key?.ImageUrl ?? "",
+        //                        GiftValue = g.Key?.GiftValue,
+        //                        Quantity = g.Count()
+        //                    })
+        //                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+        //                    .Take(paginationParams.PageSize);
 
-                cardDtos = ascending ? cardDtos.OrderBy(x => x.Quantity).ToList() : cardDtos.OrderByDescending(x => x.Quantity).ToList();
 
-                return new PaginatedResultDto<ListCardDto>
-                {
-                    Items = cardDtos,
-                    TotalCount = totalCount
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get paginated cards sorted by purchases for lottery {LotteryId}.", lotteryId);
-                throw;
-            }
-        }
+        //        return new PaginatedResultDto<ListCardDto>
+        //        {
+        //            Items = cardDtos,
+        //            TotalCount = totalCount
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Failed to get paginated cards sorted by purchases for lottery {LotteryId}.", lotteryId);
+        //        throw;
+        //    }
+        //}
 
         public async Task<CardDto?> GetCardByGiftId(int id)
         {
@@ -167,6 +235,10 @@ namespace ChineseSaleApi.Services
             {
                 var cards = await _repository.GetCardByGiftId(id);
                 if (cards == null) return null;
+                var winnerCard = cards.FirstOrDefault(x => x.IsWin == true);
+                string? winnerName = winnerCard?.User != null
+                    ? $"{winnerCard.User.FirstName} {winnerCard.User.LastName}"
+                    : null;
                 var groupCards = cards.GroupBy(x => new { x.UserId, x.GiftId, x.Gift?.Name, x.User?.FirstName, x.User?.LastName })
                                 .Select(g => new
                                 {
@@ -186,7 +258,8 @@ namespace ChineseSaleApi.Services
                 {
                     GiftId = x.GiftId,
                     GiftName = x.GiftName,
-                    CardPurchases = dict
+                    CardPurchases = dict,
+                    WinnerName = winnerName
                 }).FirstOrDefault();
             }
             catch (Exception ex)
@@ -207,6 +280,28 @@ namespace ChineseSaleApi.Services
                 _logger.LogError(ex, "Failed to reset winners for lottery {LotteryId}.", lotteryId);
                 throw;
             }
+        }
+
+        private static UserDto MapUser(User user)
+        {
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Email = user.Email,
+                IsAdmin = user.IsAdmin,
+                Address = user.Address != null ? new AddressDto
+                {
+                    Id = user.Address.Id,
+                    City = user.Address.City,
+                    Street = user.Address.Street,
+                    Number = user.Address.Number,
+                    ZipCode = user.Address.ZipCode
+                } : null
+            };
         }
     }
 }
