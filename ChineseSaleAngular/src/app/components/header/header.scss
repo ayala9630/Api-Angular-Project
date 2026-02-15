@@ -85,6 +85,17 @@ nz-select {
         }
     }
 }
+.connected-status {
+    color: #595959;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 10px;
+
+    &::before {
+        content: "👋 ";
+        margin-right: 6px;
+    }
+}
 
 // Responsive
 @media (max-width: 768px) {
