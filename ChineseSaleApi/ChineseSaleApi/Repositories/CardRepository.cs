@@ -23,7 +23,7 @@ namespace ChineseSaleApi.Repositories
         //read
         public async Task<IEnumerable<Card>> GetAllCards(int lotteryId)
         {
-            return await _context.Cards.Include(p => p.Gift).Where(x=>x.Gift.LotteryId==lotteryId).ToListAsync();
+            return await _context.Cards.Include(p => p.Gift).Include(x=>x.User).Where(x=>x.Gift.LotteryId==lotteryId).ToListAsync();
         }
         public async Task<List<Card?>> GetCardByGiftId(int id)
         {

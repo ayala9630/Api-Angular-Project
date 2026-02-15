@@ -11,6 +11,8 @@ import { AddGift } from './components/giftComponents/add-gift/add-gift';
 import { Home } from './components/home/home';
 import { single } from 'rxjs';
 import { SinglePackage } from './components/packageComponents/single-package/single-package';
+import { Purchase } from './components/purchasesComponent/purchase/purchase';
+import { SingleGiftPurchases } from './components/purchasesComponent/single-gift-purchases/single-gift-purchases';
 
 
 export const routes: Routes = [
@@ -26,4 +28,6 @@ export const routes: Routes = [
         {path: 'donors/add',component: PostDonor},
         {path:'donors/edit/:id', component: PostDonor},
         {path:'donors/:id', component: SingleDonor},
+        {path:'purchases', component: Purchase},
+        {path:'purchases/purchase/:id', component: SingleGiftPurchases},
 ];
