@@ -9,6 +9,7 @@ import { UserService } from '../../services/user/user.service';
 import { LoginRequest } from '../../models';
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -19,34 +20,50 @@ import { CookieService } from 'ngx-cookie-service';
 export class Login {
   constructor(
     private userService: UserService,
-     private cookieService:CookieService,
-     private router: Router
-    ) {}
+    private cookieService: CookieService,
+    private router: Router,
+    private msg : NzMessageService,
+  ) { }
 
   private fb = inject(NonNullableFormBuilder);
   validateForm = this.fb.group({
     userName: this.fb.control('', [Validators.required]),
     password: this.fb.control('', [Validators.required]),
   });
-
+  isLoadingOne = false;
+  isLoadingTwo = false;
+  time:number = 40000
   submitForm(): void {
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
       this.userService.login(this.validateForm.value as LoginRequest).subscribe({
         next: (user) => {
+          this.time=40000;
           console.log('User logged in successfully:', user);
           this.cookieService.set('auth_token', user.token);
           this.cookieService.set('user', JSON.stringify(user.user));
+          this.msg.create('success', 'התחברת בהצלחה');
           this.router.navigate(['/home']);
-        }
-    });
-    // } else {
-    //   Object.values(this.validateForm.controls).forEach(control => {
-    //     if (control.invalid) {
-    //       control.markAsDirty();
-    //       control.updateValueAndValidity({ onlySelf: true });
-    //     }
-    //   });
+        },
+        error:(err)=> {
+          this.time=2000;
+          if (err.status === 401) {
+            console.error('Invalid credentials:', err);
+            this.msg.error('שם משתמש או סיסמה שגויים');
+          }
+          else {
+            console.error('Login failed:', err);
+            this.msg.error('התחברות נכשלה, אנא נסה שוב מאוחר יותר');
+          }
+        },
+      });
+
     }
+  }
+  loadOne(): void {
+    this.isLoadingOne = true;
+    setTimeout(() => {
+      this.isLoadingOne = false;
+    },this.time );
   }
 }

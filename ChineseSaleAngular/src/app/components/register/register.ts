@@ -8,20 +8,21 @@ import {
 } from '@angular/forms';
 import { Observable, Observer, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
-
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { Address } from "../address/address";
-import { CreateAddress, CreateUser } from '../../models';
+import { CreateAddress, CreateUser, LoginRequest } from '../../models';
 import { UserService } from '../../services/user/user.service';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule,ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, Address, NzCollapseModule],
+  imports: [RouterModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, Address, NzCollapseModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -40,7 +41,11 @@ export class Register {
     address: this.fb.control<CreateAddress | null>(null, [Validators.required]),
   });
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+    private msg: NzMessageService,
+    private router: Router,
+    private cookieService: CookieService,
+  ) { }
 
   ngOnInit(): void {
     this.validateForm.controls.password.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -56,7 +61,33 @@ export class Register {
   submitForm(): void {
     this.userService.registerUser(this.validateForm.value as CreateUser).subscribe({
       next: (user) => {
-        console.log('User registered successfully:', user);
+        const loginRequest: LoginRequest = {
+          userName: this.validateForm.value.userName || '',
+          password: this.validateForm.value.password || '',
+        };
+        this.userService.login(loginRequest).subscribe({
+          next: (user) => {
+            console.log('User logged in successfully:', user);
+            this.cookieService.set('auth_token', user.token);
+            this.cookieService.set('user', JSON.stringify(user.user));
+            this.msg.create('success', 'נרשמת בהצלחה');
+            this.router.navigate(['/home']);
+          }
+        });
+      },
+      error: (err) => {
+        if( err.status === 400) {
+          this.msg.error('שם משתמש או דוא"ל כבר קיימים במערכת');
+        }
+        else if (err.status === 409) {
+          this.msg.error('שם משתמש או דוא"ל כבר קיימים במערכת');
+        }
+        else if (err.status === 500) {
+          this.msg.error('שגיאה פנימית בשרת, אנא נסה שוב מאוחר יותר');
+        }
+        else if (err.status === 0) {
+          this.msg.error('אין חיבור לאינטרנט, אנא בדוק את החיבור שלך');
+        }
       }
     });
     this.resetForm1(new MouseEvent('click'));
@@ -88,10 +119,10 @@ export class Register {
     console.log('Checking username:', control.value);
     return this.userService.isUserNameExists(control.value).pipe(
       map(exists => {
-        console.log('Username exists:', exists);
         return exists ? { error: true, duplicated: true } : null;
       }),
       catchError((error) => {
+        this.msg.error('שגיאה בבדיקת שם משתמש');
         console.error('Error checking username:', error);
         return of(null);
       })
@@ -105,10 +136,10 @@ export class Register {
     console.log('Checking email:', control.value);
     return this.userService.isEmailExists(control.value).pipe(
       map(exists => {
-        console.log('Email exists:', exists);
         return exists ? { error: true, duplicated: true } : null;
       }),
       catchError((error) => {
+        this.msg.error('שגיאה בבדיקת כתובת דוא"ל');
         console.error('Error checking email:', error);
         return of(null);
       })
