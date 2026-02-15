@@ -21,6 +21,11 @@
         <li nz-menu-item>
             <a routerLink="packages">יצירת קשר</a>
         </li>
+        @if(admin) {
+        <li nz-menu-item>
+            <a routerLink="purchases">רכישות</a>
+        </li>
+        }
     </ul>
     <ul nz-menu nzMode="horizontal" class="auth-menu">
         @if (conected) {

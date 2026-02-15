@@ -1,0 +1,69 @@
+<div class="purchase-page">
+    <div class="sort-group">
+        <nz-input-group [nzPrefix]="prefixIconSort">
+            <nz-select class="sort-select" [(ngModel)]="sortType" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onSortChange($event)" nzPlaceHolder="מיין לפי...">
+                <nz-option nzValue="value" nzLabel="ערך מתנה"></nz-option>
+                <nz-option nzValue="purchases" nzLabel="כמות רכישות"></nz-option>
+            </nz-select>
+        </nz-input-group>
+
+
+        <ng-template #prefixIconSort>
+            @if(ascending) {
+            <span nz-icon nzType="sort-ascending"></span>
+            }
+            @else {
+            <span nz-icon nzType="sort-descending"></span>
+            }
+        </ng-template>
+
+        <div class="switch-wrapper">
+            <span class="switch-label">{{ ascending ? 'עולה' : 'יורד' }}</span>
+            <nz-switch [(ngModel)]="ascending" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onSortOrderChange($event)">
+            </nz-switch>
+        </div>
+    </div>
+
+    <nz-list class="purchase-list demo-loadmore-list" [nzLoading]="initLoading">
+        @for (item of allGifts; track item.giftId){
+        <nz-list-item class="purchase-item">
+            <ng-container>
+                <nz-list-item-meta nzAvatar="http://localhost:5025/images/{{item.imageUrl}}"
+                    nzDescription="שווי מתנה: ₪{{ item.giftValue }}">
+                    <nz-list-item-meta-title>
+                        <a class="purchase-name" [routerLink]="['/purchases/purchase', item.giftId]">
+                            {{ item.giftName }}
+                        </a>
+                    </nz-list-item-meta-title>
+                    <nz-list-item-meta-description>
+                        @if(item.quantity > 0) {
+                        נרכשו {{ item.quantity }} כרטיסים
+                        }
+                        @else {
+                        עדיין לא נרכשו כרטיסים למתנה זו
+                        }
+                    </nz-list-item-meta-description>
+                </nz-list-item-meta>
+            </ng-container>
+            <div class="purchase-side">
+                <div class="purchase-value">
+                    {{item.giftValue ? 'שווי: ₪' + item.giftValue : 'הערך המשוער של המתנה לא זמין'}}
+                </div>
+                @if(global.lotteryFinished()){
+                <div class="purchase-extra">
+                    {{item.winUser ? 'הזוכה במתנה זו הוא: ' + item.winUser.firstName + ' ' + item.winUser.lastName : 'מתנה זו עדיין לא הוגרלה'}}
+                </div>
+                }
+            </div>
+        </nz-list-item>
+        }
+
+        @if (allGifts.length === 0) {
+        <div class="empty-message">לא נמצאו מתנות</div>
+        }
+    </nz-list>
+    <nz-pagination class="nz-pagination sticky-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
+        [nzPageSize]="pageSize" (nzPageIndexChange)="onPageChange($event)" />
+</div>

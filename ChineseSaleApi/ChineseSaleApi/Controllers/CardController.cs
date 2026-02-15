@@ -71,12 +71,12 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
-        [HttpGet("pagination/sortByValue/{lotteryId}")]
-        public async Task<IActionResult> GetCardsWithPaginationSortByValue(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
+        [HttpGet("pagination/sorted/{lotteryId}")]
+        public async Task<IActionResult> GetCardsWithPaginationSorted(int lotteryId, [FromQuery] PaginationParamsDto paginationParams,[FromQuery]string? sortType, [FromQuery] bool ascending)
         {
             try
             {
-                var cards = await _service.GetCardsWithPaginationSortByValue(lotteryId, paginationParams, ascending);
+                var cards = await _service.GetCardsWithPaginationSorted(lotteryId, paginationParams,sortType, ascending);
                 return Ok(cards);
             }
             catch (Exception ex)
@@ -86,20 +86,20 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
-        [HttpGet("pagination/sortByPurchases/{lotteryId}")]
-        public async Task<IActionResult> GetCardsWithPaginationSortByPurchases(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
-        {
-            try
-            {
-                var cards = await _service.GetCardsWithPaginationSortByPurchases(lotteryId, paginationParams, ascending);
-                return Ok(cards);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get paginated cards sorted by purchases for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500, "An unexpected error occurred while retrieving sorted cards.");
-            }
-        }
+        //[HttpGet("pagination/sortByPurchases/{lotteryId}")]
+        //public async Task<IActionResult> GetCardsWithPaginationSortByPurchases(int lotteryId, [FromQuery] PaginationParamsDto paginationParams, [FromQuery] bool ascending)
+        //{
+        //    try
+        //    {
+        //        var cards = await _service.GetCardsWithPaginationSortByPurchases(lotteryId, paginationParams, ascending);
+        //        return Ok(cards);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Failed to get paginated cards sorted by purchases for lottery {LotteryId}.", lotteryId);
+        //        return StatusCode(500, "An unexpected error occurred while retrieving sorted cards.");
+        //    }
+        //}
 
         //create
         [HttpPost]

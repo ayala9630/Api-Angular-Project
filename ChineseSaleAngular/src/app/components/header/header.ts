@@ -31,6 +31,7 @@ export class Header implements OnDestroy {
   selectedLottery: Lottery | undefined;
   user: User | null = null;
   conected: boolean = false;
+  admin: boolean = true;
 
   ngOnInit() {
     // הירשמות לשינויים במצב החיבור
@@ -53,9 +54,12 @@ export class Header implements OnDestroy {
     // טען לוטריות (כמו קודם)
     this.lotteryService.getAllLotteries().subscribe((data: Lottery[]) => {
       this.lotteryData = data;
-      if (this.lotteryData.length) {
-        this.selectedLottery = this.lotteryData[this.lotteryData.length - 1];
-        this.global.currentLottery.set(this.selectedLottery);
+      this.selectedLottery = this.lotteryData[this.lotteryData.length - 1];
+      this.global.currentLottery.set(this.selectedLottery);
+      const user = this.cookieService.get('user');
+      if (user) {
+        this.user = JSON.parse(user);
+        // this.admin = this.user?.isAdmin || false;
       }
       // חשוב: לא צריך כאן לקרוא this.global.conected() — ההרשמה מטפלת בזה
     });

@@ -1,0 +1,32 @@
+<div class="single-gift-page">
+    <nz-card class="gift-card" [nzBordered]="false">
+        <div class="gift-hero">
+            <div class="gift-title">
+                <span class="gift-label">מתנה</span>
+                <span class="gift-name">{{ gift?.giftName || 'מתנה ללא שם' }}</span>
+            </div>
+            <div class="gift-meta">
+                <span class="meta-item">סה"כ רוכשים: <strong>{{ allPurchases.length }}</strong></span>
+                <span class="meta-item">סה"כ כרטיסים: <strong>{{ totalTickets }}</strong></span>
+            </div>
+        </div>
+        <div class="list-title">רשימת רוכשים</div>
+        <nz-list class="purchase-list demo-loadmore-list" [nzLoading]="initLoading">
+            @for (item of allPurchases; track item.userName) {
+            <nz-list-item class="purchase-item">
+                <ng-container>
+                    <nz-list-item-meta>
+                        <nz-list-item-meta-title>
+                            <span class="buyer-name">{{ item.userName }}</span>
+                            <span class="quantity-pill">כרטיסים: {{ item.quantity }}</span>
+                        </nz-list-item-meta-title>
+                    </nz-list-item-meta>
+                </ng-container>
+            </nz-list-item>
+            }
+            @if (!initLoading && allPurchases.length === 0) {
+            <div class="empty-message">לא נמצאו כרטיסים למתנה זו</div>
+            }
+        </nz-list>
+    </nz-card>
+</div>

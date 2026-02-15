@@ -19,6 +19,7 @@ namespace ChineseSaleApi.Dto
         public int GiftId { get; set; }
         public string? GiftName { get; set; }
         public IDictionary<string, int>? CardPurchases { get; set; }
+        public string? WinnerName { get; set; }
     }
     public class CreateCardDto
     {
