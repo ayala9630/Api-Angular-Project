@@ -22,6 +22,8 @@ namespace ChineseSaleApi.Services
         //create
         public async Task<int> AddAddressForUser(CreateAddressForUserDto address)
         {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+
             try
             {
                 Address addrress2 = new Address
@@ -48,6 +50,8 @@ namespace ChineseSaleApi.Services
 
         public async Task<int> AddAddressForDonor(CreateAddressForDonorDto address)
         {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+
             try
             {
                 Address addrress2 = new Address
@@ -75,6 +79,8 @@ namespace ChineseSaleApi.Services
         //read
         public async Task<AddressDto?> GetAddressById(int id)
         {
+            if (id <= 0) throw new ArgumentException("Id must be greater than zero.", nameof(id));
+
             try
             {
                 var address = await _repository.GetAddress(id);
@@ -102,6 +108,8 @@ namespace ChineseSaleApi.Services
         //update
         public async Task<bool?> UpdateAddress(AddressDto addressDto)
         {
+            if (addressDto == null) throw new ArgumentNullException(nameof(addressDto));
+
             try
             {
                 var address = await _repository.GetAddress(addressDto.Id);

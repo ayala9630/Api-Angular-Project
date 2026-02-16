@@ -17,6 +17,7 @@ import { NzSelectModule } from "ng-zorro-antd/select";
 import { NzOptionComponent } from "ng-zorro-antd/select";
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSwitchComponent } from "ng-zorro-antd/switch";
+import { NzMessageComponent, NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-gift',
@@ -40,12 +41,12 @@ import { NzSwitchComponent } from "ng-zorro-antd/switch";
   styleUrl: './gift.scss',
 })
 
-
 export class Gift {
   constructor(
     private giftService: GiftService,
     public global: GlobalService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private msg: NzMessageService
   ) { }
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
@@ -56,7 +57,6 @@ export class Gift {
   isVisible: boolean = false;
   pageNumber: number = 1;
   pageSize: number = 3;
-
   searchText: string = '';
   filteredGifts: GiftWithOldPurchase[] = [];
   searchType: 'name' | 'donor' = 'name';
@@ -66,11 +66,8 @@ export class Gift {
 
   private fb = inject(NonNullableFormBuilder)
 
-
   onSearchChange(searchValue: string): void {
-    // console.log("onSearchChange");
     this.uploadData();
-    // console.log(this.searchText);
   }
 
   searchTypeChange(value: 'name' | 'donor'): void {
@@ -87,13 +84,10 @@ export class Gift {
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
     const token = this.cookieService.get('authToken') || '';
-    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
-    // this.cookieService.set('cardCart', [], 7);
     this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
     this.uploadData()
 
   }
-
 
   validateForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -109,9 +103,14 @@ export class Gift {
 
 
   uploadData(): void {
-    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder).subscribe((gifts) => {
-      this.paginatedGifts = gifts;
-      this.allGifts = this.paginatedGifts.items.flat();
+    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder).subscribe({
+      next: (gifts) => {
+        this.paginatedGifts = gifts;
+        this.allGifts = this.paginatedGifts.items.flat();
+      },
+      error: (err) => {
+        this.msg.error('שגיאה בטעינת המתנות');
+      }
     });
   }
 
@@ -123,7 +122,7 @@ export class Gift {
 
   onSortChange(type: 'name' | 'category' | 'price'): void {
     console.log("onSortChange", type);
-    
+
     this.sortType = type;
     console.log("onSortChange", this.sortType);
     this.uploadData();
@@ -154,13 +153,7 @@ export class Gift {
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
-    // if (this.global.currentLottery() != null) {
-    // this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
-    // this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
-    // }    
-    // console.log("started", this.global.lotteryStarted(), "finished", this.global.lotteryFinished());  
   });
-
 
   updateGift(giftId: number, qty: number): void {
     const existingCartItem = this.cart.find(item => item.giftId === giftId);
@@ -184,26 +177,8 @@ export class Gift {
     console.log('submit', this.validateForm.value);
   }
 
-
   ngOnChanges(c: SimpleChanges): void {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
-
-    // this.validateForm = new FormGroup({
-    //   name: this.fb.group(['', [Validators.required]]),
-    //   description:this.fb.group( ['']),
-    //   price: this.fb.group([0, [Validators.required, Validators.min(0)]]),
-    //   giftValue: this.fb.group([0, [Validators.required, Validators.min(0)]]),
-    //   imageUrl: this.fb.group(['']),
-    //   isPackageAble: this.fb.group([false]),
-    //   donorId: this.fb.group([0, [Validators.required, Validators.min(1)]]),
-    //   categoryId: this.fb.group([0, [Validators.min(1)]]),
-    //   lotteryId: this.fb.group([this.currentLotteryId, [Validators.required]]),
-    // });
   }
-
-
-
-
-
 }

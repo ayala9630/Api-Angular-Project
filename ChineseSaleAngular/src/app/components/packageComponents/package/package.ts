@@ -28,10 +28,10 @@ import { RouterLink } from "@angular/router";
   imports: [NzAvatarModule, NzCardModule, NzIconModule, FormsModule, NzInputNumberModule, NzButtonModule, NzModalModule, ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, RouterLink],
   templateUrl: './package.html',
   styleUrl: './package.scss',
-})  
+})
 export class Package {
   constructor(private packageService: PackageService, private modal: NzModalService, public global: GlobalService, private cookieService: CookieService) { }
-  
+
   allPackages: PackageModel[] = [];
   admin: boolean = false;
   value = 0;
@@ -41,17 +41,17 @@ export class Package {
   packageCart: PackageCarts[] = [];
   token: string = '';
   isLogin = false;
-  
+
   ngOnInit() {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
     this.token = this.cookieService.get('auth_token') || '';
-    this.admin = getClaim(this.token, 'IsAdmin') ==='true';
+    this.admin = getClaim(this.token, 'IsAdmin') === 'true';
     console.log(this.admin);
     this.isLogin = this.token !== '';
     this.uploadData();
   }
-  
+
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
 
@@ -62,7 +62,7 @@ export class Package {
     numOfCards: [0, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
     LotteryId: [this.currentLotteryId(), [Validators.required]],
-  });  
+  });
 
   packageData: CreatePackage = {
     name: '',
@@ -70,39 +70,55 @@ export class Package {
     numOfCards: 0,
     price: 0,
     LotteryId: this.currentLotteryId(),
-  }  
+  }
 
   private lotteryEffect = effect(() => {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     const lottery = this.global.currentLottery();
     this.uploadData();
-  });  
+  });
 
   uploadData() {
-    this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
-      this.allPackages = packages;
-      console.log(this.allPackages);
-      
-    });  
-  }  
+    this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe({
+      next: (packages) => {
+        this.allPackages = packages;
+        console.log(this.allPackages);
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.global.msg.warning('לא נמצאו חבילות להגרלה זו');
+          this.allPackages = [];
+          return;
+        }
+        else if (err.status === 500) {
+          this.global.msg.error('שגיאה בשרת בעת טעינת החבילות');
+          return;
+        }
+        else {
+          console.error('Failed to load packages', err);
+          this.global.msg.error('נכשל בטעינת החבילות');
+        }
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }  
+  }
 
   submitForm(): void {
     console.log('submit', this.validateForm.value);
-  }  
+  }
 
   resetForm(e: MouseEvent): void {
     e.preventDefault();
     this.validateForm.reset();
-  }  
+  }
 
   showModal2(): void {
     this.isVisible = true;
-  };  
+  };
 
   handleOk(): void {
     this.packageData = {
@@ -111,21 +127,21 @@ export class Package {
       numOfCards: this.validateForm.value.numOfCards || 0,
       price: this.validateForm.value.price || 0,
       LotteryId: this.currentLotteryId(),
-    }  
+    }
     this.resetForm(new MouseEvent('click'));
     this.isConfirmLoading = true;
     this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
       console.log('New package added with ID:', newPackageId);
       // Optionally, refresh the package list or perform other actions
       this.uploadData();
-    });  
+    });
     this.isVisible = false;
     this.isConfirmLoading = false;
-  }  
+  }
 
   handleCancel(): void {
     this.isVisible = false;
-  }  
+  }
 
 
   updatePackage(packageId: number, qty: number): void {
@@ -155,8 +171,21 @@ export class Package {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        this.packageService.deletePackage(packageId).subscribe(() => {
-          this.uploadData();
+        this.packageService.deletePackage(packageId).subscribe({
+          next: () => {
+            this.uploadData();
+          },
+          error: (err) => {
+            if (err.status === 404) {
+              this.global.msg.warning('החבילה כבר נמחקה');
+              this.uploadData();
+              return;
+            }
+            else if (err.status === 500) {
+              this.global.msg.error('שגיאה במחיקת החבילה');
+              console.error('Failed to delete package', packageId, err);
+            } 
+          }
         });
       },
       nzCancelText: 'No',

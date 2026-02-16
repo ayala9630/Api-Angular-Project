@@ -23,6 +23,11 @@ namespace ChineseSaleApi.Services
         //create
         public async Task<int> CreateCardCar(CreateCardCartDto cardCartDto)
         {
+            if (cardCartDto == null) throw new ArgumentNullException(nameof(cardCartDto));
+            if (cardCartDto.UserId <= 0) throw new ArgumentException("UserId must be greater than zero.", nameof(cardCartDto.UserId));
+            if (cardCartDto.GiftId <= 0) throw new ArgumentException("GiftId must be greater than zero.", nameof(cardCartDto.GiftId));
+            if (cardCartDto.Quantity <= 0) throw new ArgumentException("Quantity must be greater than zero.", nameof(cardCartDto.Quantity));
+
             try
             {
                 CardCart cardCart = new CardCart
@@ -35,7 +40,12 @@ namespace ChineseSaleApi.Services
             }
             catch (ArgumentNullException ex)
             {
-                _logger.LogError(ex, "CreateCardCar received a null argument: {@CardCartDto}", cardCartDto);
+                _logger.LogWarning(ex, "CreateCardCar received a null argument: {@CardCartDto}", cardCartDto);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "CreateCardCar received invalid argument: {@CardCartDto}", cardCartDto);
                 throw;
             }
             catch (Exception ex)
@@ -48,6 +58,8 @@ namespace ChineseSaleApi.Services
         //read
         public async Task<IEnumerable<CardCartDto>> GetCardCartsByUserId(int userId)
         {
+            if (userId <= 0) throw new ArgumentException("UserId must be greater than zero.", nameof(userId));
+
             try
             {
                 var cardCarts = await _repository.GetCardCartsByUserId(userId);
@@ -59,6 +71,11 @@ namespace ChineseSaleApi.Services
                     GiftId = cc.GiftId
                 });
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "GetCardCartsByUserId received invalid userId: {UserId}.", userId);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get card carts for user {UserId}.", userId);
@@ -69,6 +86,10 @@ namespace ChineseSaleApi.Services
         //update
         public async Task<bool?> UpdateCardCart(UpdateQuantityDto cardCartDto)
         {
+            if (cardCartDto == null) throw new ArgumentNullException(nameof(cardCartDto));
+            if (cardCartDto.Id <= 0) throw new ArgumentException("CardCart Id must be greater than zero.", nameof(cardCartDto.Id));
+            if (cardCartDto.Quantity < 0) throw new ArgumentException("Quantity cannot be negative.", nameof(cardCartDto.Quantity));
+
             try
             {
                 CardCart? cardCart = await _repository.GetCardCartById(cardCartDto.Id);
@@ -82,7 +103,12 @@ namespace ChineseSaleApi.Services
             }
             catch (ArgumentNullException ex)
             {
-                _logger.LogError(ex, "UpdateCardCart received a null argument: {@CardCartDto}", cardCartDto);
+                _logger.LogWarning(ex, "UpdateCardCart received a null argument: {@CardCartDto}", cardCartDto);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "UpdateCardCart received invalid argument: {@CardCartDto}", cardCartDto);
                 throw;
             }
             catch (Exception ex)
@@ -95,9 +121,16 @@ namespace ChineseSaleApi.Services
         //delete
         public async Task DeleteCardCart(int id)
         {
+            if (id <= 0) throw new ArgumentException("CardCart Id must be greater than zero.", nameof(id));
+
             try
             {
                 await _repository.DeleteCardCart(id);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "DeleteCardCart received invalid id: {CardCartId}.", id);
+                throw;
             }
             catch (Exception ex)
             {
