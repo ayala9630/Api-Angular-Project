@@ -32,12 +32,13 @@ export class PostDonor {
     private router: Router,
     private activateRoute: ActivatedRoute,
     private global: GlobalService) { }
+
   private fb = inject(NonNullableFormBuilder)
   private destroy$ = new Subject<void>();
   newDonor: CreateDonor | null = null;
-  titel: string = '';
+  title: string = '';
   id: number | null = null;
-  addressId :number | null = null;
+  addressId: number | null = null;
   currentDonor: UpdateDonor | null = null;
   validateForm = this.fb.group({
     firstName: this.fb.control(''),
@@ -53,9 +54,9 @@ export class PostDonor {
     this.activateRoute.params.subscribe(params => this.id = params['id']);
     console.log(this.id);
     if (!this.id)
-      this.titel = "הוספת תורם"
+      this.title = "הוספת תורם"
     else {
-      this.titel = "עריכת תורם"
+      this.title = "עריכת תורם"
       this.donorServise.getDonorByIdSimple(this.id, this.global.currentLotteryId()).subscribe({
         next: (donor) => {
           this.addressId = donor.companyAddressId;
@@ -94,10 +95,10 @@ export class PostDonor {
         }
       });
     } else {
-      const updatePayload: UpdateDonor = {
-        ...(this.validateForm.value as UpdateDonor),
-        id: this.id
-      };
+        const updatePayload: UpdateDonor = {
+          ...(this.validateForm.value as UpdateDonor),
+          id: this.id
+        };
 
       this.donorServise.updateDonor(updatePayload).subscribe({
         next: () => {

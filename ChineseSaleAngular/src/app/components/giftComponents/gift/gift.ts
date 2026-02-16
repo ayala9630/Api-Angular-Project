@@ -5,7 +5,7 @@ import { GiftWithOldPurchase } from '../../../models/gift';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CardCarts, PaginatedResult } from '../../../models';
+import { CardCarts, Category, PaginatedResult } from '../../../models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CookieService } from 'ngx-cookie-service';
 import { FormsModule, NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,9 @@ import { NzOptionComponent } from "ng-zorro-antd/select";
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSwitchComponent } from "ng-zorro-antd/switch";
 import { NzMessageComponent, NzMessageService } from 'ng-zorro-antd/message';
+import { Router } from '@angular/router';
+import { CategoryService } from '../../../services/category/category.service';
+
 
 @Component({
   selector: 'app-gift',
@@ -47,10 +50,13 @@ export class Gift {
     public global: GlobalService,
     private cookieService: CookieService,
     private msg: NzMessageService
+    private router: Router,
+    private categoryService: CategoryService
   ) { }
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
+  allCategories: Category[] = [];
   admin: boolean = true;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
@@ -63,6 +69,8 @@ export class Gift {
   placeholderText: 'חפש מתנה...' | 'חפש תורם...' = 'חפש מתנה...';
   sortType: 'price' | 'category' | 'name' = 'price';
   ascendingOrder: boolean = true;
+
+  selectedCategory: number | null = null;
 
   private fb = inject(NonNullableFormBuilder)
 
@@ -89,6 +97,13 @@ export class Gift {
 
   }
 
+  edit(item: any): void {
+    console.log("item", item);
+
+    this.router.navigate([`/gifts/edit/${item}`]);
+  }
+
+
   validateForm = this.fb.group({
     name: ['', [Validators.required]],
     description: [''],
@@ -103,10 +118,13 @@ export class Gift {
 
 
   uploadData(): void {
-    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder).subscribe({
+    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder,this.selectedCategory).subscribe({
       next: (gifts) => {
         this.paginatedGifts = gifts;
         this.allGifts = this.paginatedGifts.items.flat();
+        this.categoryService.getAllCategories().subscribe((categories) => {
+        this.allCategories = categories;
+      });
       },
       error: (err) => {
         this.msg.error('שגיאה בטעינת המתנות');
@@ -135,25 +153,17 @@ export class Gift {
     this.uploadData();
   }
 
-  edit() {
-    this.validateForm.patchValue({
-      name: this.validateForm.value.name,
-      description: this.validateForm.value.description,
-      price: this.validateForm.value.price,
-      giftValue: this.validateForm.value.giftValue,
-      imageUrl: this.validateForm.value.imageUrl,
-      isPackageAble: this.validateForm.value.isPackageAble,
-      donorId: this.validateForm.value.donorId,
-      categoryId: this.validateForm.value.categoryId,
-      lotteryId: this.currentLotteryId,
-    });
-
-  }
-
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
   });
+
+  onCategoryChange(selectedCategory: number | null  ): void {
+    console.log(selectedCategory);
+    
+    this.selectedCategory = selectedCategory;
+    this.uploadData();
+  }
 
   updateGift(giftId: number, qty: number): void {
     const existingCartItem = this.cart.find(item => item.giftId === giftId);

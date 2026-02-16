@@ -99,6 +99,33 @@ namespace ChineseSaleApi.Services
             }
         }
 
+        public async Task<UpdateGiftDto> GetGiftsByIdUpdate(int id)
+        {
+            try
+            {
+                var gift = await _repository.GetGiftById(id);
+                return new UpdateGiftDto
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    Description = gift.Description,
+                    Price = gift.Price,
+                    GiftValue = gift.GiftValue,
+                    ImageUrl = gift.ImageUrl,
+                    IsPackageAble = gift.IsPackageAble,
+                    DonorId = gift.DonorId,
+                    CategoryId = gift.CategoryId,
+                    LotteryId = gift.LotteryId
+                };
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get gifts by lottery id {LotteryId}.", id);
+                throw;
+            }
+        }
+        
         public async Task<IEnumerable<GiftWithOldPurchaseDto>> GetAllGifts(int lotteryId, int userId)
         {
             try
@@ -155,12 +182,12 @@ namespace ChineseSaleApi.Services
         }
 
 
-        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType,bool? ascendingOrder)
+        public async Task<PaginatedResultDto<GiftWithOldPurchaseDto>> GetGiftsSearchPagination(int lotteryId, int? userId, PaginationParamsDto paginationParams, string? textSearch, string? type, string? sortType,bool? ascendingOrder,int? categoryId)
         {
             try
             {
                 var winners = await _cardRepository.GetWinnerCards(lotteryId);
-                var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, textSearch, type,sortType,ascendingOrder);
+                var (gifts, totalCount) = await _repository.GetGiftsSearchPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize, textSearch, type,sortType,ascendingOrder,categoryId);
                 var giftsWithWinners = gifts.GroupJoin(
                     winners,
                     gift => gift.Id,
@@ -196,6 +223,19 @@ namespace ChineseSaleApi.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to search gifts for lottery {LotteryId}.", lotteryId);
+                throw;
+            }
+        }
+
+        public async Task<int> GetGiftCountByLotteryId(int lotteryId)
+        {
+            try
+            {
+                return await _repository.GetGiftCountByLotteryId(lotteryId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get gift count for lottery {LotteryId}.", lotteryId);
                 throw;
             }
         }

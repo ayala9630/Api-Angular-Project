@@ -10,6 +10,7 @@ namespace ChineseSaleApi.Services
         Task<LoginResponseDto?> AuthenticateAsync(LoginRequestDto loginRequest);
         Task<UserDto?> GetUserById(int id);
         Task<List<UserDto>> GetAllUsers();
+        Task<int> GetUserCount();
         Task<PaginatedResultDto<UserDto>> GetUserWithPagination(PaginationParamsDto paginationParams);
         Task<bool?> UpdateUser(UpdateUserDto userDto);
         Task<bool> IsEmailExists(string email);

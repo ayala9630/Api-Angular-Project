@@ -12,6 +12,7 @@ export interface ListCard {
 export interface Card {
   giftId: number;
   giftName?: string;
+  winnerName?: string;
   cardPurchases?: { [key: string]: number };
 }
 

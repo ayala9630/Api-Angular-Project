@@ -20,28 +20,28 @@
     <nz-row [nzGutter]="[24, 24]">
       <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
         <nz-statistic 
-          [nzValue]="150" 
+          [nzValue]="numOfGifts" 
           [nzTitle]="'מתנות מדהימות'"
           [nzPrefix]="giftIcon">
         </nz-statistic>
       </nz-col>
       <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
         <nz-statistic 
-          [nzValue]="2500" 
+          [nzValue]="numOfUsers"
           [nzTitle]="'משתתפים'"
           [nzPrefix]="userIcon">
         </nz-statistic>
       </nz-col>
       <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
         <nz-statistic 
-          [nzValue]="50" 
+          [nzValue]="numOfDonors"
           [nzTitle]="'תורמים'"
           [nzPrefix]="heartIcon">
         </nz-statistic>
       </nz-col>
       <nz-col [nzSpan]="6" [nzXs]="12" [nzSm]="12" [nzMd]="6">
         <nz-statistic 
-          [nzValue]="30" 
+          [nzValue]="daysToLottery<0?'הגרלה הסתיימה':daysToLottery" 
           [nzTitle]="'ימים להגרלה'"
           [nzPrefix]="calendarIcon">
         </nz-statistic>

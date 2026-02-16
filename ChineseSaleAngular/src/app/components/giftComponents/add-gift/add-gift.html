@@ -1,6 +1,6 @@
 <div class="add-gift-container">
     <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-        <h2 class="form-title">הוספת מתנה</h2>
+        <h2 class="form-title">{{ id ? 'עריכת מתנה' : 'הוספת מתנה' }}</h2>
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired>שם</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">

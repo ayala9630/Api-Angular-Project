@@ -193,6 +193,19 @@ namespace ChineseSaleApi.Services
             }
         }
 
+        public async Task<int> GetDonorCountByLotteryId(int lotteryId)
+        {
+            try
+            {
+                return await _repository.GetDonorCountByLotteryId(lotteryId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get donor count for lottery {LotteryId}.", lotteryId);
+                throw;
+            }
+        }
+
         //all
         public async Task<IEnumerable<DonorDto>> GetAllDonors()
         {

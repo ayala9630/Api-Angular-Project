@@ -33,6 +33,10 @@ namespace ChineseSaleApi.Repositories
         {
             return await _context.Users.ToListAsync();
         }
+        public async Task<int> GetUserCount()
+        {
+            return await _context.Users.CountAsync();
+        }
         public async Task<(IEnumerable<User> items, int totalCount)> GetUsersWithPagination(int pageNumber, int pageSize)
         {
             var query = _context.Users.AsQueryable();

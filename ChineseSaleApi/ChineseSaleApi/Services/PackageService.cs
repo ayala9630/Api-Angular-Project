@@ -28,6 +28,7 @@ namespace ChineseSaleApi.Services
                 {
                     Name = createPackageDto.Name,
                     Description = createPackageDto.Description,
+                    ImageUrl = createPackageDto.ImageUrl,
                     NumOfCards = createPackageDto.NumOfCards,
                     Price = createPackageDto.Price,
                     LotteryId = createPackageDto.LotteryId
@@ -60,6 +61,7 @@ namespace ChineseSaleApi.Services
                     Id = package.Id,
                     Name = package.Name,
                     Description = package.Description,
+                    ImageUrl = package.ImageUrl,
                     NumOfCards = package.NumOfCards,
                     Price = package.Price,
                     LotteryId = package.LotteryId
@@ -68,6 +70,32 @@ namespace ChineseSaleApi.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get package by id {PackageId}.", id);
+                throw;
+            }
+        }
+        public async Task<UpdatePackageDto> GetPackageByIdUpdate(int id)
+        {
+            try
+            {
+                var package = await _repository.GetPackageById(id);
+                if (package == null)
+                {
+                    return null;
+                }
+                return new UpdatePackageDto
+                {
+                    Id = package.Id,
+                    Name = package.Name,
+                    Description = package.Description,
+                    ImageUrl = package.ImageUrl,
+                    NumOfCards = package.NumOfCards,
+                    Price = package.Price,
+                    LotteryId = package.LotteryId
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get package for update by id {PackageId}.", id);
                 throw;
             }
         }
@@ -80,6 +108,7 @@ namespace ChineseSaleApi.Services
                 {
                     Id = package.Id,
                     Name = package.Name,
+                    ImageUrl = package.ImageUrl,
                     Description = package.Description,
                     NumOfCards = package.NumOfCards,
                     Price = package.Price,
@@ -101,6 +130,7 @@ namespace ChineseSaleApi.Services
                 if (package != null)
                 {
                     package.Name = packageDto.Name ?? package.Name;
+                    package.ImageUrl = packageDto.ImageUrl ?? package.ImageUrl;
                     package.Description = packageDto.Description ?? package.Description;
                     package.NumOfCards = packageDto.NumOfCards ?? package.NumOfCards;
                     package.Price = packageDto.Price ?? package.Price;  

@@ -238,3 +238,22 @@ input[nz-input] {
     z-index: 1;
   }
 }
+
+.add-button {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: normal;
+  background: transparent !important;
+  border: none !important;
+  color: #1890ff;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  box-shadow: none;
+}

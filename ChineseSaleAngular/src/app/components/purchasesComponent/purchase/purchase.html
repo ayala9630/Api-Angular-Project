@@ -8,7 +8,6 @@
             </nz-select>
         </nz-input-group>
 
-
         <ng-template #prefixIconSort>
             @if(ascending) {
             <span nz-icon nzType="sort-ascending"></span>
@@ -53,7 +52,8 @@
                 </div>
                 @if(global.lotteryFinished()){
                 <div class="purchase-extra">
-                    {{item.winUser ? 'הזוכה במתנה זו הוא: ' + item.winUser.firstName + ' ' + item.winUser.lastName : 'מתנה זו עדיין לא הוגרלה'}}
+                    {{item.winUser ? 'הזוכה במתנה זו הוא: ' + item.winUser.firstName + ' ' + item.winUser.lastName :
+                    'מתנה זו עדיין לא הוגרלה'}}
                 </div>
                 }
             </div>

@@ -86,6 +86,21 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
+        [HttpGet("count")]
+        public async Task<IActionResult> GetUserCount()
+        {
+            try
+            {
+                var count = await _service.GetUserCount();
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get user count.");
+                return StatusCode(500, "An unexpected error occurred while retrieving user count.");
+            }
+        }
+
         [HttpGet("pagination")]
         public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
         {

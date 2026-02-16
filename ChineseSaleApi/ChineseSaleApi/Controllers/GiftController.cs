@@ -40,6 +40,20 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
+        [HttpGet("id/{id}/update")]
+        public async Task<IActionResult> GetGiftsByIdUpdate(int id)
+        {
+            try
+            {
+                var gifts = await _service.GetGiftsByIdUpdate(id);
+                return Ok(gifts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get gifts for update by lottery {LotteryId}.", id);
+                return StatusCode(500, "An unexpected error occurred while retrieving the gifts for update.");
+            }
+        }
         [HttpGet("user/{userId}/lottery/{lotteryId}")]
         public async Task<IActionResult> GetAllGifts(int lotteryId, int userId)
         {
@@ -70,8 +84,23 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
+        [HttpGet("lottery/{lotteryId}/count")]
+        public async Task<IActionResult> GetGiftCountByLotteryId(int lotteryId)
+        {
+            try
+            {
+                var count = await _service.GetGiftCountByLotteryId(lotteryId);
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get gift count for lottery {LotteryId}.", lotteryId);
+                return StatusCode(500, "An unexpected error occurred while retrieving gift count.");
+            }
+        }
+
         [HttpGet("lottery/{lotteryId}/search-pagination")]
-        public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto? paginationParams, [FromQuery] string? name, [FromQuery] string? donor, [FromQuery]  string? sortType, [FromQuery] bool? ascendingOrder)
+        public async Task<IActionResult> GetGiftsSearchPagination(int lotteryId, [FromQuery] int? userId, [FromQuery] PaginationParamsDto? paginationParams, [FromQuery] string? name, [FromQuery] string? donor, [FromQuery]  string? sortType, [FromQuery] bool? ascendingOrder, [FromQuery] int? categoryId)
         {
             try
             {
@@ -86,17 +115,17 @@ namespace ChineseSaleApi.Controllers
                 }
                 if (name != null)
                 {
-                    var pagedGiftsName = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, name, "name",sortType,ascendingOrder);
+                    var pagedGiftsName = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, name, "name",sortType,ascendingOrder,categoryId);
                     return Ok(pagedGiftsName);
                 }
                 else if (donor != null)
                 {
-                    var pagedGiftsDonor = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, donor, "donor",sortType,ascendingOrder);
+                    var pagedGiftsDonor = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, donor, "donor",sortType,ascendingOrder,categoryId);
                     return Ok(pagedGiftsDonor);
                 }
                 else
                 {
-                    var pagedGifts = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, null, null,sortType,ascendingOrder);
+                    var pagedGifts = await _service.GetGiftsSearchPagination(lotteryId, userId, paginationParams, null, null,sortType,ascendingOrder,categoryId);
                     return Ok(pagedGifts);
                 }
             }
