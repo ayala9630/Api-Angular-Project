@@ -266,7 +266,7 @@ namespace ChineseSaleApi.Services
                 throw;
             }
         }
-
+            
         public async Task<bool> UpdateWin(Card card)
         {
             try

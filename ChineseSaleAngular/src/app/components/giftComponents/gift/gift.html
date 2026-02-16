@@ -99,7 +99,7 @@
         }}
         @else {
         @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateGift(gift.id, -1)"></nz-icon>
+        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateQuantity(gift, -1)"></nz-icon>
         }
         }
     </ng-template>
@@ -137,7 +137,7 @@
         }}
         @else {
             @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateGift(gift.id, 1)"></nz-icon>
+        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateQuantity(gift, 1)"></nz-icon>
         }
         }
     </ng-template>
@@ -173,7 +173,7 @@
         }}
         @else {
         @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateGift(gift.id, -1)"></nz-icon>
+        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateQuantity(gift, -1)"></nz-icon>
         }
         }
     </ng-template>
@@ -211,7 +211,7 @@
         }}
         @else {
             @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateGift(gift.id, 1)"></nz-icon>
+        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateQuantity(gift, 1)"></nz-icon>
         }
         }
     </ng-template>

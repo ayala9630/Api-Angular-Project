@@ -49,7 +49,7 @@ export class Gift {
     public giftService: GiftService,
     public global: GlobalService,
     private cookieService: CookieService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
     private router: Router,
     private categoryService: CategoryService
   ) { }
@@ -95,7 +95,7 @@ export class Gift {
     // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
     // this.cookieService.set('cardCart', [], 7);
     this.uploadData()
-
+    this.giftService.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
   }
 
   edit(item: any): void {
@@ -162,9 +162,7 @@ export class Gift {
   onCategoryChange(selectedCategory: number | null  ): void {
     this.selectedCategory = selectedCategory;
     this.uploadData();
-  }
-
-  
+  }  
 
   submitForm(): void {
     console.log('submit', this.validateForm.value);

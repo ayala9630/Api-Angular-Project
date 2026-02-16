@@ -54,6 +54,8 @@ export class Package {
     // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
     console.log(this.admin);
     this.isLogin = this.token !== '';
+    this.validateForm.patchValue({
+      lotteryId: this.global.currentLotteryId()    });
     this.uploadData();
   }
 
@@ -66,16 +68,16 @@ export class Package {
     description: [''],
     numOfCards: [0, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    LotteryId: [this.currentLotteryId(), [Validators.required]],
+    lotteryId: [0, [Validators.required]],
   });
 
-  packageData: CreatePackage = {
-    name: '',
-    description: '',
-    numOfCards: 0,
-    price: 0,
-    LotteryId: this.currentLotteryId(),
-  }
+  // packageData: CreatePackage = {
+  //   name: '',
+  //   description: '',
+  //   numOfCards: 0,
+  //   price: 0,
+  //   LotteryId: 0,
+  // }
 
   private lotteryEffect = effect(() => {
     // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
