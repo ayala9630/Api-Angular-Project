@@ -36,7 +36,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get gift by id {GiftId}.", id);
-                return StatusCode(500, "An unexpected error occurred while retrieving the gift.");
+                throw;
             }
         }
 
@@ -65,7 +65,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get gifts for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500, "An unexpected error occurred while retrieving gifts.");
+                throw;
             }
         }
 
@@ -80,7 +80,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get paginated gifts for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500, "An unexpected error occurred while retrieving paginated gifts.");
+                throw;
             }
         }
 
@@ -132,7 +132,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to search gifts for lottery {LotteryId}.", lotteryId);
-                return StatusCode(500, "An unexpected error occurred while searching gifts.");
+                throw;
             }
         }
 
@@ -148,7 +148,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to add gift for lottery {LotteryId}.", gift?.LotteryId);
-                return StatusCode(500, ex + "An unexpected error occurred while adding the gift.");
+                throw;
             }
         }
 
@@ -166,7 +166,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update gift {GiftId}.", gift?.Id);
-                return StatusCode(500, ex + "An unexpected error occurred while updating the gift.");
+                throw;
             }
         }
 
@@ -182,7 +182,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete gift {GiftId}.", id);
-                return StatusCode(500, "An unexpected error occurred while deleting the gift.");
+                throw;
             }
         }
     }

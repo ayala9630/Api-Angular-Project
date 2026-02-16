@@ -14,6 +14,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { CreateAddress } from '../../models';
 import { AddressService } from '../../services/address/AddressService';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-address',
@@ -29,7 +30,9 @@ export class Address implements OnInit, OnDestroy, OnChanges {
 
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
-  constructor(private addressService: AddressService) {}
+  constructor(private addressService: AddressService,
+    private msg: NzMessageService
+  ) {}
 
   validateForm = this.fb.group({
     city: this.fb.control('', [Validators.required]),
@@ -69,6 +72,7 @@ export class Address implements OnInit, OnDestroy, OnChanges {
         this.addressChanged.emit(this.validateForm.value as CreateAddress);
       },
       error: (err) => {
+        this.msg.error('נכשל בטעינת הכתובת');
         console.error('Failed to load address', id, err);
       }
     });

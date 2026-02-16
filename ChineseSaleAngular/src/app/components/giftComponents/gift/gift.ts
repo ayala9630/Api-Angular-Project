@@ -17,6 +17,7 @@ import { NzSelectModule } from "ng-zorro-antd/select";
 import { NzOptionComponent } from "ng-zorro-antd/select";
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSwitchComponent } from "ng-zorro-antd/switch";
+import { NzMessageComponent, NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../../services/category/category.service';
 
@@ -43,12 +44,12 @@ import { CategoryService } from '../../../services/category/category.service';
   styleUrl: './gift.scss',
 })
 
-
 export class Gift {
   constructor(
     public giftService: GiftService,
     public global: GlobalService,
     private cookieService: CookieService,
+    private msg: NzMessageService
     private router: Router,
     private categoryService: CategoryService
   ) { }
@@ -62,7 +63,6 @@ export class Gift {
   isVisible: boolean = false;
   pageNumber: number = 1;
   pageSize: number = 3;
-
   searchText: string = '';
   filteredGifts: GiftWithOldPurchase[] = [];
   searchType: 'name' | 'donor' = 'name';
@@ -73,7 +73,6 @@ export class Gift {
   selectedCategory: number | null = null;
 
   private fb = inject(NonNullableFormBuilder)
-
 
   onSearchChange(searchValue: string): void {
     this.uploadData();
@@ -120,12 +119,17 @@ export class Gift {
 
 
   uploadData(): void {
-    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder, this.selectedCategory).subscribe((gifts) => {
-      this.paginatedGifts = gifts;
-      this.allGifts = this.paginatedGifts.items.flat();
-      this.categoryService.getAllCategories().subscribe((categories) => {
+    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder,this.selectedCategory).subscribe({
+      next: (gifts) => {
+        this.paginatedGifts = gifts;
+        this.allGifts = this.paginatedGifts.items.flat();
+        this.categoryService.getAllCategories().subscribe((categories) => {
         this.allCategories = categories;
       });
+      },
+      error: (err) => {
+        this.msg.error('שגיאה בטעינת המתנות');
+      }
     });
   }
 
@@ -165,7 +169,6 @@ export class Gift {
   submitForm(): void {
     console.log('submit', this.validateForm.value);
   }
-
 
   ngOnChanges(c: SimpleChanges): void {
     this.currentLotteryId = this.global.currentLotteryId();

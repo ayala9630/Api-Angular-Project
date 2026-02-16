@@ -3,8 +3,7 @@
         <h2 class="form-title">{{ id ? 'עריכת מתנה' : 'הוספת מתנה' }}</h2>
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired>שם</nz-form-label>
-            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
-                [nzErrorTip]="userErrorTpl">
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
                 <input nz-input formControlName="name" />
                 <ng-template #userErrorTpl let-control>
                     @if (control.errors?.['required']) {
@@ -34,13 +33,40 @@
         <nz-form-item>
             <nz-form-label [nzSpan]="7">תמונה</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback>
-                <input nz-input formControlName="imageUrl" />
+                <div class="image-field" style="display:flex; gap:12px; align-items:center;">
+                    <input nz-input formControlName="imageUrl" placeholder="הזן כתובת תמונה או העלה קובץ" />
+                    @if (uploadingImage) {
+                    <div class="uploading-status" style="display:flex;align-items:center;gap:10px;">
+                        <i nz-icon nzType="loading" nzTheme="outline" nzSpin></i>
+                        <span>מעלה... {{ filesService.uploadProgress }}%</span>
+                    </div>
+                    } @else {
+                    @if (!imageSelected) {
+                    <nz-upload [nzBeforeUpload]="beforeUpload" [nzShowUploadList]="false" nzAccept="image/*">
+                        <button nz-button>
+                            <nz-icon nzType="upload"></nz-icon>
+                            העלה תמונה
+                        </button>
+                    </nz-upload>
+                    }
+                    }
+                    @if (imageSelected && imagePreview) {
+                    <div class="image-preview" style="display:flex; gap:8px; align-items:center;">
+                        <img [src]="imagePreview" alt="preview"
+                            style="width:96px; height:64px; object-fit:cover; border-radius:6px; border:1px solid #e8e8e8;" />
+                        <button nz-button nzType="default" (click)="removeImage()" title="הסר תמונה">
+                            <nz-icon nzType="delete"></nz-icon>
+                        </button>
+                    </div>
+                    }
+                </div>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired>תורם</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please select donor!">
-                <nz-select [(ngModel)]="selectedDonor" [ngModelOptions]="{standalone: true}" (ngModelChange)="donorChange($event)">
+                <nz-select [(ngModel)]="selectedDonor" [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="donorChange($event)">
                     @for (d of donorData; track d.id) {
                     <nz-option [nzValue]="d.id" [nzLabel]="d.firstName + ' ' + d.lastName"></nz-option>
                     }
@@ -50,8 +76,9 @@
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired>קטגוריה</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please select category!">
-                <nz-select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" (ngModelChange)="categoryChange($event)">
-                        @for (c of categoryData; track c.id) {
+                <nz-select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="categoryChange($event)">
+                    @for (c of categoryData; track c.id) {
                     <nz-option [nzValue]="c.id" [nzLabel]="c.name"></nz-option>
                     }
                 </nz-select>

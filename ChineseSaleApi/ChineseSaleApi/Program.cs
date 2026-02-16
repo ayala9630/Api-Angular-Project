@@ -13,6 +13,7 @@ using StoreApi.Services;
 using System.Text;
 using ChineseSaleApi.Dto;
 using MailKit;
+using ChineseSaleApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -151,6 +152,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Use custom error handling middleware
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // הפעלת CORS
 app.UseCors("AllowAllOrigins");

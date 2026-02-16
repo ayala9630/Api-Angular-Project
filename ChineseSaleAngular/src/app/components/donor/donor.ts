@@ -80,7 +80,7 @@ export class Donor {
     this.currentLotteryId = this.globalService.currentLotteryId();
     this.pageNumber = 1;
     console.log("init");
-    
+
     this.uploadData(this.pageNumber);
     this.route.queryParams.subscribe(params => {
       if (params['reopenAddModal'] === 'true') {
@@ -91,22 +91,45 @@ export class Donor {
     });
   }
   onSearchChange(searchValue: string): void {
-        this.uploadData(this.pageNumber,searchValue);
+    this.uploadData(this.pageNumber, searchValue);
   }
   uploadData(page: number, searchText?: string): void {
-    this.donorService.getDonorsSearchPagination(this.currentLotteryId, page, this.pageSize, searchText, this.searchType).subscribe((donors) => {
-      this.data = donors;
-      this.filteredDonors = this.data.items;  
-      this.allDonors = this.data.items;
-      this.filteredDonors = this.allDonors;
-      this.pageNumber = page;
-      this.loadingMore = false;
+    this.donorService.getDonorsSearchPagination(this.currentLotteryId, page, this.pageSize, searchText, this.searchType).subscribe({
+      next: (donors) => {
+        this.msg.success('הנתונים עודכנו בהצלחה');
+        this.data = donors;
+        this.filteredDonors = this.data.items;
+        this.allDonors = this.data.items;
+        this.filteredDonors = this.allDonors;
+        this.pageNumber = page;
+        this.loadingMore = false;
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          this.msg.error('לא נמצאו תורמים');
+          this.filteredDonors = [];
+        } else {
+          this.msg.error('שגיאה בקבלת התורמים');
+        }
+        this.loadingMore = false;
+      }
     });
   }
 
   getAllDonorsForAdd(): void {
-    this.donorService.getAllDonors().subscribe((donors) => {
-      this.allDonorsForAdd = donors;
+    this.donorService.getAllDonors().subscribe( {
+      next: (donors) => {
+        this.allDonorsForAdd = donors;
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          this.msg.error('לא נמצאו תורמים להוספה');
+          this.allDonorsForAdd = [];
+        } else {
+          console.error('Error fetching all donors:', error);
+          this.msg.error('שגיאה בקבלת כל התורמים');
+        }
+      }
     });
   }
   searchtypeChange(value: 'name' | 'email'): void {
