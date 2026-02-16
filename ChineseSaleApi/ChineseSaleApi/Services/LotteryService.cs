@@ -264,7 +264,7 @@ namespace ChineseSaleApi.Services
             {
                 _logger.LogError(ex, "Failed to delete lottery {LotteryId}.", id);
                 throw;
-            }
+            }   
         }
             
         public async Task<bool> UpdateWin(Card card)
