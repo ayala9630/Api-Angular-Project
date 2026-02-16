@@ -22,7 +22,7 @@ export class Header implements OnDestroy {
 
   constructor(
     private lotteryService: LotteryService,
-    private global: GlobalService,
+    public global: GlobalService,
     private cookieService: CookieService,
     private router: Router
   ) { }
@@ -74,6 +74,39 @@ export class Header implements OnDestroy {
   lotteryChange(value: Lottery): void {
     this.selectedLottery = value;
     this.global.currentLottery.set(this.selectedLottery);
+  }
+
+  isLotteryNotStarted(lottery: Lottery): boolean {
+    return new Date(lottery.startDate).getTime() > Date.now();
+  }
+
+  editLottery(lottery: Lottery): void {
+    this.router.navigate(['/lottery/edit', lottery.id]);
+  }
+
+  deleteLottery(lottery: Lottery): void {
+    if (!this.isLotteryNotStarted(lottery)) {
+      return;
+    }
+
+    const confirmed = window.confirm('האם למחוק את ההגרלה?');
+    if (!confirmed) {
+      return;
+    }
+
+    this.lotteryService.deleteLottery(lottery.id).subscribe({
+      next: () => {
+        this.lotteryData = this.lotteryData.filter(item => item.id !== lottery.id);
+        if (this.selectedLottery?.id === lottery.id) {
+          this.selectedLottery = this.lotteryData[this.lotteryData.length - 1];
+          this.global.currentLottery.set(this.selectedLottery ?? null);
+        }
+        this.global.msg.success('ההגרלה נמחקה בהצלחה');
+      },
+      error: () => {
+        this.global.msg.error('שגיאה במחיקת ההגרלה');
+      }
+    });
   }
 
   logout(): void {

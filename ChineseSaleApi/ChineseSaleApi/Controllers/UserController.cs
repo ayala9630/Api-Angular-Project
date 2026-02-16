@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
+using ChineseSaleApi.Attributes;
 using ChineseSaleApi.Dto;
+using ChineseSaleApi.Models;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
-using StoreApi.DTOs;
-using ChineseSaleApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StoreApi.DTOs;
 using System;
 
 namespace ChineseSaleApi.Controllers
@@ -100,7 +102,8 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while retrieving user count.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpGet("pagination")]
         public async Task<IActionResult> GetUsersWithPagination([FromQuery] PaginationParamsDto paginationParamsDto)
         {
@@ -171,6 +174,7 @@ namespace ChineseSaleApi.Controllers
             }
         }
         //update
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto)
         {

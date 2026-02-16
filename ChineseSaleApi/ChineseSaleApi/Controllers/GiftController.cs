@@ -4,11 +4,14 @@ using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using ChineseSaleApi.Attributes;
 
 namespace ChineseSaleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
     public class GiftController : ControllerBase
     {
         private readonly IGiftService _service;
@@ -39,7 +42,8 @@ namespace ChineseSaleApi.Controllers
                 throw;
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpGet("id/{id}/update")]
         public async Task<IActionResult> GetGiftsByIdUpdate(int id)
         {
@@ -83,7 +87,6 @@ namespace ChineseSaleApi.Controllers
                 throw;
             }
         }
-
         [HttpGet("lottery/{lotteryId}/count")]
         public async Task<IActionResult> GetGiftCountByLotteryId(int lotteryId)
         {
@@ -137,6 +140,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //create
+        [Authorize]
+        [Admin]
         [HttpPost]
         public async Task<IActionResult> AddGift([FromBody] CreateGiftDto gift)
         {
@@ -153,6 +158,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //update
+        [Authorize]
+        [Admin]
         [HttpPut]
         public async Task<IActionResult> UpdateGift([FromBody] UpdateGiftDto gift)
         {
@@ -171,6 +178,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //delete
+        [Authorize]
+        [Admin]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGift(int id)
         {

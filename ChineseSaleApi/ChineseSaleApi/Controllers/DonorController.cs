@@ -1,17 +1,21 @@
+using ChineseSaleApi.Attributes;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace ChineseSaleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
+    [Admin]
     public class DonorController : ControllerBase
     {
         private readonly IDonorService _service;
@@ -109,7 +113,7 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while retrieving paginated donors.");
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("lottery/{lotteryId}/count")]
         public async Task<IActionResult> GetDonorCountByLotteryId(int lotteryId)
         {

@@ -46,7 +46,7 @@ namespace ChineseSaleApi.Services
                 if (lotteries.Count > 0)
                 {
                     var prevLottery = lotteries.OrderByDescending(l => l.Id).First();
-                    if (prevLottery != null && prevLottery.EndDate >= lotteryDto.StartDate)
+                    if (prevLottery != null && prevLottery.EndDate <= lotteryDto.StartDate)
                     {
                         throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.", nameof(lotteryDto.StartDate));
                     }

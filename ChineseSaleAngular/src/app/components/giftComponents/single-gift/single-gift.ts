@@ -41,7 +41,7 @@ export class SingleGift implements OnInit {
     private route: ActivatedRoute,
     public giftService: GiftService,
     private cookieService: CookieService,
-    public global: GlobalService
+    public global: GlobalService,
     private msg: NzMessageService,
     private router: Router
   ) { }

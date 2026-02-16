@@ -71,10 +71,6 @@ export class GiftService {
   //Additional functions
 
   cart: CardCarts[] = [];
-
-  ngonit(): void {
-    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
-  }
   
   updateGift(giftId: number, qty: number): void {
     const existingCartItem = this.cart.find(item => item.giftId === giftId);
@@ -90,6 +86,7 @@ export class GiftService {
   }
 
   getGiftQuantity(giftId: number): number {
+    console.log('Getting quantity for giftId:', giftId);
     const cartItem = this.cart.find(item => item.giftId === giftId);
     return cartItem ? cartItem.quantity : 0;
   }

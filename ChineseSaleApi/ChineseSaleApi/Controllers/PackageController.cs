@@ -1,6 +1,8 @@
+using ChineseSaleApi.Attributes;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
 using ChineseSaleApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -54,9 +56,10 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, ex + "An unexpected error occurred while retrieving packages.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpGet("id/{id}/update")]
-        public async Task<IActionResult> GetPackagesByIds(int id)
+        public async Task<IActionResult> GetPackagesByIdUpdate(int id)
         {
             try
             {
@@ -70,6 +73,8 @@ namespace ChineseSaleApi.Controllers
             }
         }
         //create
+        [Authorize]
+        [Admin]
         [HttpPost]
         public async Task<IActionResult> AddPackage([FromBody] CreatePackageDto createPackageDto)
         {
@@ -86,6 +91,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //update
+        [Authorize]
+        [Admin]
         [HttpPut]
         public async Task<IActionResult> UpdatePackage([FromBody] UpdatePackageDto packageDto)
         {
@@ -104,6 +111,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //delete
+        [Authorize]
+        [Admin]
         [HttpDelete]
         public async Task<IActionResult> DeletePackage(int id)
         {

@@ -46,13 +46,16 @@ export class Package {
   // currentLotteryId = signal(0);
   token: string = '';
   isLogin = false;
-
+  
   ngOnInit() {
     // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     // this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
     this.token = this.cookieService.get('auth_token') || '';
     // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
-    console.log(this.admin);
+    // console.log(this.admin);
+    this.validateForm.patchValue({
+      LotteryId: this.global.currentLotteryId()
+    });
     this.isLogin = this.token !== '';
     this.uploadData();
   }
@@ -66,16 +69,16 @@ export class Package {
     description: [''],
     numOfCards: [0, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    LotteryId: [this.currentLotteryId(), [Validators.required]],
+    LotteryId: [0, [Validators.required]],
   });
 
-  packageData: CreatePackage = {
-    name: '',
-    description: '',
-    numOfCards: 0,
-    price: 0,
-    LotteryId: this.currentLotteryId(),
-  }
+  // packageData: CreatePackage = {
+  //   name: '',
+  //   description: '',
+  //   numOfCards: 0,
+  //   price: 0,
+  //   LotteryId: this.currentLotteryId(),
+  // }
 
   private lotteryEffect = effect(() => {
     // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);

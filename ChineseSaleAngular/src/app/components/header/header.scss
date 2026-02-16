@@ -46,8 +46,65 @@ nz-select {
 
 .header-container {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto 1fr auto;
     align-items: center;
+    gap: 15px;
+}
+
+.lottery-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
+
+.lottery-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lottery-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lottery-action {
+    color: #8c8c8c;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #1890ff;
+    }
+
+    &.delete {
+        color: #d4380d;
+
+        &:hover {
+            color: #cf1322;
+        }
+    }
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+
+    .header-logo {
+        height: 50px;
+        width: auto;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
 }
 
 .user-info {
