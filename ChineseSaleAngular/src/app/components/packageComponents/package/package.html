@@ -29,14 +29,14 @@
     }}
     @else {
       @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <nz-icon nzType="minus" nzTheme="outline" (click)="updatePackage(package.id, -1)"></nz-icon>
+    <nz-icon nzType="minus" nzTheme="outline" (click)="packageService.updateQty(package.id, -1)"></nz-icon>
     }
     }
   </ng-template>
   <ng-template #middleAction>
     @if(global.lotteryStarted() && !global.lotteryFinished()){
     @if(!admin){
-    {{getPackageQuantity(package.id)}}
+    {{packageService.getPackageQuantity(package.id)}}
     }
     }
     @else {
@@ -52,7 +52,7 @@
     }}
     @else {
       @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <nz-icon nzType="plus" nzTheme="outline" (click)="updatePackage(package.id, 1)"></nz-icon>
+    <nz-icon nzType="plus" nzTheme="outline" (click)="packageService.updateQty(package.id, 1)"></nz-icon>
     }}
   </ng-template>
   }

@@ -46,7 +46,7 @@ import { CategoryService } from '../../../services/category/category.service';
 
 export class Gift {
   constructor(
-    private giftService: GiftService,
+    public giftService: GiftService,
     public global: GlobalService,
     private cookieService: CookieService,
     private msg: NzMessageService
@@ -57,7 +57,7 @@ export class Gift {
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
   allCategories: Category[] = [];
-  admin: boolean = true;
+  admin: boolean = false;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible: boolean = false;
@@ -92,7 +92,8 @@ export class Gift {
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
     const token = this.cookieService.get('authToken') || '';
-    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
+    // this.cookieService.set('cardCart', [], 7);
     this.uploadData()
 
   }
@@ -159,29 +160,11 @@ export class Gift {
   });
 
   onCategoryChange(selectedCategory: number | null  ): void {
-    console.log(selectedCategory);
-    
     this.selectedCategory = selectedCategory;
     this.uploadData();
   }
 
-  updateGift(giftId: number, qty: number): void {
-    const existingCartItem = this.cart.find(item => item.giftId === giftId);
-    if (existingCartItem) {
-      existingCartItem.quantity += qty;
-      if (existingCartItem.quantity <= 0) {
-        this.cart = this.cart.filter(item => item.giftId !== giftId);
-      }
-    } else if (qty > 0) {
-      this.cart.push({ giftId: giftId, quantity: qty });
-    }
-    this.cookieService.set('cardCartUser1', JSON.stringify(this.cart), 7);
-  }
-
-  getGiftQuantity(giftId: number): number {
-    const cartItem = this.cart.find(item => item.giftId === giftId);
-    return cartItem ? cartItem.quantity : 0;
-  }
+  
 
   submitForm(): void {
     console.log('submit', this.validateForm.value);
