@@ -1,5 +1,5 @@
 <h2 class="page-title">מתנות
-    @if(global.lotteryStart) {
+    @if(!global.lotteryStart) {
         <a nz-button nzType="primary" routerLink="add" class="add-button">
             <span nz-icon nzType="plus"></span>
             <span>הוסף מתנה</span>

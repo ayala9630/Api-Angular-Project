@@ -57,7 +57,7 @@ export class Gift {
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
   allGifts: GiftWithOldPurchase[] = [];
   allCategories: Category[] = [];
-  admin: boolean = true;
+  admin: boolean = false;
   currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible: boolean = false;
