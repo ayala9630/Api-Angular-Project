@@ -31,7 +31,7 @@ import { Router, RouterLink } from "@angular/router";
 })
 export class Package {
   constructor(
-    private packageService: PackageService,
+    public packageService: PackageService,
     private modal: NzModalService,
     public global: GlobalService,
     private cookieService: CookieService,
@@ -43,14 +43,13 @@ export class Package {
   value = 0;
   isVisible = false;
   isConfirmLoading = false;
-  currentLotteryId = signal(0);
-  packageCart: PackageCarts[] = [];
+  // currentLotteryId = signal(0);
   token: string = '';
   isLogin = false;
 
   ngOnInit() {
-    this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
-    this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
+    // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
+    // this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
     this.token = this.cookieService.get('auth_token') || '';
     // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
     console.log(this.admin);
@@ -62,15 +61,15 @@ export class Package {
   private destroy$ = new Subject<void>();
 
   private lotteryEffect = effect(() => {
-    this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
+    // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     const lottery = this.global.currentLottery();
     this.uploadData();
   });
 
   uploadData() {
-    this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
+    this.packageService.getPackagesByLotteryId(this.global.currentLotteryId()).subscribe((packages) => {
       this.allPackages = packages;
-      console.log(this.allPackages);
+      // console.log(this.allPackages);
     });
   }
 
@@ -83,52 +82,6 @@ export class Package {
   editPackage(packageId: number): void {
     console.log(packageId);
     this.router.navigate(['/packages/edit', packageId]);
-  }
-  // showModal2(): void {
-  //   this.isVisible = true;
-  // };  
-
-  // handleOk(): void {
-  //   this.packageData = {
-  //     name: this.validateForm.value.name || '',
-  //     description: this.validateForm.value.description || '',
-  //     numOfCards: this.validateForm.value.numOfCards || 0,
-  //     price: this.validateForm.value.price || 0,
-  //     LotteryId: this.currentLotteryId(),
-  //   }  
-  //   this.resetForm(new MouseEvent('click'));
-  //   this.isConfirmLoading = true;
-  //   this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
-  //     console.log('New package added with ID:', newPackageId);
-  //     // Optionally, refresh the package list or perform other actions
-  //     this.uploadData();
-  //   });  
-  //   this.isVisible = false;
-  //   this.isConfirmLoading = false;
-  // }  
-
-  // handleCancel(): void {
-  //   this.isVisible = false;
-  // }  
-
-
-  updatePackage(packageId: number, qty: number): void {
-    const existingCartItem = this.packageCart.find(item => item.packageId === packageId);
-    if (existingCartItem) {
-      existingCartItem.quantity += qty;
-      if (existingCartItem.quantity <= 0) {
-        this.packageCart = this.packageCart.filter(item => item.packageId !== packageId);
-      }
-    }
-    else if (qty > 0) {
-      this.packageCart.push({ packageId: packageId, quantity: qty });
-    }
-    this.cookieService.set('packageCartUser1', JSON.stringify(this.packageCart), 7);
-  }
-
-  getPackageQuantity(packageId: number): number {
-    const existingCartItem = this.packageCart.find(item => item.packageId === packageId);
-    return existingCartItem ? existingCartItem.quantity : 0;
   }
 
   showDeleteConfirm(packageId: number): void {

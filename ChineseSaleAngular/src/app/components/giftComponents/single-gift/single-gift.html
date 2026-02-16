@@ -44,28 +44,28 @@
 </ng-template>
 
 <ng-template #actionPlus>
-    @if(lotteryStarted && !lotteryfinished){
-    <div (click)="updateGift(giftId, 1)">+</div>}
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
+    <div (click)="giftService.updateGift(giftId, 1)">+</div>}
 </ng-template>
 <ng-template #actionMinus>
-    @if(lotteryStarted && !lotteryfinished){
-    <div (click)="updateGift(giftId, -1)">-</div>}
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
+    <div (click)="giftService.updateGift(giftId, -1)">-</div>}
 </ng-template>
 <ng-template #number>
-        @if(lotteryStarted && !lotteryfinished){
-        {{ getGiftQuantity(giftId) }}
-        }
-        @else {
-            @if(lotteryfinished){
-        @if(gift?.winner != " ") {
-        {{`הזוכה במתנה :  ${gift?.winner} ` }}
-        }
-        @else {
-        {{`מתנה זו עדיין לא הוגרלה`}}
-        }
-        }
-        @else {
-        {{"עדיין לא ניתן לרכוש"}}
-        }
-        }
-    </ng-template>
+    @if(global.lotteryStarted() && !global.lotteryFinished()){
+    {{ giftService.getGiftQuantity(giftId) }}
+    }
+    @else {
+    @if(global.lotteryFinished()){
+    @if(gift?.winner != " ") {
+    {{`הזוכה במתנה : ${gift?.winner} ` }}
+    }
+    @else {
+    {{`מתנה זו עדיין לא הוגרלה`}}
+    }
+    }
+    @else {
+    {{"עדיין לא ניתן לרכוש"}}
+    }
+    }
+</ng-template>

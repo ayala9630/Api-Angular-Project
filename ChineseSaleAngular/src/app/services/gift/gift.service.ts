@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
+import { CardCarts, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,34 +12,37 @@ import { CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } fr
 export class GiftService {
   private readonly url = `${environment.apiUrl}/gift`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService
+  ) { }
 
-    getGifts(
-      lotteryId: number,
-      userId?: number,
-      pageNumber?: number,
-      pageSize?: number,
-      searchText?: string,
-      searchType?: 'name' | 'donor',
-      sortType?: 'name' | 'category' | 'price',
-      ascendingOrder?: boolean,
-      categoryId?: number | null
-    ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
-      let queryParams = `?lotteryId=${lotteryId}`;
-      if (userId !== undefined) queryParams += `&userId=${userId}`;
-      if (pageNumber !== undefined && pageSize !== undefined)
-        queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
-      if (searchText !== undefined && searchType !== undefined) {
-        if (searchType === 'name') queryParams += `&name=${searchText}`;
-        else if (searchType === 'donor') queryParams += `&donor=${searchText}`;
-      }    
-      if (sortType !== undefined && ascendingOrder !== undefined)
-        queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
-      if (categoryId !== null) queryParams += `&categoryId=${categoryId}`;
-      console.log(queryParams);
-      
-      return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
+  getGifts(
+    lotteryId: number,
+    userId?: number,
+    pageNumber?: number,
+    pageSize?: number,
+    searchText?: string,
+    searchType?: 'name' | 'donor',
+    sortType?: 'name' | 'category' | 'price',
+    ascendingOrder?: boolean,
+    categoryId?: number | null
+  ): Observable<PaginatedResult<GiftWithOldPurchase[]>> {
+    let queryParams = `?lotteryId=${lotteryId}`;
+    if (userId !== undefined) queryParams += `&userId=${userId}`;
+    if (pageNumber !== undefined && pageSize !== undefined)
+      queryParams += `&pageNumber=${pageNumber} + &pageSize=${pageSize}`;
+    if (searchText !== undefined && searchType !== undefined) {
+      if (searchType === 'name') queryParams += `&name=${searchText}`;
+      else if (searchType === 'donor') queryParams += `&donor=${searchText}`;
     }
+    if (sortType !== undefined && ascendingOrder !== undefined)
+      queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
+    if (categoryId !== null) queryParams += `&categoryId=${categoryId}`;
+    console.log(queryParams);
+
+    return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
+  }
 
   getGiftById(id: number): Observable<Gift> {
     return this.http.get<Gift>(`${this.url}/${id}`);
@@ -63,4 +67,34 @@ export class GiftService {
   deleteGift(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
+
+  //Additional functions
+
+  cart: CardCarts[] = [];
+
+  ngonit(): void {
+    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+  }
+  
+  updateGift(giftId: number, qty: number): void {
+    const existingCartItem = this.cart.find(item => item.giftId === giftId);
+    if (existingCartItem) {
+      existingCartItem.quantity += qty;
+      if (existingCartItem.quantity <= 0) {
+        this.cart = this.cart.filter(item => item.giftId !== giftId);
+      }
+    } else if (qty > 0) {
+      this.cart.push({ giftId: giftId, quantity: qty });
+    }
+    this.cookieService.set('cardCartUser1', JSON.stringify(this.cart), 7);
+  }
+
+  getGiftQuantity(giftId: number): number {
+    const cartItem = this.cart.find(item => item.giftId === giftId);
+    return cartItem ? cartItem.quantity : 0;
+  }
+
+
+
+
 }

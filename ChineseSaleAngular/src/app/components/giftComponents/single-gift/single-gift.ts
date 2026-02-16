@@ -38,16 +38,13 @@ export class SingleGift implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private giftService: GiftService,
+    public giftService: GiftService,
     private cookieService: CookieService,
-    private global: GlobalService
+    public global: GlobalService
   ) { }
 
   giftId: number = 0;
   gift?: Gift;
-  cart: CardCarts[] = [];
-  lotteryStarted: boolean = false;
-  lotteryfinished: boolean = false;
   
 
   ngOnInit(): void {
@@ -56,25 +53,5 @@ export class SingleGift implements OnInit {
     this.giftService.getGiftById(id).subscribe((data: Gift) => {
       this.gift = data;
     });
-    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
-     this.lotteryfinished = (new Date(this.global.currentLottery()?.endDate|| new Date()).getTime() <= new Date().getTime());
-    this.lotteryStarted = (new Date(this.global.currentLottery()?.startDate|| new Date()).getTime() <= new Date().getTime());
-  }
-  updateGift(giftId: number, qty: number): void {
-    const existingCartItem = this.cart.find(item => item.giftId === giftId);
-    if (existingCartItem) {
-      existingCartItem.quantity += qty;
-      if (existingCartItem.quantity <= 0) {
-        this.cart = this.cart.filter(item => item.giftId !== giftId);
-      }
-    } else if (qty > 0) {
-      this.cart.push({ giftId: giftId, quantity: qty });
-    }
-    this.cookieService.set('cardCartUser1', JSON.stringify(this.cart), 7);
-  }
-
-  getGiftQuantity(giftId: number): number {
-    const cartItem = this.cart.find(item => item.giftId === giftId);
-    return cartItem ? cartItem.quantity : 0;
   }
 }
