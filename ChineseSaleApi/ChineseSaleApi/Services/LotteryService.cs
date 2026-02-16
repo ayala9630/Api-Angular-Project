@@ -39,7 +39,7 @@ namespace ChineseSaleApi.Services
             {
                 if (lotteryDto.EndDate <= lotteryDto.StartDate)
                 {
-                    throw new ArgumentException("Lottery end date must be after start date.");
+                    throw new ArgumentException("Lottery end date must be after start date.", nameof(lotteryDto.EndDate));
                 }
 
                 List<LotteryDto> lotteries = await GetAllLotteries();
@@ -48,7 +48,7 @@ namespace ChineseSaleApi.Services
                     var prevLottery = lotteries.OrderByDescending(l => l.Id).First();
                     if (prevLottery != null && prevLottery.EndDate >= lotteryDto.StartDate)
                     {
-                        throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.");
+                        throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.", nameof(lotteryDto.StartDate));
                     }
                 }
                 Lottery lottery = new Lottery
@@ -58,6 +58,11 @@ namespace ChineseSaleApi.Services
                     EndDate = lotteryDto.EndDate
                 };
                 await _repository.AddLottery(lottery);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation error while adding lottery.");
+                throw;
             }
             catch (Exception ex)
             {
@@ -90,6 +95,8 @@ namespace ChineseSaleApi.Services
         }
         public async Task<LotteryDto?> GetLotteryById(int id)
         {
+            if (id <= 0) throw new ArgumentException("Id must be greater than zero.", nameof(id));
+
             try
             {
                 var lottery = await _repository.GetLotteryById(id);
@@ -107,6 +114,11 @@ namespace ChineseSaleApi.Services
                     TotalSum = lottery.TotalSum,
                     IsDone = lottery.IsDone
                 };
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument for GetLotteryById: {LotteryId}.", id);
+                throw;
             }
             catch (Exception ex)
             {
@@ -187,7 +199,7 @@ namespace ChineseSaleApi.Services
             {
                 if (lotteryDto.EndDate <= lotteryDto.StartDate)
                 {
-                    throw new ArgumentException("Lottery end date must be after start date.");
+                    throw new ArgumentException("Lottery end date must be after start date.", nameof(lotteryDto.EndDate));
                 }
                 var lottery = await _repository.GetLotteryById(lotteryDto.Id);
                 if (lottery == null)
@@ -196,7 +208,7 @@ namespace ChineseSaleApi.Services
                 }
                 if (lottery.StartDate <= DateTime.Now)
                 {
-                    throw new ArgumentException("Cannot update a lottery that already started.");
+                    throw new ArgumentException("Cannot update a lottery that already started.", nameof(lotteryDto.Id));
                 }
 
                 lottery.Name = lotteryDto.Name ?? lottery.Name;
@@ -208,6 +220,11 @@ namespace ChineseSaleApi.Services
                 await _repository.UpdateLottery(lottery);
                 return true;
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed updating lottery {LotteryId}.", lotteryDto?.Id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update lottery {LotteryId}.", lotteryDto?.Id);
@@ -218,18 +235,30 @@ namespace ChineseSaleApi.Services
         //delete
         public async Task DeleteLottery(int id)
         {
+            if (id <= 0) throw new ArgumentException("Id must be greater than zero.", nameof(id));
+
             try
             {
                 var lottery = await _repository.GetLotteryById(id);
                 if (lottery == null)
                 {
-                    throw new Exception("Lottery not found.");
+                    throw new KeyNotFoundException("Lottery not found.");
                 }
                 if (lottery.StartDate <= DateTime.Now)
                 {
-                    throw new Exception("Cannot delete a lottery that already started.");
+                    throw new ArgumentException("Cannot delete a lottery that already started.", nameof(id));
                 }
                 await _repository.DeleteLottery(id);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Lottery not found: {LotteryId}.", id);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid operation while deleting lottery {LotteryId}.", id);
+                throw;
             }
             catch (Exception ex)
             {
@@ -255,18 +284,20 @@ namespace ChineseSaleApi.Services
 
         public async Task<UserDto?> Lottery(int giftId)
         {
+            if (giftId <= 0) throw new ArgumentException("GiftId must be greater than zero.", nameof(giftId));
+
             try
             {
                 List<Card?> cardsList = await _cardRepository.GetCardByGiftId(giftId);
                 if (cardsList == null || !cardsList.Any())
                 {
-                    throw new Exception("No cards available for the specified gift.");
+                    throw new KeyNotFoundException("No cards available for the specified gift.");
                 }
                 int winnerCardNumber = new Random().Next(1, cardsList.Count() + 1);
                 User? winnerUser = await _userRepository.GetUserById(cardsList[winnerCardNumber - 1].UserId);
                 if (winnerUser == null)
                 {
-                    throw new Exception("Winner user not found.");
+                    throw new KeyNotFoundException("Winner user not found.");
                 }
                 await UpdateWin(cardsList[winnerCardNumber - 1]);
                 return new UserDto
@@ -278,6 +309,16 @@ namespace ChineseSaleApi.Services
                     Phone = winnerUser.Phone,
                     Email = winnerUser.Email
                 };
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Lottery selection failed for gift {GiftId}: {Message}", giftId, ex.Message);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument in Lottery for gift {GiftId}.", giftId);
+                throw;
             }
             catch (Exception ex)
             {

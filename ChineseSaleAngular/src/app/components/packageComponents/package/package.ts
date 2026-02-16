@@ -61,6 +61,23 @@ export class Package {
   private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
 
+
+  validateForm = this.fb.group({
+    name: ['', [Validators.required]],
+    description: [''],
+    numOfCards: [0, [Validators.required, Validators.min(1)]],
+    price: [0, [Validators.required, Validators.min(0)]],
+    LotteryId: [this.currentLotteryId(), [Validators.required]],
+  });
+
+  packageData: CreatePackage = {
+    name: '',
+    description: '',
+    numOfCards: 0,
+    price: 0,
+    LotteryId: this.currentLotteryId(),
+  }
+
   private lotteryEffect = effect(() => {
     this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     const lottery = this.global.currentLottery();
@@ -68,9 +85,26 @@ export class Package {
   });
 
   uploadData() {
-    this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe((packages) => {
-      this.allPackages = packages;
-      console.log(this.allPackages);
+    this.packageService.getPackagesByLotteryId(this.currentLotteryId()).subscribe({
+      next: (packages) => {
+        this.allPackages = packages;
+        console.log(this.allPackages);
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.global.msg.warning('לא נמצאו חבילות להגרלה זו');
+          this.allPackages = [];
+          return;
+        }
+        else if (err.status === 500) {
+          this.global.msg.error('שגיאה בשרת בעת טעינת החבילות');
+          return;
+        }
+        else {
+          console.error('Failed to load packages', err);
+          this.global.msg.error('נכשל בטעינת החבילות');
+        }
+      }
     });
   }
 
@@ -84,34 +118,7 @@ export class Package {
     console.log(packageId);
     this.router.navigate(['/packages/edit', packageId]);
   }
-  // showModal2(): void {
-  //   this.isVisible = true;
-  // };  
-
-  // handleOk(): void {
-  //   this.packageData = {
-  //     name: this.validateForm.value.name || '',
-  //     description: this.validateForm.value.description || '',
-  //     numOfCards: this.validateForm.value.numOfCards || 0,
-  //     price: this.validateForm.value.price || 0,
-  //     LotteryId: this.currentLotteryId(),
-  //   }  
-  //   this.resetForm(new MouseEvent('click'));
-  //   this.isConfirmLoading = true;
-  //   this.packageService.addPackage(this.packageData).subscribe((newPackageId: number) => {
-  //     console.log('New package added with ID:', newPackageId);
-  //     // Optionally, refresh the package list or perform other actions
-  //     this.uploadData();
-  //   });  
-  //   this.isVisible = false;
-  //   this.isConfirmLoading = false;
-  // }  
-
-  // handleCancel(): void {
-  //   this.isVisible = false;
-  // }  
-
-
+  
   updatePackage(packageId: number, qty: number): void {
     const existingCartItem = this.packageCart.find(item => item.packageId === packageId);
     if (existingCartItem) {
@@ -139,8 +146,21 @@ export class Package {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        this.packageService.deletePackage(packageId).subscribe(() => {
-          this.uploadData();
+        this.packageService.deletePackage(packageId).subscribe({
+          next: () => {
+            this.uploadData();
+          },
+          error: (err) => {
+            if (err.status === 404) {
+              this.global.msg.warning('החבילה כבר נמחקה');
+              this.uploadData();
+              return;
+            }
+            else if (err.status === 500) {
+              this.global.msg.error('שגיאה במחיקת החבילה');
+              console.error('Failed to delete package', packageId, err);
+            } 
+          }
         });
       },
       nzCancelText: 'No',

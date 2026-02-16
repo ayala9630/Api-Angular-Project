@@ -34,35 +34,41 @@ export class Header implements OnDestroy {
   admin: boolean = true;
 
   ngOnInit() {
-    // הירשמות לשינויים במצב החיבור
     this.subscriptions.add(
       this.global.connected$.subscribe(value => {
         this.conected = value;
-        // אם התחלנו להיות מחוברים - נטען את המשתמש מהעוגיה (אם קיים)
         if (value) {
           const user = this.cookieService.get('user');
           if (user) {
             try { this.user = JSON.parse(user); } catch { this.user = null; }
           }
         } else {
-          // אם נותקנו - ננקה
           this.user = null;
         }
       })
     );
 
-    // טען לוטריות (כמו קודם)
-    this.lotteryService.getAllLotteries().subscribe((data: Lottery[]) => {
-      this.lotteryData = data;
-      this.selectedLottery = this.lotteryData[this.lotteryData.length - 1];
-      this.global.currentLottery.set(this.selectedLottery);
-      const user = this.cookieService.get('user');
-      if (user) {
-        this.user = JSON.parse(user);
-        // this.admin = this.user?.isAdmin || false;
-      }
-      // חשוב: לא צריך כאן לקרוא this.global.conected() — ההרשמה מטפלת בזה
-    });
+    this.lotteryService.getAllLotteries().subscribe({
+      next: (data) => {
+        this.lotteryData = data;
+        this.selectedLottery = this.lotteryData[this.lotteryData.length - 1];
+        this.global.currentLottery.set(this.selectedLottery);
+        const user = this.cookieService.get('user');
+        if (user) {
+          this.user = JSON.parse(user);
+        }
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.global.msg.error('הסשן שלך פג, אנא התחבר מחדש');
+          this.global.setConnected(false);
+          this.router.navigate(['/login']);
+        } else if (err.status === 404) {
+          this.global.msg.error('לא נמצאו הגרלות');
+        } else {
+          this.global.msg.error('אירעה שגיאה בטעינת הגרלות');
+        }
+      }});
   }
 
   lotteryChange(value: Lottery): void {
@@ -73,9 +79,7 @@ export class Header implements OnDestroy {
   logout(): void {
     this.cookieService.delete('auth_token');
     this.cookieService.delete('user');
-    // הודעה ל־GlobalService שהחיבור שונה
     this.global.setConnected(false);
-    // local state (יעודכן גם על ידי המנוי אבל נחזיר מיד)
     this.conected = this.global.isConnected();
     this.user = null;
     this.router.navigate(['/login']);

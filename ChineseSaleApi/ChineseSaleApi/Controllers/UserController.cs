@@ -34,10 +34,15 @@ namespace ChineseSaleApi.Controllers
                 }
                 return Ok(user);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid login request for user {Username}.", loginDto?.UserName);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Authentication failed for user {Username}.", loginDto?.UserName);
-                return StatusCode(500, "An unexpected error occurred while authenticating.");
+                throw;
             }
         }
 
@@ -54,10 +59,15 @@ namespace ChineseSaleApi.Controllers
                 }
                 return Ok(user);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument for GetUserById: {UserId}.", id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get user by id {UserId}.", id);
-                return StatusCode(500, "An unexpected error occurred while retrieving the user.");
+                throw;
             }
         }
 
@@ -72,7 +82,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get all users.");
-                return StatusCode(500, "An unexpected error occurred while retrieving users.");
+                throw;
             }
         }
 
@@ -99,10 +109,15 @@ namespace ChineseSaleApi.Controllers
                 var pagedUsers = await _service.GetUserWithPagination(paginationParamsDto);
                 return Ok(pagedUsers);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid pagination parameters.");
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get users with pagination.");
-                return StatusCode(500, "An unexpected error occurred while retrieving paginated users.");
+                throw;
             }
         }
 
@@ -116,10 +131,15 @@ namespace ChineseSaleApi.Controllers
                 await _service.AddUser(createUserDto);
                 return CreatedAtAction(nameof(GetUserById), new { Id = createUserDto.Username }, createUserDto);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed registering user {Username}.", createUserDto?.Username);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to register user {Username}.", createUserDto?.Username);
-                return StatusCode(500, "An unexpected error occurred while registering the user.");
+                throw;
             }
         }
         [HttpGet("userName/{userName}")]
@@ -133,7 +153,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to check if username exists: {UserName}", userName);
-                return StatusCode(500, "An unexpected error occurred while checking username.");
+                throw;
             }
         }
         [HttpGet("email/{email}")]
@@ -147,7 +167,7 @@ namespace ChineseSaleApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to check if email exists: {Email}", email);
-                return StatusCode(500, "An unexpected error occurred while checking email.");
+                throw;
             }
         }
         //update
@@ -161,10 +181,15 @@ namespace ChineseSaleApi.Controllers
                     return NotFound();
                 return NoContent();
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed updating user {UserId}.", userDto?.Id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update user {UserId}.", userDto?.Id);
-                return StatusCode(500, "An unexpected error occurred while updating the user.");
+                throw;
             }
         }
     }

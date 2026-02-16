@@ -33,7 +33,7 @@ namespace ChineseSaleApi.Services
             {
                 Lottery? lottery = await _lotteryRepository.GetLotteryById(createGiftDto.LotteryId);
                 if (lottery?.StartDate < DateTime.Now)
-                    throw new Exception("Gifts cannot be added after the raffle has started.");
+                    throw new ArgumentException("Gifts cannot be added after the raffle has started.", nameof(createGiftDto.LotteryId));
                 Gift gift = new Gift
                 {
                     Name = createGiftDto.Name,
@@ -51,6 +51,11 @@ namespace ChineseSaleApi.Services
             catch (ArgumentNullException ex)
             {
                 _logger.LogError(ex, "AddGift received a null argument: {@CreateGiftDto}", createGiftDto);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid operation while adding gift for lottery {LotteryId}: {Message}", createGiftDto?.LotteryId, ex.Message);
                 throw;
             }
             catch (Exception ex)
@@ -245,7 +250,7 @@ namespace ChineseSaleApi.Services
                 {
                     Lottery? lottery = await _lotteryRepository.GetLotteryById(updateGiftDto.LotteryId);
                     if (lottery?.StartDate < DateTime.Now)
-                        throw new Exception("Gifts cannot be updated after the raffle has started.");
+                        throw new ArgumentException("Gifts cannot be updated after the raffle has started.", nameof(updateGiftDto.LotteryId));
                 }
                 var gift = await _repository.GetGiftById(updateGiftDto.Id);
                 if (gift != null)
@@ -265,6 +270,11 @@ namespace ChineseSaleApi.Services
                 }
                 return null;
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid operation while updating gift {GiftId}.", updateGiftDto?.Id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update gift {GiftId}.", updateGiftDto?.Id);
@@ -279,8 +289,13 @@ namespace ChineseSaleApi.Services
                 Gift? gift = await _repository.GetGiftById(id);
                 Lottery? lottery = await _lotteryRepository.GetLotteryById(gift?.LotteryId ?? 0);
                 if (lottery?.StartDate < DateTime.Now)
-                    throw new Exception("Gifts cannot be deleted after the raffle has started.");
+                    throw new ArgumentException("Gifts cannot be deleted after the raffle has started.", nameof(id));
                 await _repository.DeleteGift(id);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid operation while deleting gift {GiftId}.", id);
+                throw;
             }
             catch (Exception ex)
             {

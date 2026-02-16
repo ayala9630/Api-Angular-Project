@@ -45,7 +45,7 @@ namespace ChineseSaleApi.Services
             {
                 if (await _repository.IsUserNameExists(createUserDto.Username))
                 {
-                    throw new Exception("Username already exists");
+                    throw new ArgumentException("Username already exists", nameof(createUserDto.Username));
                 }
 
                 int idAddress = await _addressService.AddAddressForUser(createUserDto.Address);
@@ -69,6 +69,11 @@ namespace ChineseSaleApi.Services
                 });
 
                 await _repository.AddUser(user);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation error while adding user {Username}.", createUserDto?.Username);
+                throw;
             }
             catch (Exception ex)
             {
@@ -229,7 +234,7 @@ namespace ChineseSaleApi.Services
                     var allUsers = await _repository.GetAllUsers();
                     if (allUsers.Any(u => u.Email == userDto.Email))
                     {
-                        throw new Exception("Email already exists");
+                        throw new ArgumentException("Email already exists", nameof(userDto.Email));
                     }
                 }
 
@@ -240,6 +245,11 @@ namespace ChineseSaleApi.Services
 
                 await _repository.UpdateUser(user);
                 return true;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed updating user {UserId}.", userDto?.Id);
+                throw;
             }
             catch (Exception ex)
             {

@@ -30,6 +30,10 @@ namespace ChineseSaleApi.Services
         //create
         public async Task<int> AddDonor(CreateDonorDto donorDto)
         {
+            if (donorDto == null) throw new ArgumentNullException(nameof(donorDto));
+            if (string.IsNullOrWhiteSpace(donorDto.CompanyName)) throw new ArgumentException("CompanyName is required.", nameof(donorDto.CompanyName));
+            if (string.IsNullOrWhiteSpace(donorDto.CompanyEmail)) throw new ArgumentException("CompanyEmail is required.", nameof(donorDto.CompanyEmail));
+
             try
             {
                 var idAddress = await _addressService.AddAddressForDonor(donorDto.CompanyAddress);
@@ -47,7 +51,12 @@ namespace ChineseSaleApi.Services
             }
             catch (ArgumentNullException ex)
             {
-                _logger.LogError(ex, "AddDonor received a null argument: {@DonorDto}", donorDto);
+                _logger.LogWarning(ex, "AddDonor received a null argument: {@DonorDto}", donorDto);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed while adding donor: {@DonorDto}", donorDto);
                 throw;
             }
             catch (Exception ex)
@@ -60,6 +69,9 @@ namespace ChineseSaleApi.Services
         //read
         public async Task<SingelDonorDto?> GetDonorById(int id, int lotteryId, PaginationParamsDto paginationParamsdto)
         {
+            if (id <= 0) throw new ArgumentException("Id must be greater than zero.", nameof(id));
+            if (lotteryId <= 0) throw new ArgumentException("lotteryId must be greater than zero.", nameof(lotteryId));
+
             try
             {
                 var donor = await _repository.GetDonorById(id);
@@ -90,6 +102,11 @@ namespace ChineseSaleApi.Services
                     Gifts = dict
                 };
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument while getting donor by id {DonorId}.", id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get donor by id {DonorId} for lottery {LotteryId}.", id, lotteryId);
@@ -98,6 +115,9 @@ namespace ChineseSaleApi.Services
         }
         public async Task<DonorDto?> GetDonorByIdSimple(int id, int lotteryId)
         {
+            if (id <= 0) throw new ArgumentException("Id must be greater than zero.", nameof(id));
+            if (lotteryId <= 0) throw new ArgumentException("lotteryId must be greater than zero.", nameof(lotteryId));
+
             try
             {
                 var donor = await _repository.GetDonorById(id);
@@ -117,6 +137,11 @@ namespace ChineseSaleApi.Services
                     LastName = donor.LastName
                 };
 
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument for GetDonorByIdSimple: {DonorId}.", id);
+                throw;
             }
             catch (Exception ex)
             {
@@ -139,6 +164,8 @@ namespace ChineseSaleApi.Services
         //by lotterry id
         public async Task<IEnumerable<DonorDto?>> GetDonorByLotteryId(int lottery)
         {
+            if (lottery <= 0) throw new ArgumentException("Lottery id must be greater than zero.", nameof(lottery));
+
             try
             {
                 var donors = await _repository.GetDonorByLotteryId(lottery);
@@ -153,6 +180,11 @@ namespace ChineseSaleApi.Services
                     CompanyIcon = donor.CompanyIcon,
                     CompanyAddressId = donor.CompanyAddressId
                 });
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument for GetDonorByLotteryId: {LotteryId}.", lottery);
+                throw;
             }
             catch (Exception ex)
             {
@@ -202,6 +234,9 @@ namespace ChineseSaleApi.Services
         //with pagination
         public async Task<PaginatedResultDto<DonorDto>> GetDonorsWithPagination(int lottery, PaginationParamsDto paginationParams)
         {
+            if (paginationParams == null) throw new ArgumentNullException(nameof(paginationParams));
+            if (lottery <= 0) throw new ArgumentException("Lottery id must be greater than zero.", nameof(lottery));
+
             try
             {
                 var (donors, totalCount) = await _repository.GetDonorsWithPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize);
@@ -224,6 +259,11 @@ namespace ChineseSaleApi.Services
                     PageSize = paginationParams.PageSize
                 };
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, "Pagination parameters null for lottery {LotteryId}.", lottery);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get donors with pagination for lottery {LotteryId}.", lottery);
@@ -233,6 +273,9 @@ namespace ChineseSaleApi.Services
 
         public async Task<PaginatedResultDto<DonorDto>> GetDonorsNameSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch)
         {
+            if (paginationParams == null) throw new ArgumentNullException(nameof(paginationParams));
+            if (lottery <= 0) throw new ArgumentException("Lottery id must be greater than zero.", nameof(lottery));
+
             try
             {
                 var (donors, totalCount) = await _repository.GetDonorsNameSearchedPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize, textSearch);
@@ -255,6 +298,11 @@ namespace ChineseSaleApi.Services
                     PageSize = paginationParams.PageSize
                 };
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, "Pagination parameters null for lottery {LotteryId}.", lottery);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get donors by name search for lottery {LotteryId}.", lottery);
@@ -263,6 +311,9 @@ namespace ChineseSaleApi.Services
         }
         public async Task<PaginatedResultDto<DonorDto>> GetDonorsEmailSearchedPagination(int lottery, PaginationParamsDto paginationParams, string textSearch)
         {
+            if (paginationParams == null) throw new ArgumentNullException(nameof(paginationParams));
+            if (lottery <= 0) throw new ArgumentException("Lottery id must be greater than zero.", nameof(lottery));
+
             try
             {
                 var (donors, totalCount) = await _repository.GetDonorsEmailSearchedPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize, textSearch);
@@ -285,6 +336,11 @@ namespace ChineseSaleApi.Services
                     PageSize = paginationParams.PageSize
                 };
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, "Pagination parameters null for lottery {LotteryId}.", lottery);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get donors by email search for lottery {LotteryId}.", lottery);
@@ -295,6 +351,9 @@ namespace ChineseSaleApi.Services
         //update
         public async Task<bool?> UpdateDonor(UpdateDonorDto donor)
         {
+            if (donor == null) throw new ArgumentNullException(nameof(donor));
+            if (donor.Id <= 0) throw new ArgumentException("Donor Id must be greater than zero.", nameof(donor.Id));
+
             try
             {
                 Donor? donor1 = await _repository.GetDonorById(donor.Id);
@@ -312,6 +371,16 @@ namespace ChineseSaleApi.Services
                 await _repository.UpdateDonor(donor1);
                 return true;
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, "UpdateDonor called with null payload.");
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation failed updating donor {DonorId}.", donor?.Id);
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update donor {DonorId}.", donor?.Id);
@@ -321,9 +390,17 @@ namespace ChineseSaleApi.Services
         //add lottery to donor
         public async Task<bool?> AddLotteryToDonor(int donorId, int lotteryId)
         {
+            if (donorId <= 0) throw new ArgumentException("DonorId must be greater than zero.", nameof(donorId));
+            if (lotteryId <= 0) throw new ArgumentException("LotteryId must be greater than zero.", nameof(lotteryId));
+
             try
             {
                 return await _repository.UpdateLotteryDonor(donorId, lotteryId);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument while adding lottery {LotteryId} to donor {DonorId}.", lotteryId, donorId);
+                throw;
             }
             catch (Exception ex)
             {
@@ -334,6 +411,9 @@ namespace ChineseSaleApi.Services
         //delete
         public async Task<bool?> DeleteDonor(int id, int lotteryId)
         {
+            if (id <= 0) throw new ArgumentException("Donor Id must be greater than zero.", nameof(id));
+            if (lotteryId <= 0) throw new ArgumentException("LotteryId must be greater than zero.", nameof(lotteryId));
+
             try
             {
                 Donor? donor = await _repository.GetDonorById(id);
@@ -344,6 +424,11 @@ namespace ChineseSaleApi.Services
                 if (donor.Lotteries.Count() > 1)
                     return await _repository.DeleteLotteryDonor(id, lotteryId);
                 return await _repository.DeleteDonor(id);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument while deleting donor {DonorId} from lottery {LotteryId}.", id, lotteryId);
+                throw;
             }
             catch (Exception ex)
             {
