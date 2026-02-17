@@ -20,6 +20,7 @@ import { NzSwitchComponent } from "ng-zorro-antd/switch";
 import { NzMessageComponent, NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../../services/category/category.service';
+import { CartService } from '../../../services/cart/cart.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class Gift {
     private cookieService: CookieService,
     private msg: NzMessageService,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cartService: CartService
   ) { }
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
@@ -94,6 +96,8 @@ export class Gift {
     this.validateForm.patchValue({
       lotteryId: this.global.currentLotteryId()
     });
+    this.cartService.initAvailableCards();
+    
     // console.log(this.global.user());
 
     // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
@@ -198,6 +202,7 @@ export class Gift {
       price: gift.price,
       isPackageAble: gift.isPackageAble
     };
+    this.cartService.availableCards += (gift.isPackageAble ? -change : 0);
     this.giftService.updateCardQuantity(item, change);
   }
 }

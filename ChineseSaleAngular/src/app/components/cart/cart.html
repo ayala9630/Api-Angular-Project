@@ -193,7 +193,7 @@
       <div class="progress-section">
         <div class="progress-header">
           <span class="progress-label">התקדמות הרכישה</span>
-          <span class="progress-count">{{ getTotalTickets() }} / 10</span>
+          <span class="progress-count">{{ getTotalTickets() }} / {{ cartService.availableCards }}</span>
         </div>
         <nz-progress 
           [nzPercent]="getProgressPercent()" 

@@ -21,6 +21,8 @@ import { GlobalService } from '../../../services/global/global.service';
 import { CookieService } from 'ngx-cookie-service';
 import { getClaim } from '../../../utils/token.util';
 import { Router, RouterLink } from "@angular/router";
+import { PackageCartService } from '../../../services/package-cart/package-cart.service';
+import { CartService } from '../../../services/cart/cart.service';
 
 
 @Component({
@@ -35,7 +37,8 @@ export class Package {
     private modal: NzModalService,
     public global: GlobalService,
     private cookieService: CookieService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) { }
 
   allPackages: PackageModel[] = [];
@@ -63,6 +66,7 @@ export class Package {
     });
     this.updateCanCreatePackage();
     this.uploadData();
+    this.cartService.initAvailableCards();
   }
 
   private fb = inject(NonNullableFormBuilder);
@@ -77,13 +81,6 @@ export class Package {
     lotteryId: [0, [Validators.required]],
   });
 
-  // packageData: CreatePackage = {
-  //   name: '',
-  //   numOfCards: 0,
-  //   description: '',
-  //   price: 0,
-  //   LotteryId: 0,
-  // }
 
   private lotteryEffect = effect(() => {
     // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
@@ -184,9 +181,10 @@ export class Package {
       packageId: packageModel.id,
       packageName: packageModel.name,
       imageUrl: packageModel.imageUrl || '',
+      numberOfCards: packageModel.numOfCards,
       price: packageModel.price
-
     };
+    this.cartService.availableCards += (card.numberOfCards * qty);  
     this.packageService.updatePackageQuantity(card, qty);
   }
 
