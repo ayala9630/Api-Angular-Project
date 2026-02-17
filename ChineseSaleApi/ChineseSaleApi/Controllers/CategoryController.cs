@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+using ChineseSaleApi.Attributes;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -8,6 +10,7 @@ namespace ChineseSaleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -55,6 +58,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //create
+        [Authorize]
+        [Admin]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryDto category)
         {
@@ -71,6 +76,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //delete
+        [Authorize]
+        [Admin]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {

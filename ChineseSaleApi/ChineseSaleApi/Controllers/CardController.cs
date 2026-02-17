@@ -4,12 +4,15 @@ using ChineseSaleApi.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System;
+using ChineseSaleApi.Attributes;
 
 namespace ChineseSaleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
+    [Admin]
+
     public class CardController : ControllerBase
     {
         private readonly ICardService _service;

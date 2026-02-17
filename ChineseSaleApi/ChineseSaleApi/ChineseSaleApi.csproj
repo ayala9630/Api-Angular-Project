@@ -8,13 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="Images\**" />
-    <Compile Remove="NewFolder\**" />
     <Content Remove="Images\**" />
-    <Content Remove="NewFolder\**" />
     <EmbeddedResource Remove="Images\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="Images\**" />
-    <None Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>

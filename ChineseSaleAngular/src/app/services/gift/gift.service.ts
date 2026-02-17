@@ -93,6 +93,7 @@ export class GiftService {
   }
 
   getGiftQuantity(giftId: number): number {
+    console.log('Getting quantity for giftId:', giftId);
     const cartItem = this.cart.find(item => item.giftId === giftId);
     return cartItem ? cartItem.quantity : 0;
   }

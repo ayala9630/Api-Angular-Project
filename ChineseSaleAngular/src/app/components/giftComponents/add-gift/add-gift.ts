@@ -83,7 +83,7 @@ export class AddGift {
     private msg: NzMessageService,
     private http: HttpClient,
     public filesService: FilesService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -266,10 +266,11 @@ export class AddGift {
         }
       });
     }
-    }
-    cancel(): void {
-      this.router.navigate(['/gifts']);
-    }
+  }
+
+  cancel(): void {
+    this.router.navigate(['/gifts']);
+  }
 
     donorChange(value: number): void {
       this.validateForm.controls['donorId'].setValue(value || 0);

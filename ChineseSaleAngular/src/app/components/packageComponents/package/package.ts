@@ -53,7 +53,10 @@ export class Package {
     // this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
     this.token = this.cookieService.get('auth_token') || '';
     // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
-    console.log(this.admin);
+    // console.log(this.admin);
+    this.validateForm.patchValue({
+      LotteryId: this.global.currentLotteryId()
+    });
     this.isLogin = this.token !== '';
     this.validateForm.patchValue({
       lotteryId: this.global.currentLotteryId()

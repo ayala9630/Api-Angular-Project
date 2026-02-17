@@ -1,3 +1,42 @@
+<div class="header-container">
+    <!-- <div class="logo-container"> -->
+        <!-- <a routerLink="home">
+            <img src="assets/images/logo.svg" alt="מכירה סינית" class="header-logo">
+        </a> -->
+    <!-- </div> -->
+    <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
+        @for (p of lotteryData; track p.id) {
+            <nz-option [nzValue]="p" [nzLabel]="p.name" nzCustomContent>
+                <span class="lottery-option">
+                    <span class="lottery-name">{{ p.name }}</span>
+                    @if (isLotteryNotStarted(p)) {
+                        <span class="lottery-actions">
+                            <span nz-icon nzType="edit" class="lottery-action"
+                                title="עריכה"
+                                (click)="$event.stopPropagation(); editLottery(p)"></span>
+                            <span nz-icon nzType="delete" class="lottery-action delete"
+                                title="מחיקה"
+                                (click)="$event.stopPropagation(); deleteLottery(p)"></span>
+                        </span>
+                    }
+                </span>
+            </nz-option>
+        }
+    </nz-select>
+    <a routerLink="lottery/add">+הוסף הגרלה</a>
+    <ul nz-menu nzMode="horizontal">
+        <li nz-menu-item>
+            <a routerLink="packages">חבילות</a>
+        </li>
+        <li nz-menu-item>
+            <a routerLink="gifts">מתנות</a>
+        </li>
+        <li nz-menu-item>
+            <a routerLink="donors">תורמים</a>
+        </li>
+        <li nz-menu-item>
+            <a routerLink="home">בית</a>
+        </li>
 <div class="header-container" [class.started]="lotteryStart" [class.not-started]="!lotteryStart">
     <div class="left-block">
         <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">

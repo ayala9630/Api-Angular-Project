@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+using ChineseSaleApi.Attributes;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.ServiceInterfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -55,7 +57,8 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while retrieving the lottery.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpGet("{id}/report")]
         public async Task<IActionResult> GetLotteryReport(int id)
         {
@@ -74,7 +77,8 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while generating the lottery report.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpGet("{id}/report/export")]
         public async Task<IActionResult> ExportLotteryReport(int id, [FromQuery] string format = "csv")
         {
@@ -125,6 +129,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //create
+        [Authorize]
+        [Admin]
         [HttpPost]
         public async Task<IActionResult> AddLottery([FromBody] CreateLotteryDto lottery)
         {
@@ -139,7 +145,8 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while adding the lottery.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpPut]
         public async Task<IActionResult> UpdateLottery([FromBody] UpdateLotteryDto lottery)
         {
@@ -158,6 +165,8 @@ namespace ChineseSaleApi.Controllers
         }
 
         //delete
+        [Authorize]
+        [Admin]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLottery(int id)
         {
@@ -172,7 +181,8 @@ namespace ChineseSaleApi.Controllers
                 return StatusCode(500, "An unexpected error occurred while deleting the lottery.");
             }
         }
-
+        [Authorize]
+        [Admin]
         [HttpPut]
         [Route("DrawWinners/{giftId}")]
         public async Task<IActionResult> DrawWinners(int giftId)
