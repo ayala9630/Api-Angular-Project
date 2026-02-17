@@ -71,6 +71,7 @@ export class Gift {
   ascendingOrder: boolean = true;
 
   selectedCategory: number | null = null;
+  canCollect: boolean = false;
 
   private fb = inject(NonNullableFormBuilder)
 
@@ -119,13 +120,24 @@ export class Gift {
 
 
   uploadData(): void {
+    const current = this.global.currentLottery();
+    if (!current || (!current.startDate && !current.endDate)) {
+      this.canCollect = false;
+      this.global.lotteryStart = true;
+    } else {
+      const now = Date.now();
+      const start = current.startDate ? new Date(current.startDate).getTime() : now;
+      this.canCollect = now < start;
+      this.global.lotteryStart = !(now < start);
+    }
+
     this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder,this.selectedCategory).subscribe({
       next: (gifts) => {
         this.paginatedGifts = gifts;
         this.allGifts = this.paginatedGifts.items.flat();
         this.categoryService.getAllCategories().subscribe((categories) => {
-        this.allCategories = categories;
-      });
+          this.allCategories = categories;
+        });
       },
       error: (err) => {
         this.msg.error('שגיאה בטעינת המתנות');
@@ -162,9 +174,7 @@ export class Gift {
   onCategoryChange(selectedCategory: number | null  ): void {
     this.selectedCategory = selectedCategory;
     this.uploadData();
-  }
-
-  
+  }  
 
   submitForm(): void {
     console.log('submit', this.validateForm.value);

@@ -211,10 +211,6 @@ export class AddGift {
     console.log("submit form");
     console.log("id:", this.id);
     console.log("editing:", this.editing);
-
-
-
-
     // console.log(this.validateForm.value);
     if (!this.editing) {
       if (this.validateForm.valid) {
@@ -241,7 +237,6 @@ export class AddGift {
         ...(this.validateForm.value as UpdateGift),
       };
       updatePayload.id = this.id!;
-
       this.giftService.createGift(this.validateForm.value).subscribe({
         next: (newGift: GiftModel) => {
           console.log('Gift created successfully:', newGift);
@@ -273,15 +268,14 @@ export class AddGift {
     }
   }
 
-
   cancel(): void {
     this.router.navigate(['/gifts']);
   }
 
-  donorChange(value: number): void {
-    this.validateForm.controls['donorId'].setValue(value || 0);
+    donorChange(value: number): void {
+      this.validateForm.controls['donorId'].setValue(value || 0);
+    }
+    categoryChange(value: number): void {
+      this.validateForm.controls['categoryId'].setValue(value || 0);
+    }
   }
-  categoryChange(value: number): void {
-    this.validateForm.controls['categoryId'].setValue(value || 0);
-  }
-}

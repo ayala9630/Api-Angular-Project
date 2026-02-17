@@ -46,7 +46,8 @@ export class Package {
   // currentLotteryId = signal(0);
   token: string = '';
   isLogin = false;
-  
+  canCreatePackage: boolean = false;
+
   ngOnInit() {
     // this.currentLotteryId.set(this.global.currentLottery()?.id || 0);
     // this.packageCart = JSON.parse(this.cookieService.get('packageCartUser1') || '[]');
@@ -57,6 +58,10 @@ export class Package {
       LotteryId: this.global.currentLotteryId()
     });
     this.isLogin = this.token !== '';
+    this.validateForm.patchValue({
+      lotteryId: this.global.currentLotteryId()
+    });
+    this.updateCanCreatePackage();
     this.uploadData();
   }
 
@@ -69,15 +74,15 @@ export class Package {
     description: [''],
     numOfCards: [0, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    LotteryId: [0, [Validators.required]],
+    lotteryId: [0, [Validators.required]],
   });
 
   // packageData: CreatePackage = {
   //   name: '',
-  //   description: '',
   //   numOfCards: 0,
+  //   description: '',
   //   price: 0,
-  //   LotteryId: this.currentLotteryId(),
+  //   LotteryId: 0,
   // }
 
   private lotteryEffect = effect(() => {
@@ -87,6 +92,7 @@ export class Package {
   });
 
   uploadData() {
+    this.updateCanCreatePackage();
     this.packageService.getPackagesByLotteryId(this.global.currentLotteryId()).subscribe({
       next: (packages) => {
         this.allPackages = packages;
@@ -142,13 +148,33 @@ export class Package {
             else if (err.status === 500) {
               this.global.msg.error('שגיאה במחיקת החבילה');
               console.error('Failed to delete package', packageId, err);
-            } 
+            }
           }
         });
       },
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel')
     });
+  }
+
+  private updateCanCreatePackage(): void {
+    const current = this.global.currentLottery();
+    if (!current || !current.startDate) {
+      // אין הגרלה תקינה — מנע יצירת חבילה
+      this.canCreatePackage = false;
+    } else {
+      const now = Date.now();
+      const start = new Date(current.startDate).getTime();
+      // אפשר ליצור חבילה רק אם ההגרלה עדיין לא התחילה
+      this.canCreatePackage = now < start;
+    }
+
+    // Enable/disable the form controls based on permission
+    if (this.canCreatePackage) {
+      this.validateForm.enable();
+    } else {
+      this.validateForm.disable();
+    }
   }
 }
 

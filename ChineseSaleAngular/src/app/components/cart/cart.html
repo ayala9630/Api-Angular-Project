@@ -1,0 +1,83 @@
+<div class="cart-wrapper">
+  <div class="cart-header">
+    <h2>שלב 2: בחירת הפרסים</h2>
+  </div>
+
+  <div class="cart-items-scroll">
+    @for (cartItem of giftService.cart; track cartItem.giftId) {
+      <div class="cart-item">
+        <div class="item-top-row">
+          <button 
+            nz-button 
+            nzType="text" 
+            nzSize="small"
+            class="delete-btn"
+            (click)="giftService.updateQuantity(cartItem, -cartItem.quantity)">
+            <span nz-icon nzType="delete" nzTheme="outline"></span>
+          </button>
+
+          <div class="item-image">
+            <nz-avatar 
+              [nzSrc]="cartItem.imageUrl" 
+              [nzShape]="'square'"
+              [nzSize]="80">
+            </nz-avatar>
+          </div>
+        </div>
+
+        <div class="item-bottom-row">
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="giftService.updateQuantity(cartItem, 1)">+</button>
+            <span class="qty-value">{{ cartItem.quantity }}</span>
+            <button 
+              class="qty-btn" 
+              (click)="giftService.updateQuantity(cartItem, -1)"
+              [disabled]="cartItem.quantity <= 1">−</button>
+          </div>
+
+          <div class="item-details">
+            <span class="item-price">{{ cartItem.price | number }}₪</span>
+            <span class="item-name">{{ cartItem.giftName }}</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (!initLoading && giftService.cart.length === 0) {
+      <div class="empty-state">
+        <h3>העגלה ריקה</h3>
+        <p>בחר אחת מהמתנות בעמוד</p>
+      </div>
+    }
+  </div>
+
+  @if (giftService.cart.length > 10) {
+    <div class="cart-footer">
+      <div class="progress-row">
+        <span class="progress-icon">🎁</span>
+        <span class="progress-label">מצויין! מימשת את כל הכרטיסים</span>
+      </div>
+      <nz-progress 
+        [nzPercent]="getProgressPercent()" 
+        [nzShowInfo]="false"
+        nzStrokeColor="#ff6b6b"
+        [nzStrokeWidth]="8">
+      </nz-progress>
+      <div class="progress-count">{{ getTotalTickets() }} / 10</div>
+
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large" 
+        nzBlock 
+        class="next-btn">
+        לשלב הבא
+      </button>
+
+      <div class="footer-notice">
+        <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
+        <span>יש לבחור חבילת כרטיסים</span>
+      </div>
+    </div>
+  }
+</div>
