@@ -21,6 +21,7 @@ import { CardCartService } from '../../services/card-cart/card-cart.service';
 import { GiftService } from '../../services/gift/gift.service';
 import { CardCart } from '../../models';
 import { PackageService } from '../../services/package/package.service';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -46,15 +47,17 @@ import { PackageService } from '../../services/package/package.service';
 export class Cart implements OnInit, OnDestroy {
   initLoading: boolean = false;
   private connectedSubscription?: Subscription;
-  cardCart = computed(() => this.giftService.userCart());  activeTab: 'packages' | 'gifts' = 'packages';  packageCart = computed(() => this.packageService.userCart());
+  cardCart = computed(() => this.giftService.userCart()); activeTab: 'packages' | 'gifts' = 'packages'; packageCart = computed(() => this.packageService.userCart());
 
   constructor(
-    private cartService: CardCartService,
+    private cardCartService: CardCartService,
     public global: GlobalService,
     public giftService: GiftService,
-    public packageService: PackageService,  
-    private router: Router 
+    public packageService: PackageService,
+    private router: Router,
+    public cartService: CartService
   ) { }
+
 
   ngOnInit() {
     this.giftService.userId.set(this.giftService.getUserId());
@@ -62,6 +65,7 @@ export class Cart implements OnInit, OnDestroy {
       this.giftService.userId.set(this.giftService.getUserId());
     });
 
+    
     const userId = this.global.user()?.id || null;
     if (userId) {
       this.initLoading = true;
@@ -74,21 +78,26 @@ export class Cart implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.connectedSubscription?.unsubscribe();
   }
-  
+
   getTotal(): number {
     return this.cardCart().reduce((sum, item) => {
-      return sum + (item.price * item.quantity);
+      const price = Number(item.price) || 0;
+      const quantity = Number(item.quantity) || 0;
+      return sum + (price * quantity);
     }, 0);
   }
 
   getTotalTickets(): number {
     return this.cardCart().reduce((sum, item) => {
-      return sum + item.quantity;
+      const quantity = Number(item.quantity) || 0;
+      return sum + quantity;
     }, 0);
   }
 
   getProgressPercent(): number {
     const total = this.getTotalTickets();
-    return Math.min((total / 10) * 100, 100);
+    return Math.min((total / this.cartService.availableCards) * 100, 100);
   }
+
+
 }

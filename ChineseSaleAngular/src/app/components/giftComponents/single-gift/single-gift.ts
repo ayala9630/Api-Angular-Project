@@ -17,6 +17,7 @@ import { CardCart, CardCarts } from '../../../models';
 import { GlobalService } from '../../../services/global/global.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GiftWithOldPurchase } from '../../../models/gift';
+import { CartService } from '../../../services/cart/cart.service';
 
 @Component({
   selector: 'app-single-gift',
@@ -44,7 +45,8 @@ export class SingleGift implements OnInit {
     private cookieService: CookieService,
     public global: GlobalService,
     private msg: NzMessageService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) { }
 
   giftId: number = 0;
@@ -88,6 +90,7 @@ export class SingleGift implements OnInit {
         price: gift.price || 0,
         isPackageAble: gift.isPackageAble
       };
+      this.cartService.availableCards += (gift.isPackageAble ? -change : 0);
       this.giftService.updateCardQuantity(item, change);
     }
 }

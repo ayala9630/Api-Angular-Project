@@ -4,6 +4,7 @@ export interface PackageCart {
   userId: number;
   packageId: number;
   packageName: string;
+  numberOfCards: number;
   imageUrl: string;
   price: number;
 }

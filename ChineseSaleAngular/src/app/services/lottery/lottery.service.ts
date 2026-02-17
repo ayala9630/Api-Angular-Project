@@ -39,16 +39,10 @@ export class LotteryService {
     return this.http.get<User>(`${this.baseUrl}/giftId/${giftId}`, {});
   }
 
-  /**
-   * Exports a lottery report.
-   * @param lotteryId The ID of the lottery.
-   * @param format The desired file format ('csv', 'json', 'pdf').
-   * @returns An Observable of the full HttpResponse containing the file blob.
-   */
   exportLotteryReport(lotteryId: number, format: 'csv' | 'json' | 'pdf'): Observable<HttpResponse<Blob>> {
     return this.http.get(`${this.baseUrl}/${lotteryId}/report/export`, {
       params: { format },
-      observe: 'response', // <-- This is crucial to get headers
+      observe: 'response',
       responseType: 'blob'
     });
   }
