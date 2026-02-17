@@ -49,7 +49,7 @@ export class Purchase {
   initLoading = false;
 
   ngOnInit() {
-    this.uploadData();
+    // this.uploadData();
   }
 
   uploadData() {

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CardCart, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
+import { CardCart, CardCartGroup, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
 import { GlobalService } from '../global/global.service';
 
@@ -12,12 +12,18 @@ import { GlobalService } from '../global/global.service';
 
 export class GiftService {
   private readonly url = `${environment.apiUrl}/gift`;
+  private readonly cart = signal<CardCartGroup[]>([]);
+  public readonly userId = signal<number | null>(null);
 
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
     private global: GlobalService
-  ) { }
+  ) {
+    this.cart.set(this.readCartFromCookie());
+    this.userId.set(this.getUserId());
+    // this.userFromCookie();
+  }
 
   getGifts(
     lotteryId: number,
@@ -41,7 +47,7 @@ export class GiftService {
     if (sortType !== undefined && ascendingOrder !== undefined)
       queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
     if (categoryId !== null) queryParams += `&categoryId=${categoryId}`;
-    console.log(queryParams);
+    // console.log(queryParams);
 
     return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
   }
@@ -71,33 +77,80 @@ export class GiftService {
   }
 
   //Additional functions
+  userCart = computed(() => {
+    const userId = this.userId();
+    if (!userId) return [];
+    const userCartGroup = this.cart().find(group => group.userId === userId);
+    return userCartGroup ? userCartGroup.userCart : [];
+  });
 
-  cart: CardCart[] = [];
+  // userFromCookie(): void {
+  //   this.userId.set(this.getUserId());
+  // }
 
-  ngOnInit(): void {
-    this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+  readCartFromCookie(): CardCartGroup[] {
+    const raw = this.cookieService.get('cardCart');
+    return raw ? JSON.parse(raw) : [];
   }
-  
-  updateQuantity(gift: GiftWithOldPurchase | CardCart |undefined | Gift, qty: number): void {
-    if (!gift) return;
-    console.log((gift as CardCart).giftId ??(gift as GiftWithOldPurchase).id+ " gift as GiftWithOldPurchase " + (gift as GiftWithOldPurchase).name + " gift as CardCart " + (gift as CardCart).giftName);
-    
-    const existingCartItem = this.cart.find(item => item.giftId === ((gift as CardCart).giftId ?? (gift as GiftWithOldPurchase).id));
-    if (existingCartItem) {
-      existingCartItem.quantity += qty;
-      if (existingCartItem.quantity <= 0) {
-        this.cart = this.cart.filter(item => item.giftId !== ((gift as CardCart).giftId ?? (gift as GiftWithOldPurchase).id));
+
+  writeCartToCookie(cart: CardCartGroup[]): void {
+    this.cookieService.set('cardCart', JSON.stringify(cart));
+  }
+
+  getUserId(): number | null {
+    const user = this.cookieService.get('user');
+    if (!user) return null;
+    try {
+      return JSON.parse(user).id ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  updateCardQuantity(card: CardCart, qty: number): void {
+    // if (!gift) return;
+    // console.log((gift as CardCart).giftId ?? (gift as GiftWithOldPurchase).id + " gift as GiftWithOldPurchase " + (gift as GiftWithOldPurchase).name + " gift as CardCart " + (gift as CardCart).giftName);
+    const userId = this.userId();
+    if (!userId) {
+      return;
+    }
+    const updatedCart = [...this.cart()];
+    let userGroup = updatedCart.find(item => item.userId === userId);
+    if (!userGroup) {
+      if (qty <= 0) {
+        return;
+      }
+      userGroup = { userId, userCart: [] };
+      updatedCart.push(userGroup);
+    }
+
+    const existingItem = userGroup.userCart.find(item => item.giftId === card.giftId);
+    if (existingItem) {
+      existingItem.quantity += qty;
+      if (existingItem.quantity <= 0) {
+        userGroup.userCart = userGroup.userCart.filter(item => item.giftId !== card.giftId);
       }
     } else if (qty > 0) {
-      this.cart.push({ giftId: (gift as CardCart).giftId ??(gift as GiftWithOldPurchase).id, quantity: qty ,giftName: (gift as GiftWithOldPurchase).name ?? (gift as CardCart).giftName, imageUrl: gift?.imageUrl ?? '', price: gift?.price ?? 0, isPackageAble: gift?.isPackageAble ?? true, userId: Number(this.cookieService.get('userId')) || 0, id: 0 });
+      userGroup.userCart.push({ ...card, quantity: qty });
     }
-    // this.cookieService.set(`cardCart`, JSON.stringify(this.cart), 7);
-    this.cookieService.set(`cardCartUser${this.global.user()?.id}`, JSON.stringify(this.cart), 7);
+
+    if (userGroup.userCart.length === 0) {
+      const filteredCart = updatedCart.filter(item => item.userId !== userId);
+      this.cart.set(filteredCart);
+      this.writeCartToCookie(filteredCart);
+      return;
+    }
+
+    this.cart.set(updatedCart);
+    this.writeCartToCookie(updatedCart);
   }
 
   getGiftQuantity(giftId: number): number {
-    console.log('Getting quantity for giftId:', giftId);
-    const cartItem = this.cart.find(item => item.giftId === giftId);
+    const userId = this.userId();
+    if (!userId) return 0;
+    const userCartGroup = this.cart().find(item => item.userId === userId);
+    if (!userCartGroup) return 0;
+    const cartItem = userCartGroup.userCart.find(item => item.giftId === giftId);
     return cartItem ? cartItem.quantity : 0;
   }
 }

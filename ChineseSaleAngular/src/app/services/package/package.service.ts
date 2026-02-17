@@ -1,20 +1,27 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Package, CreatePackage, UpdatePackage, PackageCarts } from '../../models';
+import { Package, CreatePackage, UpdatePackage, PackageCarts, CardCartGroup, PackageCart, PackageCartGroup } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
+import { GlobalService } from '../global/global.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PackageService {
   private readonly url = `${environment.apiUrl}/package`;
+  private readonly cart = signal<PackageCartGroup[]>([]);
+  public readonly userId = signal<number | null>(null);
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
-  ) { }
+    private cookieService: CookieService,
+    private global: GlobalService
+  ) {
+    this.cart.set(this.readCartFromCookie());
+    this.userId.set(this.getUserId());
+   }
 
   getPackageById(id: number): Observable<Package> {
     return this.http.get<Package>(`${this.url}/${id}`);
@@ -41,25 +48,77 @@ export class PackageService {
     });
   }
   //Aditional functions
-  packageCart: PackageCarts[] = [];
 
-  updateQty(pkg: Package | PackageCarts, qty: number): void {
-    const existingCartItem = this.packageCart.find(item => item.packageId === (pkg as Package).id);
-    if (existingCartItem) {
-      existingCartItem.quantity += qty;
-      if (existingCartItem.quantity <= 0) {
-        this.packageCart = this.packageCart.filter(item => item.packageId !== (pkg as Package).id);
+  userCart = computed(() => {
+    const userId = this.userId();
+    if (!userId) return [];
+    const userCartGroup = this.cart().find(group => group.userId === userId);
+    return userCartGroup ? userCartGroup.userCart : [];
+  });
+
+  readCartFromCookie(): PackageCartGroup[] {
+    const raw = this.cookieService.get('packageCart');
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  writeCartToCookie(cart: PackageCartGroup[]): void {
+    this.cookieService.set('packageCart', JSON.stringify(cart));
+  }
+
+  getUserId(): number | null {
+    const user = this.cookieService.get('user');
+    if (!user) return null; 
+    try {
+      return JSON.parse(user).id ?? null;
+    }
+    catch {
+      return null;
+    }
+  }
+  updatePackageQuantity(card: PackageCart, qty: number): void {
+      const userId = this.userId();
+      if (!userId) {
+        return;
       }
+      const updatedCart = [...this.cart()];
+      let userGroup = updatedCart.find(item => item.userId === userId);
+      if (!userGroup) {
+        if (qty <= 0) {
+          return;
+        }
+        userGroup = { userId, userCart: [] };
+        updatedCart.push(userGroup);
+      }
+  
+      const existingItem = userGroup.userCart.find(item => item.packageId === card.packageId);
+      if (existingItem) {
+        existingItem.quantity += qty;
+        if (existingItem.quantity <= 0) {
+          userGroup.userCart = userGroup.userCart.filter(item => item.packageId !== card.packageId);
+        }
+      } else if (qty > 0) {
+        userGroup.userCart.push({ ...card, quantity: qty });
+      }
+  
+      if (userGroup.userCart.length === 0) {
+        const filteredCart = updatedCart.filter(item => item.userId !== userId);
+        this.cart.set(filteredCart);
+        this.writeCartToCookie(filteredCart);
+        return;
+      }
+  
+      this.cart.set(updatedCart);
+      this.writeCartToCookie(updatedCart);
     }
-    else if (qty > 0) {
-      this.packageCart.push({ packageId: (pkg as Package).id, quantity: qty });
+  
+    getPackageQuantity(packageId: number): number {
+      const userId = this.userId();
+      if (!userId) return 0;
+      const userCartGroup = this.cart().find(item => item.userId === userId);
+      if (!userCartGroup) return 0;
+      const cartItem = userCartGroup.userCart.find(item => item.packageId === packageId);
+      return cartItem ? cartItem.quantity : 0;
     }
-    this.cookieService.set('packageCartUser1', JSON.stringify(this.packageCart), 7);
-  }
-
-  getPackageQuantity(packageId: number): number {
-    const existingCartItem = this.packageCart.find(item => item.packageId === packageId);
-    return existingCartItem ? existingCartItem.quantity : 0;
-  }
+  
 
 }

@@ -81,7 +81,7 @@ export class Donor {
     this.pageNumber = 1;
     console.log("init");
 
-    this.uploadData(this.pageNumber);
+    // this.uploadData(this.pageNumber);
     this.route.queryParams.subscribe(params => {
       if (params['reopenAddModal'] === 'true') {
         this.getAllDonorsForAdd();
@@ -96,7 +96,7 @@ export class Donor {
   uploadData(page: number, searchText?: string): void {
     this.donorService.getDonorsSearchPagination(this.currentLotteryId, page, this.pageSize, searchText, this.searchType).subscribe({
       next: (donors) => {
-        this.msg.success('הנתונים עודכנו בהצלחה');
+        // this.msg.success('הנתונים עודכנו בהצלחה');
         this.data = donors;
         this.filteredDonors = this.data.items;
         this.allDonors = this.data.items;

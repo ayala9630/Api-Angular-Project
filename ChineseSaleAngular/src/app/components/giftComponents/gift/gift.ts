@@ -5,7 +5,7 @@ import { GiftWithOldPurchase } from '../../../models/gift';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CardCarts, Category, PaginatedResult } from '../../../models';
+import { CardCart, CardCarts, Category, PackageCart, PaginatedResult } from '../../../models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CookieService } from 'ngx-cookie-service';
 import { FormsModule, NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -58,7 +58,6 @@ export class Gift {
   allGifts: GiftWithOldPurchase[] = [];
   allCategories: Category[] = [];
   admin: boolean = false;
-  currentLotteryId: number = 0;
   cart: CardCarts[] = [];
   isVisible: boolean = false;
   pageNumber: number = 1;
@@ -80,7 +79,7 @@ export class Gift {
   }
 
   searchTypeChange(value: 'name' | 'donor'): void {
-    console.log("searchTypeChange", value);
+    // console.log("searchTypeChange", value);
     this.searchType = value;
     this.onSearchChange(this.searchText);
     if (value === 'name') {
@@ -91,16 +90,19 @@ export class Gift {
   }
 
   ngOnInit(): void {
-    this.currentLotteryId = this.global.currentLotteryId();
     const token = this.cookieService.get('authToken') || '';
+    this.validateForm.patchValue({
+      lotteryId: this.global.currentLotteryId()
+    });
+    // console.log(this.global.user());
+
     // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
     // this.cookieService.set('cardCart', [], 7);
-    this.uploadData()
-    this.giftService.cart = this.cookieService.get(`cardCartUser${this.global.user()?.id}`) ? JSON.parse(this.cookieService.get(`cardCartUser${this.global.user()?.id}`)!) : [];
+    this.uploadData();
   }
-  
+
   edit(item: any): void {
-    console.log("item", item);
+    // console.log("item", item);
     this.router.navigate([`/gifts/edit/${item}`]);
   }
 
@@ -114,7 +116,7 @@ export class Gift {
     isPackageAble: [false],
     donorId: [0, [Validators.required, Validators.min(1)]],
     categoryId: [0, [Validators.min(1)]],
-    lotteryId: [this.currentLotteryId, [Validators.required]],
+    lotteryId: [0, [Validators.required]],
   });
 
 
@@ -130,7 +132,7 @@ export class Gift {
       this.global.lotteryStart = !(now < start);
     }
 
-    this.giftService.getGifts(this.currentLotteryId, undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder,this.selectedCategory).subscribe({
+    this.giftService.getGifts(this.global.currentLotteryId(), undefined, this.pageNumber, this.pageSize, this.searchText, this.searchType, this.sortType, this.ascendingOrder, this.selectedCategory).subscribe({
       next: (gifts) => {
         this.paginatedGifts = gifts;
         this.allGifts = this.paginatedGifts.items.flat();
@@ -151,37 +153,52 @@ export class Gift {
   }
 
   onSortChange(type: 'name' | 'category' | 'price'): void {
-    console.log("onSortChange", type);
+    // console.log("onSortChange", type);
 
     this.sortType = type;
-    console.log("onSortChange", this.sortType);
+    // console.log("onSortChange", this.sortType);
     this.uploadData();
   }
 
   onSortOrderChange(ascending: boolean): void {
-    console.log("onSortOrderChange", ascending);
+    // console.log("onSortOrderChange", ascending);
     this.ascendingOrder = ascending;
-    console.log("onSortOrderChange", this.ascendingOrder);
+    // console.log("onSortOrderChange", this.ascendingOrder);
     this.uploadData();
   }
 
   private lotteryEffect = effect(() => {
-    this.currentLotteryId = this.global.currentLotteryId();
-    this.giftService.cart = this.cookieService.get(`cardCartUser${this.global.user()?.id}`) ? JSON.parse(this.cookieService.get(`cardCartUser${this.global.user()?.id}`)!) : [];
     this.uploadData();
   });
 
-  onCategoryChange(selectedCategory: number | null  ): void {
+  onCategoryChange(selectedCategory: number | null): void {
     this.selectedCategory = selectedCategory;
     this.uploadData();
-  }  
+  }
 
   submitForm(): void {
-    console.log('submit', this.validateForm.value);
+    // console.log('submit', this.validateForm.value);
   }
 
   ngOnChanges(c: SimpleChanges): void {
-    this.currentLotteryId = this.global.currentLotteryId();
     this.uploadData();
   }
+  updateQuantity(gift: GiftWithOldPurchase, change: number): void {
+    if (!this.global.lotteryStarted() || this.global.lotteryFinished()) {
+      return;
+    }
+    const user = this.global.user();
+    const userId = user?.id ?? 0;
+    const item: CardCart = {
+      giftId: gift.id,
+      quantity: change,
+      userId,
+      giftName: gift.name,
+      imageUrl: gift.imageUrl,
+      price: gift.price,
+      isPackageAble: gift.isPackageAble
+    };
+    this.giftService.updateCardQuantity(item, change);
+  }
 }
+

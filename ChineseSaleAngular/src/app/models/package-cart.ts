@@ -1,10 +1,16 @@
 export interface PackageCart {
-  id: number;
+  // id: number;
   quantity: number;
   userId: number;
+  packageId: number;
   packageName: string;
-  packageUrl: string;
+  imageUrl: string;
   price: number;
+}
+
+export interface PackageCartGroup {
+  userId: number
+  userCart: PackageCart[]
 }
 
 export interface PackageCarts {

@@ -3,7 +3,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { PackageService } from '../../../services/package/package.service';
-import { Package as PackageModel, CreatePackage, PackageCarts } from '../../../models';
+import { Package as PackageModel, CreatePackage, PackageCarts, PackageCart } from '../../../models';
 import { FormsModule } from '@angular/forms';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -39,7 +39,7 @@ export class Package {
   ) { }
 
   allPackages: PackageModel[] = [];
-  admin: boolean = true;
+  admin: boolean = false;
   value = 0;
   isVisible = false;
   isConfirmLoading = false;
@@ -176,6 +176,18 @@ export class Package {
       this.validateForm.disable();
     }
   }
+
+  updateQuantity(packageModel: PackageModel, qty: number): void {
+    const card: PackageCart = {
+      quantity: this.packageService.getPackageQuantity(packageModel.id),
+      userId: this.global.user()?.id || 0,
+      packageId: packageModel.id,
+      packageName: packageModel.name,
+      imageUrl: packageModel.imageUrl || '',
+      price: packageModel.price
+
+    };
+    this.packageService.updatePackageQuantity(card, qty);
+  }
+
 }
-
-
