@@ -46,8 +46,8 @@ export class GiftService {
     }
     if (sortType !== undefined && ascendingOrder !== undefined)
       queryParams += `&sortType=${sortType}&ascendingOrder=${ascendingOrder}`;
-    if (categoryId !== null) queryParams += `&categoryId=${categoryId}`;
-    // console.log(queryParams);
+    if (categoryId !== undefined && categoryId !== null) queryParams += `&categoryId=${categoryId}`;
+    console.log(queryParams);
 
     return this.http.get<PaginatedResult<GiftWithOldPurchase[]>>(`${this.url}/lottery/${lotteryId}/search-pagination/${queryParams}`);
   }

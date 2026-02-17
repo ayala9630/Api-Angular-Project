@@ -1,0 +1,156 @@
+<div class="lottery-page">
+  <h1 class="lottery-title">🎲 הגרלה</h1>
+  
+  <div class="export-actions">
+    <button
+      nz-button
+      nzType="default"
+      class="export-btn pdf"
+      (click)="exportSummary('pdf')"
+      [nzLoading]="isExporting"
+      [disabled]="isExporting">
+      <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+      PDF
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      class="export-btn csv"
+      (click)="exportSummary('csv')"
+      [nzLoading]="isExporting"
+      [disabled]="isExporting">
+      <span nz-icon nzType="file-text" nzTheme="outline"></span>
+      CSV
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      class="export-btn json"
+      (click)="exportSummary('json')"
+      [nzLoading]="isExporting"
+      [disabled]="isExporting">
+      <span nz-icon nzType="file-sync" nzTheme="outline"></span>
+      JSON
+    </button>
+  </div>
+  </div>
+  @if (!canDraw) {
+    <nz-result
+      nzStatus="info"
+      nzTitle="ההגרלה לא פעילה כרגע"
+      nzSubTitle="ההגרלה טרם התחילה או שכבר הסתיימה">
+    </nz-result>
+  }
+
+  <div class="gifts-grid">
+    @for (gift of allGifts; track gift.id) {
+      <div
+        class="gift-card-wrapper"
+        [class.ready]="getGiftStatus(gift) === 'ready'"
+        [class.won]="getGiftStatus(gift) === 'won'"
+        [class.no-tickets]="getGiftStatus(gift) === 'no-tickets'"
+        [class.disabled]="getGiftStatus(gift) === 'disabled'"
+        (click)="onGiftClick(gift)"
+      >
+        <nz-card [nzCover]="coverTpl" class="gift-card" nzHoverable>
+          <nz-card-meta [nzTitle]="gift.name" />
+
+          <div class="gift-info">
+            <nz-tag nzColor="blue">🎟️ {{ gift.countCards }} כרטיסים</nz-tag>
+
+            @if (getGiftStatus(gift) === 'won') {
+              <nz-tag nzColor="gold">🏆 {{ gift.winner }}</nz-tag>
+            }
+            @if (getGiftStatus(gift) === 'ready') {
+              <nz-tag nzColor="green">לחץ להגרלה</nz-tag>
+            }
+            @if (getGiftStatus(gift) === 'no-tickets') {
+              <nz-tag nzColor="red">אין כרטיסים</nz-tag>
+            }
+            @if (getGiftStatus(gift) === 'disabled') {
+              <nz-tag nzColor="default">ההגרלה לא פעילה</nz-tag>
+            }
+          </div>
+        </nz-card>
+
+        <ng-template #coverTpl>
+          <div class="card-cover">
+            <img [src]="environment.baseImageUrl + '/' + gift.imageUrl" [alt]="gift.name" />
+            @if (getGiftStatus(gift) === 'won') {
+              <div class="won-overlay">
+                <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'" class="trophy-icon"></span>
+              </div>
+            }
+          </div>
+        </ng-template>
+      </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <nz-pagination
+    class="lottery-pagination"
+    [nzPageIndex]="pageNumber"
+    [nzTotal]="total || 0"
+    [nzPageSize]="pageSize"
+    (nzPageIndexChange)="onPageChange($event)">
+  </nz-pagination>
+
+  <!-- MODAL 1: Confirmation -->
+  <nz-modal
+    [(nzVisible)]="showConfirmModal"
+    nzTitle="אישור הגרלה"
+    nzOkText="🎲 התחל הגרלה"
+    nzCancelText="ביטול"
+    (nzOnOk)="onConfirmDraw()"
+    (nzOnCancel)="onCancelDraw()"
+    [nzWidth]="420"
+    nzCentered>
+    @if (selectedGift) {
+      <div class="confirm-content" *nzModalContent>
+        <div class="confirm-gift-name">{{ selectedGift.name }}</div>
+        <div class="confirm-tickets">🎟️ {{ selectedGift.countCards }} כרטיסים משתתפים</div>
+        <p class="confirm-question">האם לבצע את ההגרלה עכשיו?</p>
+      </div>
+    }
+  </nz-modal>
+
+  <!-- MODAL 2: Countdown -->
+  <nz-modal
+    [(nzVisible)]="showCountdownModal"
+    [nzClosable]="false"
+    [nzFooter]="null"
+    [nzWidth]="360"
+    nzCentered>
+    <div class="countdown-content" *nzModalContent>
+      @if (isDrawing) {
+        <nz-spin nzSize="large" nzTip="מגריל..."></nz-spin>
+      } @else {
+        <div class="countdown-number">{{ countdownValue }}</div>
+        <div class="countdown-label">ההגרלה מתחילה...</div>
+        <div class="countdown-gift-name">{{ selectedGift?.name }}</div>
+      }
+    </div>
+  </nz-modal>
+
+  <!-- MODAL 3: Winner -->
+  <nz-modal
+    [(nzVisible)]="showWinnerModal"
+    [nzFooter]="winnerFooter"
+    [nzWidth]="480"
+    nzCentered
+    [nzClosable]="true"
+    (nzOnCancel)="closeWinnerModal()">
+    <div class="winner-content" *nzModalContent>
+      <div class="winner-celebration">🎉</div>
+      <div class="winner-title">!הזוכה הגדול</div>
+      <div class="winner-gift">{{ selectedGift?.name }}</div>
+      <div class="winner-name">{{ winnerName }}</div>
+      <div class="winner-confetti">🎊✨🎊</div>
+    </div>
+    <ng-template #winnerFooter>
+      <button nz-button nzType="primary" nzSize="large" (click)="closeWinnerModal()">
+        סגור
+      </button>
+    </ng-template>
+  </nz-modal>

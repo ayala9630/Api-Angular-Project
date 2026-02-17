@@ -5,21 +5,7 @@
         </a> -->
 <!-- </div> -->
 
-<!-- <a routerLink="lottery/add">+הוסף הגרלה</a>
-    <ul nz-menu nzMode="horizontal">
-        <li nz-menu-item>
-            <a routerLink="packages">חבילות</a>
-        </li>
-        <li nz-menu-item>
-            <a routerLink="gifts">מתנות</a>
-        </li>
-        <li nz-menu-item>
-            <a routerLink="donors">תורמים</a>
-        </li>
-        <li nz-menu-item>
-            <a routerLink="home">בית</a>
-        </li>
- -->
+<!-- <a routerLink="lottery/add">+הוסף הגרלה</a> -->
 
 <div class="header-container" [class.started]="lotteryStart" [class.not-started]="!lotteryStart">
     <div class="left-block">
@@ -87,6 +73,7 @@
             <li nz-menu-item><a routerLink="packages">יצירת קשר</a></li>
             @if(admin) {
             <li nz-menu-item><a routerLink="purchases">רכישות</a></li>
+            <li nz-menu-item><a routerLink="lottery">ביצוע הגרלה</a></li>
             }
         </ul>
     </div>

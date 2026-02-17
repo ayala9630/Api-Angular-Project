@@ -71,6 +71,7 @@ namespace ChineseSaleApi.Dto
         public int OldPurchaseCount { get; set; }
         public string? CategoryName { get; set; }
         public string? winner { get; set; }
+        public int? countCards { get; set; }
     }
 
 }
