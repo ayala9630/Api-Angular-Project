@@ -13,7 +13,19 @@ export class GlobalService {
   currentLotteryId = computed(() => this.currentLottery()?.id || 0);
   lotteryStarted = computed(() => (new Date(this.currentLottery()?.startDate || new Date())).getTime() <= new Date().getTime())
   lotteryFinished = computed(() => (new Date(this.currentLottery()?.endDate || new Date())).getTime() <= new Date().getTime())
-  user = signal<User | null>(null);
+  user =  computed<User | null>(() => {
+    const userCookie = this.cookieService.get('user');
+    if (userCookie) {
+      try {
+        return JSON.parse(userCookie);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+  
+
   timeToLotteryStart = computed(() => {
     const startDate = this.currentLottery()?.startDate;
     if (!startDate) return 0;
@@ -92,7 +104,7 @@ export class GlobalService {
     // 1. שמור את ה-token בעוגיה
     this.cookieService.set('auth_token', response.token);
     this.cookieService.set('user', JSON.stringify(response.user));
-    this.user.set(response.user);
+    // this.user = response.user;
     // 2. עדכן את מצב החיבור ל- true
     this.setConnected(true);
     // 3. (אופציונלי) אם יש צורך, תוכל להפעיל מחדש את מעקב העוגיות

@@ -13,7 +13,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
-import { CardCarts } from '../../../models';
+import { CardCart, CardCarts } from '../../../models';
 import { GlobalService } from '../../../services/global/global.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GiftWithOldPurchase } from '../../../models/gift';
@@ -74,6 +74,20 @@ export class SingleGift implements OnInit {
         this.router.navigate(['/gifts']);
       }
     });
-    this.giftService.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
   }
+    updateQuantity(gift: Gift | undefined, change: number): void {
+      if (!this.global.lotteryStarted() || this.global.lotteryFinished() || !gift) {
+        return;
+      }
+      const item: CardCart = {
+        giftId: gift.id,
+        quantity: change,
+        userId: this.global.user()?.id || 0,
+        giftName: gift.name,
+        imageUrl: gift.imageUrl,
+        price: gift.price || 0,
+        isPackageAble: gift.isPackageAble
+      };
+      this.giftService.updateCardQuantity(item, change);
+    }
 }

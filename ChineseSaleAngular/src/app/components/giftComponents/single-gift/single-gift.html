@@ -45,11 +45,11 @@
 
 <ng-template #actionPlus>
     @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <div (click)="giftService.updateQuantity(gift , 1)">+</div>}
+    <div (click)="updateQuantity(gift , 1)">+</div>}
 </ng-template>
 <ng-template #actionMinus>
     @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <div (click)="giftService.updateQuantity(gift, -1)">-</div>}
+    <div (click)="updateQuantity(gift, -1)">-</div>}
 </ng-template>
 <ng-template #number>
     @if(global.lotteryStarted() && !global.lotteryFinished()){

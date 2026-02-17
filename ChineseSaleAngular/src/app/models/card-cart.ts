@@ -1,16 +1,16 @@
 export interface CardCart {
-  id: number;
+  // id: number;
   quantity: number;
   userId: number;
   giftId: number;
   giftName: string;
-  imageUrl: string;
+  imageUrl?: string;
   price: number;
-  isPackageAble: boolean;
+  isPackageAble?: boolean;
 }
-export interface Cart {
-  userId:number
-  userCart:CardCart[];
+export interface CardCartGroup {
+  userId: number
+  userCart: CardCart[]
 }
 
 export interface CardCarts {

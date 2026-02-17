@@ -66,7 +66,7 @@ export class Header implements OnInit, OnDestroy {
         this.global.currentLottery.set(this.selectedLottery);
 
         // update timer immediately after we set the current lottery
-        this.updateTimerOnce();
+        // this.updateTimerOnce();
 
         const user = this.cookieService.get('user');
         if (user) {
@@ -87,104 +87,104 @@ export class Header implements OnInit, OnDestroy {
     });
 
     // set initial values (may be zeros until lottery arrives)
-    this.updateTimerOnce();
+    // this.updateTimerOnce();
 
     // run the interval outside Angular to avoid excessive CD cycles
-    this.ngZone.runOutsideAngular(() => {
-      this.timerId = setInterval(() => {
-        // read current lottery directly from the signal
-        const current = this.global.currentLottery();
-        if (!current || (!current.startDate && !current.endDate)) {
-          // nothing to show
-          this.ngZone.run(() => {
-            this.lotteryStart = false;
-            this.days = 0;
-            this.hours = 0;
-            this.minutes = 0;
-            this.seconds = 0;
-            this.cdr.detectChanges();
-          });
-          return;
-        }
+    // this.ngZone.runOutsideAngular(() => {
+    //   this.timerId = setInterval(() => {
+    //     // read current lottery directly from the signal
+    //     const current = this.global.currentLottery();
+    //     if (!current || (!current.startDate && !current.endDate)) {
+    //       // nothing to show
+    //       this.ngZone.run(() => {
+    //         this.lotteryStart = false;
+    //         this.days = 0;
+    //         this.hours = 0;
+    //         this.minutes = 0;
+    //         this.seconds = 0;
+    //         this.cdr.detectChanges();
+    //       });
+    //       return;
+    //     }
+    // 
+    // const now = Date.now();
+    // const start = current.startDate ? new Date(current.startDate).getTime() : now;
+    // const end = current.endDate ? new Date(current.endDate).getTime() : now;
 
-        const now = Date.now();
-        const start = current.startDate ? new Date(current.startDate).getTime() : now;
-        const end = current.endDate ? new Date(current.endDate).getTime() : now;
+    // const started = now >= start;
+    // const remainingMs = started ? Math.max(0, end - now) : Math.max(0, start - now);
+    // let totalSeconds = Math.floor(remainingMs / 1000);
 
-        const started = now >= start;
-        const remainingMs = started ? Math.max(0, end - now) : Math.max(0, start - now);
-        let totalSeconds = Math.floor(remainingMs / 1000);
+    // const days = Math.floor(totalSeconds / (24 * 3600));
+    // totalSeconds %= 24 * 3600;
+    // const hours = Math.floor(totalSeconds / 3600);
+    // totalSeconds %= 3600;
+    // const minutes = Math.floor(totalSeconds / 60);
+    // const seconds = Math.floor(totalSeconds % 60);
 
-        const days = Math.floor(totalSeconds / (24 * 3600));
-        totalSeconds %= 24 * 3600;
-        const hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = Math.floor(totalSeconds % 60);
+    //       // update component inside Angular and force CD
+    //       this.ngZone.run(() => {
+    //         this.lotteryStart = started;
+    //         this.days = days;
+    //         this.hours = hours;
+    //         this.minutes = minutes;
+    //         this.seconds = seconds;
+    //         this.cdr.detectChanges();
+    //       });
+    //     }, 1000);
+    //   });
+    // }
 
-        // update component inside Angular and force CD
-        this.ngZone.run(() => {
-          this.lotteryStart = started;
-          this.days = days;
-          this.hours = hours;
-          this.minutes = minutes;
-          this.seconds = seconds;
-          this.cdr.detectChanges();
-        });
-      }, 1000);
-    });
+    // initial update inside Angular
+    // private updateTimerOnce(): void {
+    //   const current = this.global.currentLottery();
+    //   if (!current || (!current.startDate && !current.endDate)) {
+    //     this.lotteryStart = false;
+    //     this.days = 0;
+    //     this.hours = 0;
+    //     this.minutes = 0;
+    //     this.seconds = 0;
+    //     this.cdr.detectChanges();
+    //     return;
+    //   }
+
+    //   const now = Date.now();
+    //   const start = current.startDate ? new Date(current.startDate).getTime() : now;
+    //   const end = current.endDate ? new Date(current.endDate).getTime() : now;
+
+    //   const started = now >= start;
+    //   const remainingMs = started ? Math.max(0, end - now) : Math.max(0, start - now);
+    //   let totalSeconds = Math.floor(remainingMs / 1000);
+
+    //   this.days = Math.floor(totalSeconds / (24 * 3600));
+    //   totalSeconds %= 24 * 3600;
+    //   this.hours = Math.floor(totalSeconds / 3600);
+    //   totalSeconds %= 3600;
+    //   this.minutes = Math.floor(totalSeconds / 60);
+    //   this.seconds = Math.floor(totalSeconds % 60);
+    //   this.lotteryStart = started;
+
+    //   this.cdr.detectChanges();
+    // }
   }
+    lotteryChange(value: Lottery): void {
+      this.selectedLottery = value;
+      this.global.currentLottery.set(this.selectedLottery);
 
-  // initial update inside Angular
-  private updateTimerOnce(): void {
-    const current = this.global.currentLottery();
-    if (!current || (!current.startDate && !current.endDate)) {
-      this.lotteryStart = false;
-      this.days = 0;
-      this.hours = 0;
-      this.minutes = 0;
-      this.seconds = 0;
-      this.cdr.detectChanges();
-      return;
+      // update immediate after user changes selection
+      // this.updateTimerOnce();
     }
 
-    const now = Date.now();
-    const start = current.startDate ? new Date(current.startDate).getTime() : now;
-    const end = current.endDate ? new Date(current.endDate).getTime() : now;
+    isLotteryNotStarted(lottery: Lottery): boolean {
+      return new Date(lottery.startDate).getTime() > Date.now();
+    }
 
-    const started = now >= start;
-    const remainingMs = started ? Math.max(0, end - now) : Math.max(0, start - now);
-    let totalSeconds = Math.floor(remainingMs / 1000);
+    editLottery(lottery: Lottery): void {
+      this.router.navigate(['/lottery/edit', lottery.id]);
+    }
 
-    this.days = Math.floor(totalSeconds / (24 * 3600));
-    totalSeconds %= 24 * 3600;
-    this.hours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    this.minutes = Math.floor(totalSeconds / 60);
-    this.seconds = Math.floor(totalSeconds % 60);
-    this.lotteryStart = started;
-
-    this.cdr.detectChanges();
-  }
-
-  lotteryChange(value: Lottery): void {
-    this.selectedLottery = value;
-    this.global.currentLottery.set(this.selectedLottery);
-
-    // update immediate after user changes selection
-    this.updateTimerOnce();
-  }
-
-  isLotteryNotStarted(lottery: Lottery): boolean {
-    return new Date(lottery.startDate).getTime() > Date.now();
-  }
-
-  editLottery(lottery: Lottery): void {
-    this.router.navigate(['/lottery/edit', lottery.id]);
-  }
-
-  deleteLottery(lottery: Lottery): void {
-    if (!this.isLotteryNotStarted(lottery)) {
+    deleteLottery(lottery: Lottery): void {
+      if(!this.isLotteryNotStarted(lottery)) {
       return;
     }
 
@@ -211,7 +211,7 @@ export class Header implements OnInit, OnDestroy {
   logout(): void {
     this.cookieService.delete('auth_token');
     this.cookieService.delete('user');
-    this.global.user.set(null);
+    // this.global.user = null;
     this.global.setConnected(false);
     this.conected = this.global.isConnected();
     this.user = null;

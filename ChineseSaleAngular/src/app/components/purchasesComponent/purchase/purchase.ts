@@ -48,10 +48,6 @@ export class Purchase {
   pageSize: number = 10;
   initLoading = false;
 
-  // ngOnInit() {
-  //   this.uploadData();
-  // }
-
   uploadData() {
     this.cardService.getCardsWithPaginationSorted(this.global.currentLotteryId(), this.pageNumber, this.pageSize, this.sortType, this.ascending).subscribe({
       next:(res)=>{

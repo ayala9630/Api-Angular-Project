@@ -1,69 +1,207 @@
 <div class="cart-wrapper">
-  <div class="cart-header">
-    <h2>שלב 2: בחירת הפרסים</h2>
+  <!-- Header Card -->
+  <nz-card class="cart-header-card" [nzBordered]="false">
+    <div class="header-content">
+      <div class="header-title">
+        <span nz-icon nzType="shopping-cart" nzTheme="outline" class="header-icon"></span>
+        <h1>שלב 2: בחירת הפרסים</h1>
+      </div>
+      <div class="cart-summary">
+        <nz-statistic 
+          [nzValue]="getTotalTickets()" 
+          nzTitle="סך הכרטיסים"
+          [nzValueStyle]="{ 'color': '#c87941' }">
+        </nz-statistic>
+        <nz-divider nzType="vertical"></nz-divider>
+        <nz-statistic 
+          [nzValue]="getTotal()" 
+          nzTitle="סה״כ"
+          nzSuffix="₪"
+          [nzValueStyle]="{ 'color': '#e74c3c' }">
+        </nz-statistic>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- Segmented Tabs -->
+  <div class="tabs-wrapper">
+    <nz-segmented 
+      [(ngModel)]="activeTab"
+      [nzOptions]="[
+        { label: 'חבילות כרטיסים', value: 'packages' },
+        { label: 'מתנות', value: 'gifts' }
+      ]"
+      [nzBlock]="true">
+    </nz-segmented>
   </div>
 
+  <!-- Cart Items Section -->
   <div class="cart-items-scroll">
-    @for (cartItem of giftService.cart; track cartItem.giftId) {
-      <div class="cart-item">
-        <div class="item-top-row">
-          <button 
-            nz-button 
-            nzType="text" 
-            nzSize="small"
-            class="delete-btn"
-            (click)="giftService.updateQuantity(cartItem, -cartItem.quantity)">
-            <span nz-icon nzType="delete" nzTheme="outline"></span>
-          </button>
+    <!-- Packages Section -->
+    @if (activeTab === 'packages') {
+      @if (packageService.userCart().length > 0) {
+        <div class="section-content">
+          @for (cartItem of packageService.userCart(); track $index) {
+            <nz-card class="cart-item-card" [nzBordered]="true">
+              <div class="item-layout">
+                <div class="item-image-container">
+                  <nz-avatar 
+                    [nzSrc]="cartItem.imageUrl" 
+                    [nzShape]="'square'"
+                    [nzSize]="80"
+                    class="item-image">
+                  </nz-avatar>
+                  <button 
+                    nz-button 
+                    nzType="text" 
+                    nzSize="small"
+                    nzDanger
+                    class="delete-btn"
+                    (click)="packageService.updatePackageQuantity(cartItem, -cartItem.quantity)">
+                    <span nz-icon nzType="delete" nzTheme="outline"></span>
+                  </button>
+                </div>
 
-          <div class="item-image">
-            <nz-avatar 
-              [nzSrc]="cartItem.imageUrl" 
-              [nzShape]="'square'"
-              [nzSize]="80">
-            </nz-avatar>
-          </div>
+                <div class="item-details-flex">
+                  <div class="item-info">
+                    <h3 class="item-name">{{ cartItem.packageName }}</h3>
+                    <div class="item-price-tag">{{ cartItem.price | number }}₪</div>
+                  </div>
+                  
+                  <div class="quantity-section">
+                    <span class="qty-label">כמות:</span>
+                    <div class="quantity-controls">
+                      <button 
+                        nz-button 
+                        nzType="default" 
+                        nzSize="small"
+                        nzShape="circle"
+                        (click)="packageService.updatePackageQuantity(cartItem, -1)"
+                        [disabled]="cartItem.quantity <= 1">
+                        <span nz-icon nzType="minus"></span>
+                      </button>
+                      <span class="qty-value">{{ cartItem.quantity }}</span>
+                      <button 
+                        nz-button 
+                        nzType="default" 
+                        nzSize="small"
+                        nzShape="circle"
+                        (click)="packageService.updatePackageQuantity(cartItem, 1)">
+                        <span nz-icon nzType="plus"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item-total">
+                  <span class="total-label">סה״כ:</span>
+                  <span class="total-value">{{ (cartItem.price * cartItem.quantity) | number }}₪</span>
+                </div>
+              </div>
+            </nz-card>
+          }
         </div>
-
-        <div class="item-bottom-row">
-          <div class="quantity-controls">
-            <button class="qty-btn" (click)="giftService.updateQuantity(cartItem, 1)">+</button>
-            <span class="qty-value">{{ cartItem.quantity }}</span>
-            <button 
-              class="qty-btn" 
-              (click)="giftService.updateQuantity(cartItem, -1)"
-              [disabled]="cartItem.quantity <= 1">−</button>
-          </div>
-
-          <div class="item-details">
-            <span class="item-price">{{ cartItem.price | number }}₪</span>
-            <span class="item-name">{{ cartItem.giftName }}</span>
-          </div>
-        </div>
-      </div>
+      } @else {
+        <nz-empty 
+          nzNotFoundContent="אין חבילות בעגלה"
+          [nzNotFoundImage]="'simple'"
+          class="empty-placeholder">
+        </nz-empty>
+      }
     }
 
-    @if (!initLoading && giftService.cart.length === 0) {
-      <div class="empty-state">
-        <h3>העגלה ריקה</h3>
-        <p>בחר אחת מהמתנות בעמוד</p>
-      </div>
+    <!-- Gifts Section -->
+    @if (activeTab === 'gifts') {
+      @if (giftService.userCart().length > 0) {
+        <div class="section-content">
+          @for (cartItem of giftService.userCart(); track $index) {
+            <nz-card class="cart-item-card" [nzBordered]="true">
+              <div class="item-layout">
+                <div class="item-image-container">
+                  <nz-avatar 
+                    [nzSrc]="cartItem.imageUrl" 
+                    [nzShape]="'square'"
+                    [nzSize]="80"
+                    class="item-image">
+                  </nz-avatar>
+                  <button 
+                    nz-button 
+                    nzType="text" 
+                    nzSize="small"
+                    nzDanger
+                    class="delete-btn"
+                    (click)="giftService.updateCardQuantity(cartItem, -cartItem.quantity)">
+                    <span nz-icon nzType="delete" nzTheme="outline"></span>
+                  </button>
+                </div>
+
+                <div class="item-details-flex">
+                  <div class="item-info">
+                    <h3 class="item-name">{{ cartItem.giftName }}</h3>
+                    <div class="item-price-tag">{{ cartItem.price | number }}₪</div>
+                  </div>
+                  
+                  <div class="quantity-section">
+                    <span class="qty-label">כמות:</span>
+                    <div class="quantity-controls">
+                      <button 
+                        nz-button 
+                        nzType="default" 
+                        nzSize="small"
+                        nzShape="circle"
+                        (click)="giftService.updateCardQuantity(cartItem, -1)"
+                        [disabled]="cartItem.quantity <= 1">
+                        <span nz-icon nzType="minus"></span>
+                      </button>
+                      <span class="qty-value">{{ cartItem.quantity }}</span>
+                      <button 
+                        nz-button 
+                        nzType="default" 
+                        nzSize="small"
+                        nzShape="circle"
+                        (click)="giftService.updateCardQuantity(cartItem, 1)">
+                        <span nz-icon nzType="plus"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item-total">
+                  <span class="total-label">סה״כ:</span>
+                  <span class="total-value">{{ (cartItem.price * cartItem.quantity) | number }}₪</span>
+                </div>
+              </div>
+            </nz-card>
+          }
+        </div>
+      } @else {
+        <nz-empty 
+          nzNotFoundContent="אין מתנות בעגלה"
+          [nzNotFoundImage]="'simple'"
+          class="empty-placeholder">
+        </nz-empty>
+      }
     }
   </div>
 
-  @if (giftService.cart.length > 10) {
+  <!-- Footer Summary & Action -->
+  @if ((activeTab === 'packages' && packageService.userCart().length > 0) || 
+       (activeTab === 'gifts' && giftService.userCart().length > 0)) {
     <div class="cart-footer">
-      <div class="progress-row">
-        <span class="progress-icon">🎁</span>
-        <span class="progress-label">מצויין! מימשת את כל הכרטיסים</span>
+      <nz-divider></nz-divider>
+      
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-label">התקדמות הרכישה</span>
+          <span class="progress-count">{{ getTotalTickets() }} / 10</span>
+        </div>
+        <nz-progress 
+          [nzPercent]="getProgressPercent()" 
+          [nzShowInfo]="false"
+          nzStrokeColor="#c87941"
+          [nzStrokeWidth]="6">
+        </nz-progress>
       </div>
-      <nz-progress 
-        [nzPercent]="getProgressPercent()" 
-        [nzShowInfo]="false"
-        nzStrokeColor="#ff6b6b"
-        [nzStrokeWidth]="8">
-      </nz-progress>
-      <div class="progress-count">{{ getTotalTickets() }} / 10</div>
 
       <button 
         nz-button 
@@ -71,13 +209,9 @@
         nzSize="large" 
         nzBlock 
         class="next-btn">
+        <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
         לשלב הבא
       </button>
-
-      <div class="footer-notice">
-        <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
-        <span>יש לבחור חבילת כרטיסים</span>
-      </div>
     </div>
   }
 </div>
