@@ -42,16 +42,17 @@ export class PackageService {
   }
   //Aditional functions
   packageCart: PackageCarts[] = [];
-    updateQty(packageId: number, qty: number): void {
-    const existingCartItem = this.packageCart.find(item => item.packageId === packageId);
+
+  updateQty(pkg: Package | PackageCarts, qty: number): void {
+    const existingCartItem = this.packageCart.find(item => item.packageId === (pkg as Package).id);
     if (existingCartItem) {
       existingCartItem.quantity += qty;
       if (existingCartItem.quantity <= 0) {
-        this.packageCart = this.packageCart.filter(item => item.packageId !== packageId);
+        this.packageCart = this.packageCart.filter(item => item.packageId !== (pkg as Package).id);
       }
     }
     else if (qty > 0) {
-      this.packageCart.push({ packageId: packageId, quantity: qty });
+      this.packageCart.push({ packageId: (pkg as Package).id, quantity: qty });
     }
     this.cookieService.set('packageCartUser1', JSON.stringify(this.packageCart), 7);
   }

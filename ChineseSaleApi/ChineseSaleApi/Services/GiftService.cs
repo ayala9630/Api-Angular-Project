@@ -1,4 +1,5 @@
-﻿using ChineseSaleApi.Dto;
+﻿using AutoMapper;
+using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
@@ -17,13 +18,15 @@ namespace ChineseSaleApi.Services
         private readonly IGiftRepository _repository;
         private readonly ICardRepository _cardRepository;
         private readonly ILotteryRepository _lotteryRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<GiftService> _logger;
 
-        public GiftService(ICardRepository cardRepository, IGiftRepository repository, ILotteryRepository lotteryRepository, ILogger<GiftService> logger)
+        public GiftService(ICardRepository cardRepository, IGiftRepository repository, ILotteryRepository lotteryRepository, IMapper mapper, ILogger<GiftService> logger)
         {
             _repository = repository;
             _cardRepository = cardRepository;
             _lotteryRepository = lotteryRepository;
+            _mapper = mapper;
             _logger = logger;
         }
         //create
@@ -34,18 +37,7 @@ namespace ChineseSaleApi.Services
                 Lottery? lottery = await _lotteryRepository.GetLotteryById(createGiftDto.LotteryId);
                 if (lottery?.StartDate < DateTime.Now)
                     throw new ArgumentException("Gifts cannot be added after the raffle has started.", nameof(createGiftDto.LotteryId));
-                Gift gift = new Gift
-                {
-                    Name = createGiftDto.Name,
-                    Description = createGiftDto.Description,
-                    Price = createGiftDto.Price,
-                    GiftValue = createGiftDto.GiftValue,
-                    ImageUrl = createGiftDto.ImageUrl,
-                    IsPackageAble = createGiftDto.IsPackageAble,
-                    DonorId = createGiftDto.DonorId,
-                    CategoryId = createGiftDto.CategoryId,
-                    LotteryId = createGiftDto.LotteryId,
-                };
+                Gift gift = _mapper.Map<Gift>(createGiftDto);
                 return await _repository.AddGift(gift);
             }
             catch (ArgumentNullException ex)
@@ -76,21 +68,9 @@ namespace ChineseSaleApi.Services
                 }
                 var tmp = await _cardRepository.GetWinnerCards(gift.LotteryId);
                 var winner = tmp.FirstOrDefault(x => x.GiftId == gift.Id);
-                return new GiftDto
-                {
-                    Id = gift.Id,
-                    Name = gift.Name,
-                    Description = gift.Description,
-                    Price = gift.Price,
-                    GiftValue = gift.GiftValue,
-                    ImageUrl = gift.ImageUrl,
-                    IsPackageAble = gift.IsPackageAble,
-                    CompanyName = gift.Donor?.CompanyName ?? "",
-                    CompanyLogoUrl = gift.Donor?.CompanyIcon ?? "",
-                    CategoryName = gift.Category?.Name ?? "",
-                    LotteryId = gift.LotteryId,
-                    winner = winner?.User?.FirstName + " " + winner?.User?.LastName
-                };
+                var giftDto = _mapper.Map<GiftDto>(gift);
+                giftDto.winner = winner?.User?.FirstName + " " + winner?.User?.LastName;
+                return giftDto;
             }
             catch (Exception ex)
             {
@@ -104,19 +84,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var gift = await _repository.GetGiftById(id);
-                return new UpdateGiftDto
-                {
-                    Id = gift.Id,
-                    Name = gift.Name,
-                    Description = gift.Description,
-                    Price = gift.Price,
-                    GiftValue = gift.GiftValue,
-                    ImageUrl = gift.ImageUrl,
-                    IsPackageAble = gift.IsPackageAble,
-                    DonorId = gift.DonorId,
-                    CategoryId = gift.CategoryId,
-                    LotteryId = gift.LotteryId
-                };
+                return _mapper.Map<UpdateGiftDto>(gift);
             }
 
             catch (Exception ex)
@@ -131,16 +99,11 @@ namespace ChineseSaleApi.Services
             try
             {
                 var gifts = await _repository.GetAllGifts(lotteryId);
-                return gifts.Select(gifts => new GiftWithOldPurchaseDto
+                return gifts.Select(gift =>
                 {
-                    Id = gifts.Id,
-                    Name = gifts.Name,
-                    Price = gifts.Price,
-                    GiftValue = gifts.GiftValue,
-                    ImageUrl = gifts.ImageUrl,
-                    IsPackageAble = gifts.IsPackageAble,
-                    OldPurchaseCount = gifts.Cards?.Where(x => x.UserId == userId).Count() ?? 0,
-                    CategoryName = gifts.Category?.Name ?? ""
+                    var dto = _mapper.Map<GiftWithOldPurchaseDto>(gift);
+                    dto.OldPurchaseCount = gift.Cards?.Count(x => x.UserId == userId) ?? 0;
+                    return dto;
                 }).ToList();
             }
             catch (Exception ex)
@@ -156,15 +119,12 @@ namespace ChineseSaleApi.Services
             {
                 var (gifts, totalCount) = await _repository.GetGiftsByUserWithPagination(lotteryId, paginationParams.PageNumber, paginationParams.PageSize);
                 var baseUrl = $"{request.Scheme}://{request.Host}"; 
-                var giftDto = gifts.Select(gift => new GiftWithOldPurchaseDto
+                var giftDto = gifts.Select(gift =>
                 {
-                    Id = gift.Id,
-                    Name = gift.Name,
-                    Price = gift.Price,
-                    GiftValue = gift.GiftValue,
-                    ImageUrl = $"{baseUrl}/images/{gift.ImageUrl}", 
-                    IsPackageAble = gift.IsPackageAble,
-                    OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0
+                    var dto = _mapper.Map<GiftWithOldPurchaseDto>(gift);
+                    dto.ImageUrl = $"{baseUrl}/images/{gift.ImageUrl}";
+                    dto.OldPurchaseCount = userId != null ? gift.Cards.Count(x => x.UserId == userId) : 0;
+                    return dto;
                 }).ToList();
                 return new PaginatedResultDto<GiftWithOldPurchaseDto>
                 {
@@ -199,17 +159,12 @@ namespace ChineseSaleApi.Services
                     gift = x.gift,
                     winner = winner != null ? winner : null
                 });
-                var giftDto = giftsWithWinners.Select((x) => new GiftWithOldPurchaseDto
+                var giftDto = giftsWithWinners.Select(x =>
                 {
-                    Id = x.gift.Id,
-                    Name = x.gift.Name,
-                    Price = x.gift.Price,
-                    GiftValue = x.gift.GiftValue,
-                    ImageUrl = x.gift.ImageUrl,
-                    IsPackageAble = x.gift.IsPackageAble,
-                    OldPurchaseCount = userId != null ? x.gift.Cards.Count(x => x.UserId == userId) : 0,
-                    CategoryName = x.gift.Category?.Name ?? "",
-                    winner = x.winner?.User?.FirstName + " "    +x.winner?.User?.LastName
+                    var dto = _mapper.Map<GiftWithOldPurchaseDto>(x.gift);
+                    dto.OldPurchaseCount = userId != null ? x.gift.Cards.Count(y => y.UserId == userId) : 0;
+                    dto.winner = x.winner?.User?.FirstName + " " + x.winner?.User?.LastName;
+                    return dto;
                 }).ToList();
                 Console.WriteLine(giftDto);
                 return new PaginatedResultDto<GiftWithOldPurchaseDto>
@@ -256,15 +211,7 @@ namespace ChineseSaleApi.Services
                 if (gift != null)
                 {
 
-                    gift.Name = updateGiftDto.Name ?? gift.Name;
-                    gift.Description = updateGiftDto.Description ?? gift.Description;
-                    gift.Price = updateGiftDto.Price ?? gift.Price;
-                    gift.GiftValue = updateGiftDto.GiftValue ?? gift.GiftValue;
-                    gift.ImageUrl = updateGiftDto.ImageUrl ?? gift.ImageUrl;
-                    gift.IsPackageAble = updateGiftDto.IsPackageAble ?? gift.IsPackageAble;
-                    gift.DonorId = updateGiftDto.DonorId ?? gift.DonorId;
-                    gift.CategoryId = updateGiftDto.CategoryId ?? gift.CategoryId;
-                    gift.LotteryId = updateGiftDto.LotteryId != 0 ? updateGiftDto.LotteryId : gift.LotteryId;
+                    _mapper.Map(updateGiftDto, gift);
                     await _repository.UpdateGift(gift);
                     return true;
                 }

@@ -96,12 +96,11 @@ export class Gift {
     // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
     // this.cookieService.set('cardCart', [], 7);
     this.uploadData()
-    this.giftService.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
+    this.giftService.cart = this.cookieService.get(`cardCartUser${this.global.user()?.id}`) ? JSON.parse(this.cookieService.get(`cardCartUser${this.global.user()?.id}`)!) : [];
   }
-
+  
   edit(item: any): void {
     console.log("item", item);
-
     this.router.navigate([`/gifts/edit/${item}`]);
   }
 
@@ -168,6 +167,7 @@ export class Gift {
 
   private lotteryEffect = effect(() => {
     this.currentLotteryId = this.global.currentLotteryId();
+    this.giftService.cart = this.cookieService.get(`cardCartUser${this.global.user()?.id}`) ? JSON.parse(this.cookieService.get(`cardCartUser${this.global.user()?.id}`)!) : [];
     this.uploadData();
   });
 

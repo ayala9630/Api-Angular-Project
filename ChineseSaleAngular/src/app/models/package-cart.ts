@@ -2,7 +2,9 @@ export interface PackageCart {
   id: number;
   quantity: number;
   userId: number;
-  packageId: number;
+  packageName: string;
+  packageUrl: string;
+  price: number;
 }
 
 export interface PackageCarts {

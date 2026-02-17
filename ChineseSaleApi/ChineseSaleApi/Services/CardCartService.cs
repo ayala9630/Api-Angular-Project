@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -12,11 +13,13 @@ namespace ChineseSaleApi.Services
     public class CardCartService : ICardCartService
     {
         private readonly ICardCartRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<CardCartService> _logger;
 
-        public CardCartService(ICardCartRepository repository, ILogger<CardCartService> logger)
+        public CardCartService(ICardCartRepository repository, IMapper mapper, ILogger<CardCartService> logger)
         {
             _repository = repository;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -30,12 +33,7 @@ namespace ChineseSaleApi.Services
 
             try
             {
-                CardCart cardCart = new CardCart
-                {
-                    Quantity = cardCartDto.Quantity,
-                    UserId = cardCartDto.UserId,
-                    GiftId = cardCartDto.GiftId
-                };
+                CardCart cardCart = _mapper.Map<CardCart>(cardCartDto);
                 return await _repository.AddCardCart(cardCart);
             }
             catch (ArgumentNullException ex)
@@ -63,13 +61,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var cardCarts = await _repository.GetCardCartsByUserId(userId);
-                return cardCarts.Select(cc => new CardCartDto
-                {
-                    Id = cc.Id,
-                    Quantity = cc.Quantity,
-                    UserId = cc.UserId,
-                    GiftId = cc.GiftId
-                });
+                return cardCarts.Select(cc => _mapper.Map<CardCartDto>(cc));
             }
             catch (ArgumentException ex)
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -14,12 +15,14 @@ namespace ChineseSaleApi.Services
     {
         private readonly IGiftRepository _giftRepository;
         private readonly ICardRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<CardService> _logger;
-        public CardService(ICardRepository repository, ILogger<CardService> logger, IGiftRepository giftRepository)
+        public CardService(ICardRepository repository, ILogger<CardService> logger, IGiftRepository giftRepository, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
             _giftRepository = giftRepository;
+            _mapper = mapper;
         }
         //create
         public async Task<int> AddCard(CreateCardDto createCardDto)
@@ -282,26 +285,9 @@ namespace ChineseSaleApi.Services
             }
         }
 
-        private static UserDto MapUser(User user)
+        private UserDto MapUser(User user)
         {
-            return new UserDto
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                IsAdmin = user.IsAdmin,
-                Address = user.Address != null ? new AddressDto
-                {
-                    Id = user.Address.Id,
-                    City = user.Address.City,
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    ZipCode = user.Address.ZipCode
-                } : null
-            };
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

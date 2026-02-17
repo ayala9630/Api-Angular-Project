@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CardCart, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
+import { GlobalService } from '../global/global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class GiftService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private global: GlobalService
   ) { }
 
   getGifts(
@@ -89,7 +91,8 @@ export class GiftService {
     } else if (qty > 0) {
       this.cart.push({ giftId: (gift as CardCart).giftId ??(gift as GiftWithOldPurchase).id, quantity: qty ,giftName: (gift as GiftWithOldPurchase).name ?? (gift as CardCart).giftName, imageUrl: gift?.imageUrl ?? '', price: gift?.price ?? 0, isPackageAble: gift?.isPackageAble ?? true, userId: Number(this.cookieService.get('userId')) || 0, id: 0 });
     }
-    this.cookieService.set('cardCartUser1', JSON.stringify(this.cart), 7);
+    // this.cookieService.set(`cardCart`, JSON.stringify(this.cart), 7);
+    this.cookieService.set(`cardCartUser${this.global.user()?.id}`, JSON.stringify(this.cart), 7);
   }
 
   getGiftQuantity(giftId: number): number {

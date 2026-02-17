@@ -31,8 +31,8 @@
     <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
     }}
     @else {
-    @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <nz-icon nzType="minus" nzTheme="outline" (click)="packageService.updateQty(package.id, -1)"></nz-icon>
+      @if(global.lotteryStarted() && !global.lotteryFinished()){
+    <nz-icon nzType="minus" nzTheme="outline" (click)="packageService.updateQty(package, -1)"></nz-icon>
     }
     }
   </ng-template>
@@ -54,8 +54,8 @@
     <nz-icon nzType="edit" (click)="editPackage(package.id)"></nz-icon>
     }}
     @else {
-    @if(global.lotteryStarted() && !global.lotteryFinished()){
-    <nz-icon nzType="plus" nzTheme="outline" (click)="packageService.updateQty(package.id, 1)"></nz-icon>
+      @if(global.lotteryStarted() && !global.lotteryFinished()){
+    <nz-icon nzType="plus" nzTheme="outline" (click)="packageService.updateQty(package, 1)"></nz-icon>
     }}
   </ng-template>
   }

@@ -8,6 +8,10 @@ export interface CardCart {
   price: number;
   isPackageAble: boolean;
 }
+export interface Cart {
+  userId:number
+  userCart:CardCart
+}
 
 export interface CardCarts {
   giftId: number;
