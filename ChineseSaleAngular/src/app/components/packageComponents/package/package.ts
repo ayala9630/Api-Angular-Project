@@ -55,7 +55,7 @@ export class Package {
     // this.admin = getClaim(this.token, 'IsAdmin') ==='true';
     // console.log(this.admin);
     this.validateForm.patchValue({
-      LotteryId: this.global.currentLotteryId()
+      lotteryId: this.global.currentLotteryId()
     });
     this.isLogin = this.token !== '';
     this.validateForm.patchValue({
