@@ -37,29 +37,66 @@
         <li nz-menu-item>
             <a routerLink="home">בית</a>
         </li>
+<div class="header-container" [class.started]="lotteryStart" [class.not-started]="!lotteryStart">
+    <div class="left-block">
+        <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
+            @for (p of lotteryData; track p.id) {
+            <nz-option [nzValue]="p" [nzLabel]="p.name"></nz-option>
+            }
+        </nz-select>
 
-        <li nz-menu-item>
-            <a routerLink="packages">יצירת קשר</a>
-        </li>
-        @if(admin) {
-        <li nz-menu-item>
-            <a routerLink="purchases">רכישות</a>
-        </li>
-        }
-    </ul>
-    <ul nz-menu nzMode="horizontal" class="auth-menu">
-        @if (conected) {
-        <span class="connected-status">שלום, {{user?.firstName}} {{user?.lastName}}</span>
-        <li nz-menu-item>
-            <a routerLink="home" (click)="global.logout()">יציאה</a>
-        </li>
-        } @else {
-        <li nz-menu-item>
-            <a routerLink="login">התחברות</a>
-        </li>
-        <li nz-menu-item>
-            <a routerLink="register">הרשמה</a>
-        </li>
-        }
-    </ul>
-</div>
+        <!-- טיימר דק ושקוף ליד הבחירה -->
+        <div class="inline-timer" [class.started]="lotteryStart" [class.not-started]="!lotteryStart"
+            aria-hidden="false">
+            @if (lotteryStart) {
+            <div class="timer-title small">הגרלה מסתיימת בעוד</div>
+            } @else {
+            <div class="timer-title small">הגרלה תתחיל בעוד</div>
+            }
+            <div class="timer-cards-inline">
+                <div class="timer-card-inline">
+                    <div class="timer-value-inline">{{ days }}</div>
+                    <div class="timer-label-inline">ימים</div>
+                </div>
+                <div class="timer-colon">:</div>
+                <div class="timer-card-inline">
+                    <div class="timer-value-inline">{{ hours < 10 ? ('0' + hours) : hours }}</div>
+                            <div class="timer-label-inline">שעות</div>
+                    </div>
+                    <div class="timer-colon">:</div>
+                    <div class="timer-card-inline">
+                        <div class="timer-value-inline">{{ minutes < 10 ? ('0' + minutes) : minutes }}</div>
+                                <div class="timer-label-inline">דקות</div>
+                        </div>
+                        <div class="timer-colon">:</div>
+                        <div class="timer-card-inline">
+                            <div class="timer-value-inline">{{ seconds < 10 ? ('0' + seconds) : seconds }}</div>
+                                    <div class="timer-label-inline">שניות</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-block">
+                    <ul nz-menu nzMode="horizontal" class="main-nav">
+                        <li nz-menu-item><a routerLink="packages">חבילות</a></li>
+                        <li nz-menu-item><a routerLink="gifts">מתנות</a></li>
+                        <li nz-menu-item><a routerLink="donors">תורמים</a></li>
+                        <li nz-menu-item><a routerLink="home">בית</a></li>
+                        <li nz-menu-item><a routerLink="packages">יצירת קשר</a></li>
+                        @if(admin) {
+                        <li nz-menu-item><a routerLink="purchases">רכישות</a></li>
+                        }
+                    </ul>
+                </div>
+
+                <ul nz-menu nzMode="horizontal" class="auth-menu">
+                    @if (conected) {
+                    <span class="connected-status">שלום, {{user?.firstName}} {{user?.lastName}}</span>
+                    <li nz-menu-item><a routerLink="home" (click)="logout()">יציאה</a></li>
+                    } @else {
+                    <li nz-menu-item><a routerLink="login">התחברות</a></li>
+                    <li nz-menu-item><a routerLink="register">הרשמה</a></li>
+                    }
+                </ul>
+            </div>

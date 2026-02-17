@@ -3,6 +3,10 @@ export interface CardCart {
   quantity: number;
   userId: number;
   giftId: number;
+  giftName: string;
+  imageUrl: string;
+  price: number;
+  isPackageAble: boolean;
 }
 export interface Cart {
   userId:number

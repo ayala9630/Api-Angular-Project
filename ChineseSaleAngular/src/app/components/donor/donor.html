@@ -33,9 +33,11 @@
                     (click)="confirmAddDonor()">אישור</button>
             </div>
         </nz-card>
+        @if(!globalService.lotteryStarted()) {
         <nz-card nzTitle="הוספת תורם חדש" nzBordered="false">
             <button nz-button nzType="default" (click)="goToAddDonor()">הוסף תורם חדש</button>
         </nz-card>
+        }
     </ng-container>
 </nz-modal>
 
@@ -51,10 +53,16 @@
                     </a>
                 </nz-list-item-meta-title>
             </nz-list-item-meta>
-            content
+
             <ul nz-list-item-actions>
-                <nz-list-item-action><a (click)="edit(donor)">עריכה</a></nz-list-item-action>
-                <nz-list-item-action><a (click)="delete(donor.id)">מחיקה</a></nz-list-item-action>
+                @if(!globalService.lotteryStarted()) {
+                <nz-list-item-action><a (click)="edit(donor)">
+                        <nz-icon nzType="edit" nzTheme="outline"></nz-icon>
+                    </a></nz-list-item-action>
+                <nz-list-item-action><a (click)="delete(donor.id)">
+                        <nz-icon nzType="delete" nzTheme="outline"></nz-icon>
+                    </a></nz-list-item-action>
+                }
             </ul>
         </ng-container>
     </nz-list-item>
@@ -62,11 +70,12 @@
     @if (filteredDonors.length === 0) {
     <div class="empty-message">לא נמצאו תורמים</div>
     }
-
+    <!-- @if(!globalService.lotteryStarted()) {
     <button class="add-donor-button" nz-button nzType="primary" (click)="add()">
         <span nz-icon nzType="user-add" nzTheme="outline"></span>
         <span>הוסף תורם</span>
     </button>
+    } -->
 
     <nz-pagination class="nz-pagination sticky-pagination" [nzPageIndex]="pageNumber" [nzTotal]="data?.totalCount || 0"
         [nzPageSize]="pageSize" (nzPageIndexChange)="uploadData($event)" />

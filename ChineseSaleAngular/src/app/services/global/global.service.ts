@@ -14,6 +14,24 @@ export class GlobalService {
   lotteryStarted = computed(() => (new Date(this.currentLottery()?.startDate || new Date())).getTime() <= new Date().getTime())
   lotteryFinished = computed(() => (new Date(this.currentLottery()?.endDate || new Date())).getTime() <= new Date().getTime())
   user = signal<User | null>(null);
+  timeToLotteryStart = computed(() => {
+    const startDate = this.currentLottery()?.startDate;
+    if (!startDate) return 0;
+    const now = new Date().getTime();
+    const start = new Date(startDate).getTime();
+    if(start <= now) {
+      this.lotteryStart = true;
+    }
+    return Math.max(0, start - now);
+  });
+  timeToLotteryEnd = computed(() => {
+    const endDate = this.currentLottery()?.endDate;
+    if (!endDate) return 0;
+    const now = new Date().getTime();
+    const end = new Date(endDate).getTime();
+    return Math.max(0, end - now);
+  });
+  lotteryStart: boolean = computed(() => !this.lotteryStarted())();
 
   private connectedSubject = new BehaviorSubject<boolean>(false);
   public connected$ = this.connectedSubject.asObservable();

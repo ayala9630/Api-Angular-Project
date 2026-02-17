@@ -18,13 +18,25 @@ nz-header {
   line-height: 64px;
   border-bottom-left-radius: 50px;
   width: 100%;
+  background: #fff;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 nz-sider {
   text-align: center;
-  background: #000000;
   color: #fff;
   line-height: 120px;
+  background: #f8f4f0;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
+  
+  ::ng-deep .ant-layout-sider-children {
+    height: 100%;
+  }
 }
 
 app-package {
@@ -60,6 +72,9 @@ nz-content {
   overflow-x: hidden;
   padding: 20px;
   scroll-behavior: smooth;
+  background: #fff;
+  padding: 24px;
+  min-height: calc(100vh - 64px - 70px);
   // display: flex;
   // justify-content: center;
   // // align-items: center;
@@ -71,10 +86,8 @@ nz-content {
 :host>nz-layout {
   width: calc(100vw);
   max-width: calc(100vw);
-  min-height: 100vh; /* שינוי מ-height ל-min-height */
-  // border-radius: 8px;
+  min-height: 100vh; 
   overflow: hidden;
-  background: #000000;
 }
 
 .ant-layout-header {
@@ -84,6 +97,9 @@ nz-content {
 nz-footer {
   height: 48px;
   line-height: 48px;
+  text-align: center;
+  background: #f0f2f5;
+  padding: 24px 50px;
 }
 
 nz-content::-webkit-scrollbar {
@@ -107,4 +123,12 @@ nz-content::-webkit-scrollbar-thumb {
 
 nz-content::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+@media (max-width: 768px) {
+  nz-sider {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    z-index: 100;
+  }
 }

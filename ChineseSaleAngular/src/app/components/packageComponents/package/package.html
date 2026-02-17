@@ -1,7 +1,10 @@
 <h2 class="page-title">חבילות
+  @if(!global.lotteryStart && canCreatePackage) {
   <a nz-button nzType="primary" routerLink="add" class="add-button">
+    <span nz-icon nzType="plus"></span>
     <span>הוסף חבילה</span>
   </a>
+  }
 </h2>
 <div class="packages-grid">
   <div class="page-description">
@@ -18,14 +21,14 @@
 
   <ng-template #coverTemplate>
     @if(package.imageUrl) {
-        <img alt="example" src="http://localhost:5025/images/{{package.imageUrl}}" />
+    <img alt="example" src="http://localhost:5025/images/{{package.imageUrl}}" />
     }
   </ng-template>
 
   <ng-template #rightAction>
     @if(admin){
-      @if(!global.lotteryStarted()){
-      <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
+    @if(!global.lotteryStarted()){
+    <nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteConfirm(package.id)" />
     }}
     @else {
       @if(global.lotteryStarted() && !global.lotteryFinished()){
@@ -40,15 +43,15 @@
     }
     }
     @else {
-      @if(!admin) {
+    @if(!admin) {
     {{"לא ניתן לרכוש חבילות"}}
     }}
   </ng-template>
   <ng-template #leftAction>
-    
+
     @if(admin){
-      @if(!global.lotteryStarted()){
-      <nz-icon nzType="edit" (click)="editPackage(package.id)"></nz-icon>
+    @if(!global.lotteryStarted()){
+    <nz-icon nzType="edit" (click)="editPackage(package.id)"></nz-icon>
     }}
     @else {
       @if(global.lotteryStarted() && !global.lotteryFinished()){
