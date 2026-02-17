@@ -128,6 +128,26 @@ namespace ChineseSaleApi.Controllers
             }
         }
 
+        [Authorize]
+        [Admin]
+        [HttpGet("giftId/{giftId}")]
+        public async Task<IActionResult> lottery(int giftId)
+        {
+            try
+            {
+                var lottery = await _service.Lottery(giftId);
+                if (lottery == null)
+                {
+                    return NotFound();
+                }
+                return Ok(lottery);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get lottery by gift id {GiftId}.", giftId);
+                return StatusCode(500, "An unexpected error occurred while retrieving the lottery.");
+            }
+        }
         //create
         [Authorize]
         [Admin]

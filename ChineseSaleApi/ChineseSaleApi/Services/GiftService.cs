@@ -162,6 +162,7 @@ namespace ChineseSaleApi.Services
                 var giftDto = giftsWithWinners.Select(x =>
                 {
                     var dto = _mapper.Map<GiftWithOldPurchaseDto>(x.gift);
+                    dto.countCards = x.gift.Cards?.Count() ?? 0;
                     dto.OldPurchaseCount = userId != null ? x.gift.Cards.Count(y => y.UserId == userId) : 0;
                     dto.winner = x.winner?.User?.FirstName + " " + x.winner?.User?.LastName;
                     return dto;

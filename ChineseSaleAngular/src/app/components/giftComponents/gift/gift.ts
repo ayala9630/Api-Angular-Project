@@ -93,8 +93,6 @@ export class Gift {
   ngOnInit(): void {
     this.currentLotteryId = this.global.currentLotteryId();
     const token = this.cookieService.get('authToken') || '';
-    // const userId = getClaim(token, 'sub') || getClaim(token, 'userId');
-    // this.cookieService.set('cardCart', [], 7);
     this.uploadData()
     this.giftService.cart = this.cookieService.get(`cardCartUser${this.global.user()?.id}`) ? JSON.parse(this.cookieService.get(`cardCartUser${this.global.user()?.id}`)!) : [];
   }

@@ -10,7 +10,7 @@ export interface CardCart {
 }
 export interface Cart {
   userId:number
-  userCart:CardCart
+  userCart:CardCart[];
 }
 
 export interface CardCarts {
