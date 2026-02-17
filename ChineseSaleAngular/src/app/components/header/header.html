@@ -1,29 +1,11 @@
-<div class="header-container">
-    <!-- <div class="logo-container"> -->
-        <!-- <a routerLink="home">
+<!-- <div class="header-container"> -->
+<!-- <div class="logo-container"> -->
+<!-- <a routerLink="home">
             <img src="assets/images/logo.svg" alt="מכירה סינית" class="header-logo">
         </a> -->
-    <!-- </div> -->
-    <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
-        @for (p of lotteryData; track p.id) {
-            <nz-option [nzValue]="p" [nzLabel]="p.name" nzCustomContent>
-                <span class="lottery-option">
-                    <span class="lottery-name">{{ p.name }}</span>
-                    @if (isLotteryNotStarted(p)) {
-                        <span class="lottery-actions">
-                            <span nz-icon nzType="edit" class="lottery-action"
-                                title="עריכה"
-                                (click)="$event.stopPropagation(); editLottery(p)"></span>
-                            <span nz-icon nzType="delete" class="lottery-action delete"
-                                title="מחיקה"
-                                (click)="$event.stopPropagation(); deleteLottery(p)"></span>
-                        </span>
-                    }
-                </span>
-            </nz-option>
-        }
-    </nz-select>
-    <a routerLink="lottery/add">+הוסף הגרלה</a>
+<!-- </div> -->
+
+<!-- <a routerLink="lottery/add">+הוסף הגרלה</a>
     <ul nz-menu nzMode="horizontal">
         <li nz-menu-item>
             <a routerLink="packages">חבילות</a>
@@ -37,15 +19,33 @@
         <li nz-menu-item>
             <a routerLink="home">בית</a>
         </li>
+ -->
+
 <div class="header-container" [class.started]="lotteryStart" [class.not-started]="!lotteryStart">
     <div class="left-block">
-        <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
+        <!-- <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
             @for (p of lotteryData; track p.id) {
             <nz-option [nzValue]="p" [nzLabel]="p.name"></nz-option>
             }
+        </nz-select> -->
+        <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
+            @for (p of lotteryData; track p.id) {
+            <nz-option [nzValue]="p" [nzLabel]="p.name" nzCustomContent>
+                <span class="lottery-option">
+                    <span class="lottery-name">{{ p.name }}</span>
+                    @if (isLotteryNotStarted(p)) {
+                    <span class="lottery-actions">
+                        <span nz-icon nzType="edit" class="lottery-action" title="עריכה"
+                            (click)="$event.stopPropagation(); editLottery(p)"></span>
+                        <span nz-icon nzType="delete" class="lottery-action delete" title="מחיקה"
+                            (click)="$event.stopPropagation(); deleteLottery(p)"></span>
+                    </span>
+                    }
+                </span>
+            </nz-option>
+            }
         </nz-select>
-
-        <!-- טיימר דק ושקוף ליד הבחירה -->
+        <!-- טיימר דק ושקוף ליד הבחירה
         <div class="inline-timer" [class.started]="lotteryStart" [class.not-started]="!lotteryStart"
             aria-hidden="false">
             @if (lotteryStart) {
@@ -75,28 +75,28 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
+    </div>
+    <div class="nav-block">
+        <ul nz-menu nzMode="horizontal" class="main-nav">
+            <li nz-menu-item><a routerLink="packages">חבילות</a></li>
+            <li nz-menu-item><a routerLink="gifts">מתנות</a></li>
+            <li nz-menu-item><a routerLink="donors">תורמים</a></li>
+            <li nz-menu-item><a routerLink="home">בית</a></li>
+            <li nz-menu-item><a routerLink="packages">יצירת קשר</a></li>
+            @if(admin) {
+            <li nz-menu-item><a routerLink="purchases">רכישות</a></li>
+            }
+        </ul>
+    </div>
 
-                <div class="nav-block">
-                    <ul nz-menu nzMode="horizontal" class="main-nav">
-                        <li nz-menu-item><a routerLink="packages">חבילות</a></li>
-                        <li nz-menu-item><a routerLink="gifts">מתנות</a></li>
-                        <li nz-menu-item><a routerLink="donors">תורמים</a></li>
-                        <li nz-menu-item><a routerLink="home">בית</a></li>
-                        <li nz-menu-item><a routerLink="packages">יצירת קשר</a></li>
-                        @if(admin) {
-                        <li nz-menu-item><a routerLink="purchases">רכישות</a></li>
-                        }
-                    </ul>
-                </div>
-
-                <ul nz-menu nzMode="horizontal" class="auth-menu">
-                    @if (conected) {
-                    <span class="connected-status">שלום, {{user?.firstName}} {{user?.lastName}}</span>
-                    <li nz-menu-item><a routerLink="home" (click)="logout()">יציאה</a></li>
-                    } @else {
-                    <li nz-menu-item><a routerLink="login">התחברות</a></li>
-                    <li nz-menu-item><a routerLink="register">הרשמה</a></li>
-                    }
-                </ul>
-            </div>
+    <ul nz-menu nzMode="horizontal" class="auth-menu">
+        @if (conected) {
+        <span class="connected-status">שלום, {{user?.firstName}} {{user?.lastName}}</span>
+        <li nz-menu-item><a routerLink="home" (click)="logout()">יציאה</a></li>
+        } @else {
+        <li nz-menu-item><a routerLink="login">התחברות</a></li>
+        <li nz-menu-item><a routerLink="register">הרשמה</a></li>
+        }
+    </ul>
+</div>
