@@ -16,6 +16,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { CardCarts } from '../../../models';
 import { GlobalService } from '../../../services/global/global.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { GiftWithOldPurchase } from '../../../models/gift';
 
 @Component({
   selector: 'app-single-gift',
@@ -41,14 +42,14 @@ export class SingleGift implements OnInit {
     private route: ActivatedRoute,
     public giftService: GiftService,
     private cookieService: CookieService,
-    public global: GlobalService
+    public global: GlobalService,
     private msg: NzMessageService,
     private router: Router
   ) { }
 
   giftId: number = 0;
-  gift?: Gift;
-  
+  gift?: Gift | undefined= undefined;
+    
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -73,5 +74,6 @@ export class SingleGift implements OnInit {
         this.router.navigate(['/gifts']);
       }
     });
+    this.giftService.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
   }
 }

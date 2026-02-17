@@ -82,7 +82,8 @@ export class AddGift {
     private categoryService: CategoryService,
     private msg: NzMessageService,
     private http: HttpClient,
-    public filesService: FilesService
+    public filesService: FilesService,
+    private activateRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -103,7 +104,7 @@ export class AddGift {
             categoryId: gift.categoryId,
             lotteryId: gift.lotteryId,
           });
-          this.selectedDonor =this.validateForm.controls['donorId'].value;
+          this.selectedDonor = this.validateForm.controls['donorId'].value;
           this.selectedCategory = this.validateForm.controls['categoryId'].value;
         },
         error: (error) => {
@@ -210,10 +211,6 @@ export class AddGift {
     console.log("submit form");
     console.log("id:", this.id);
     console.log("editing:", this.editing);
-
-
-
-
     // console.log(this.validateForm.value);
     if (!this.editing) {
       if (this.validateForm.valid) {
@@ -240,8 +237,7 @@ export class AddGift {
         ...(this.validateForm.value as UpdateGift),
       };
       updatePayload.id = this.id!;
-
-      this.giftService.createGift(giftData).subscribe({
+      this.giftService.createGift(this.validateForm.value).subscribe({
         next: (newGift: GiftModel) => {
           console.log('Gift created successfully:', newGift);
           this.msg.success('המתנה נוצרה בהצלחה');
@@ -256,28 +252,29 @@ export class AddGift {
           }
           console.error('Error creating gift:', error);
           this.isConfirmLoading = false;
-      this.giftService.UpdateGift(updatePayload).subscribe({
-        next: () => {
-          console.log('פרטי המתנה התעדכנו בהצלחה');
-          this.msg.success('פרטי המתנה התעדכנו בהצלחה');
-          this.router.navigateByUrl('/gifts');
-        },
-        error: () => {
-          console.error('שגיאה בעדכון המתנה');
-          this.msg.error('שגיאה בעדכון המתנה');
+          this.giftService.UpdateGift(updatePayload).subscribe({
+            next: () => {
+              console.log('פרטי המתנה התעדכנו בהצלחה');
+              this.msg.success('פרטי המתנה התעדכנו בהצלחה');
+              this.router.navigateByUrl('/gifts');
+            },
+            error: () => {
+              console.error('שגיאה בעדכון המתנה');
+              this.msg.error('שגיאה בעדכון המתנה');
+            }
+          });
         }
       });
     }
-  }
+    }
+    cancel(): void {
+      this.router.navigate(['/gifts']);
+    }
 
-  cancel(): void {
-    this.router.navigate(['/gifts']);
+    donorChange(value: number): void {
+      this.validateForm.controls['donorId'].setValue(value || 0);
+    }
+    categoryChange(value: number): void {
+      this.validateForm.controls['categoryId'].setValue(value || 0);
+    }
   }
-
-  donorChange(value: number): void {
-    this.validateForm.controls['donorId'].setValue(value || 0);
-  }
-  categoryChange(value: number): void {
-    this.validateForm.controls['categoryId'].setValue(value || 0);
-  }
-}

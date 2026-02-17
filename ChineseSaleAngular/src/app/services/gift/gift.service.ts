@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CardCarts, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
+import { CardCart, CreateGift, Gift, GiftWithOldPurchase, PaginatedResult, UpdateGift } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -70,21 +70,24 @@ export class GiftService {
 
   //Additional functions
 
-  cart: CardCarts[] = [];
+  cart: CardCart[] = [];
 
-  ngonit(): void {
+  ngOnInit(): void {
     this.cart = this.cookieService.get('cardCartUser1') ? JSON.parse(this.cookieService.get('cardCartUser1')!) : [];
   }
   
-  updateGift(giftId: number, qty: number): void {
-    const existingCartItem = this.cart.find(item => item.giftId === giftId);
+  updateQuantity(gift: GiftWithOldPurchase | CardCart |undefined | Gift, qty: number): void {
+    if (!gift) return;
+    console.log((gift as CardCart).giftId ??(gift as GiftWithOldPurchase).id+ " gift as GiftWithOldPurchase " + (gift as GiftWithOldPurchase).name + " gift as CardCart " + (gift as CardCart).giftName);
+    
+    const existingCartItem = this.cart.find(item => item.giftId === ((gift as CardCart).giftId ?? (gift as GiftWithOldPurchase).id));
     if (existingCartItem) {
       existingCartItem.quantity += qty;
       if (existingCartItem.quantity <= 0) {
-        this.cart = this.cart.filter(item => item.giftId !== giftId);
+        this.cart = this.cart.filter(item => item.giftId !== ((gift as CardCart).giftId ?? (gift as GiftWithOldPurchase).id));
       }
     } else if (qty > 0) {
-      this.cart.push({ giftId: giftId, quantity: qty });
+      this.cart.push({ giftId: (gift as CardCart).giftId ??(gift as GiftWithOldPurchase).id, quantity: qty ,giftName: (gift as GiftWithOldPurchase).name ?? (gift as CardCart).giftName, imageUrl: gift?.imageUrl ?? '', price: gift?.price ?? 0, isPackageAble: gift?.isPackageAble ?? true, userId: Number(this.cookieService.get('userId')) || 0, id: 0 });
     }
     this.cookieService.set('cardCartUser1', JSON.stringify(this.cart), 7);
   }
@@ -93,8 +96,4 @@ export class GiftService {
     const cartItem = this.cart.find(item => item.giftId === giftId);
     return cartItem ? cartItem.quantity : 0;
   }
-
-
-
-
 }

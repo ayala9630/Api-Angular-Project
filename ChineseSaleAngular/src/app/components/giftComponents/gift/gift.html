@@ -1,8 +1,10 @@
 <h2 class="page-title">מתנות
-    <a nz-button nzType="primary" routerLink="add" class="add-button">
-        <span nz-icon nzType="plus"></span>
-        <span>הוסף מתנה</span>
-    </a>
+    @if(!global.lotteryStart) {
+        <a nz-button nzType="primary" routerLink="add" class="add-button">
+            <span nz-icon nzType="plus"></span>
+            <span>הוסף מתנה</span>
+        </a>
+    }
 </h2>
 
 <div class="search-sort-container">
@@ -99,7 +101,7 @@
         }}
         @else {
         @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateGift(gift.id, -1)"></nz-icon>
+        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateQuantity(gift, -1)"></nz-icon>
         }
         }
     </ng-template>
@@ -137,7 +139,7 @@
         }}
         @else {
             @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateGift(gift.id, 1)"></nz-icon>
+        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateQuantity(gift, 1)"></nz-icon>
         }
         }
     </ng-template>
@@ -173,7 +175,7 @@
         }}
         @else {
         @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateGift(gift.id, -1)"></nz-icon>
+        <nz-icon nzType="minus" nzTheme="outline" (click)="giftService.updateQuantity(gift, -1)"></nz-icon>
         }
         }
     </ng-template>
@@ -211,7 +213,7 @@
         }}
         @else {
             @if(global.lotteryStarted() && !global.lotteryFinished()){
-        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateGift(gift.id, 1)"></nz-icon>
+        <nz-icon nzType="plus" nzTheme="outline" (click)="giftService.updateQuantity(gift, 1)"></nz-icon>
         }
         }
     </ng-template>

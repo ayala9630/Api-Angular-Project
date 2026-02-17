@@ -196,7 +196,47 @@ input[nz-input] {
   }
 }
 
-// רספונסיביות
+/* מיקום הכותרת + פעולות */
+.packages-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+
+/* כותרת בעיצוב קיים — תשנה אם יש סלקטור אחר */
+.packages-header .page-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* קופסת הפעולות — דוחפת את הכפתור לימין/מרכז בהתאם לצורך */
+.packages-header .packages-actions {
+  margin-left: auto; /* דוחף את הכפתור בקצה הימני של הכותרת */
+  display: flex;
+  align-items: center;
+}
+
+/* כפתור הוספה קטן ונקי */
+.add-package-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+/* במובייל - שומר על מקום */
+@media (max-width: 680px) {
+  .packages-header {
+    padding: 6px 10px;
+  }
+  .add-package-btn { padding: 5px 8px; font-size: 13px; }
+}
+
+/* רספונסיביות */
 @media (max-width: 768px) {
   :host {
     margin: 20px;

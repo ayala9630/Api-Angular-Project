@@ -44,66 +44,467 @@ nz-select {
     box-shadow: none !important;
 }
 
+/* גובה בר משתנה שניתן לכוונון */
+:root {
+    --promo-height: 20px;
+    /* שינוי כאן ישנה את גובה הפס וה־spacer */
+}
+
+/* ----- פס עליון קבוע עם כרטיסי טיימר צבעוניים ----- */
+.promo-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: var(--promo-height);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* spacer לשמירת הזרימה מתחת לפס הקבוע */
+.promo-spacer {
+    height: var(--promo-height);
+    width: 100%;
+    flex-shrink: 0;
+}
+
+// /* צבע הרקע של הפס לפי מצב */
+// .promo-bar.started { background: #c62b2b; }       /* אדום */
+// .promo-bar.not-started { background: #0b8a5a; }   /* ירוק */
+
+/* Inner */
+.promo-inner {
+    max-width: 980px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+/* כותרת קטנה מעל הטיימר */
+.promo-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* כרטיסי טיימר ושורות */
+.timer-cards {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+/* כל כרטיס זמן */
+.timer-card {
+    border-radius: 6px;
+    padding: 6px 8px;
+    min-width: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* צבע כרטיס ועיצוב לפי מצב (כעת צבע הכרטיס מלא והתווים לבנים) */
+.promo-bar.started .timer-card {
+    background: #c62b2b;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(198, 43, 43, 0.12);
+}
+
+.promo-bar.not-started .timer-card {
+    background: #0b8a5a;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(11, 138, 90, 0.12);
+}
+
+/* הערכים (המספרים) בכרטיס - לבנים */
+.timer-value {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1;
+    color: #ffffff;
+}
+
+/* תווית מתחת למספר */
+.timer-label {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.95);
+    margin-top: 4px;
+}
+
+/* מפריד נקודות בין הכרטיסים */
+.timer-sep {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+/* ----- שורת הניווט מתחת לפס ----- */
 .header-container {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #fff;
+    position: relative;
+    z-index: 10;
 }
 
-.user-info {
-    padding: 10px 40px;
+/* left column - select + inline timer */
+.left-block {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 15px;
-    direction: rtl;
-
-    span {
-        color: #595959;
-        font-size: 14px;
-        font-weight: 400;
-        
-        &::before {
-            content: "👤 ";
-            margin-left: 6px;
-        }
-    }
-
-    button {
-        color: #8c8c8c !important;
-        font-weight: 400;
-        font-size: 14px;
-        padding: 0;
-        height: auto;
-        background: transparent;
-        border: none;
-        transition: color 0.2s ease;
-
-        &:hover {
-            color: #1890ff !important;
-            text-decoration: underline;
-        }
-    }
+    gap: 12px;
 }
-.connected-status {
-    color: #595959;
+
+/* Inline timer - קטן, ללא רקע כולל */
+.inline-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    padding-left: 4px;
+    /* אין רקע חיצוני, רק הכרטיסים עצמם צבועים */
+}
+
+/* כותרת קטנה מעל הטיימר */
+.timer-title.small {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.65);
+    font-weight: 700;
+}
+
+/* שורת כרטיסים אופקית דחוסה */
+.timer-cards-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    direction: ltr;
+}
+
+/* כרטיס יחיד דק וריבועי יותר */
+.timer-card-inline {
+    width: 40px;
+    height: 40px;
+    padding: 3px 4px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    overflow: visible;
+}
+
+.inline-timer.started .timer-card-inline {
+    background: #c62b2b;
+    color: #fff;
+}
+
+.inline-timer.not-started .timer-card-inline {
+    background: #0b8a5a;
+    color: #fff;
+}
+
+/* מספר קטן ולבן */
+.timer-value-inline {
     font-size: 14px;
-    font-weight: 400;
-    margin-left: 10px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    white-space: nowrap;
+}
 
-    &::before {
-        content: "👋 ";
-        margin-right: 6px;
+/* תווית קטנה מתחת למספר */
+.timer-label-inline {
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.95);
+    margin-top: 2px;
+    opacity: 0.95;
+    line-height: 1;
+}
+
+/* הקטן את המרווח מתחת לכותרת הקטנה כדי שכל השורה תיכנס ב‑HEADER */
+.timer-title.small {
+    margin-bottom: 2px;
+}
+
+/* nav + auth */
+.nav-block {
+    display: flex;
+    justify-content: center;
+}
+
+.main-nav {
+    justify-content: center;
+    width: 100%;
+}
+
+.auth-menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.connected-status {
+    margin-right: 10px;
+    color: #454545;
+}
+
+/* שינוי צבעים פחות גלוי במצב started כשנדרשת נראות אחרת */
+.header-container.started .timer-title.small,
+.inline-timer.started .timer-title.small {
+    color: rgba(198, 43, 43, 0.95);
+}
+
+.header-container.not-started .timer-title.small,
+.inline-timer.not-started .timer-title.small {
+    color: rgba(11, 138, 90, 0.95);
+}
+
+/* עטיפה כללית של הריבועים - אם יש שם אחר החלף את הסלקטור בהתאם */
+.header-time-row,
+.header-controls {
+    display: flex;
+    gap: 8px;
+    /* רווח אופקי קטן בין הריבועים */
+    align-items: center;
+    margin-top: 6px;
+    /* מרחק קטן מהכותרת (הקטן ממה שהיה) */
+}
+
+/* סגנון לריבוע עצמו - החלף .time-box / .square לפי הסלקטור האמיתי */
+.time-box,
+.square,
+.time-option,
+.btn-square {
+    width: 40px;
+    /* רוחב קבוע קטן ולא גדול מדי */
+    height: 40px;
+    /* גובה שווה לרוחב לשמור על ריבוע */
+    min-width: 40px;
+    padding: 0;
+    /* אין פדינג שמגדיל את הממדים */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f9d58;
+    /* צבע רקע ירוק — שנה אם צריך */
+    color: #ffffff;
+    /* לבן חזק להניגודיות והנראות של המספר */
+    font-weight: 700;
+    font-size: 14px;
+    /* גופן קריא בלי להגדיל את הריבוע */
+    border-radius: 8px;
+    /* עיגול מתון */
+    box-shadow: none;
+    line-height: 1;
+    /* לוודא שהמספר במרכז אנכית */
+    cursor: pointer;
+}
+
+/* אם יש תווית/כותרת של ההדר — הקטן את המרווח התחתון שלה */
+.header-title,
+.header .title,
+h1.header-title {
+    margin-bottom: 4px;
+    /* הקטן מרווח בין הכותרת לסרגל הריבועים */
+}
+
+/* רספונסיביות קלה: בממדים קטנים תקטין הריבוע במעט */
+@media (max-width: 480px) {
+
+    .time-box,
+    .square,
+    .time-option,
+    .btn-square {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .timer-debug { display: none; } /* בחלונות קטנים נסיר את הוויזואל הבדיקה */
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --promo-height: 56px;
+    }
+
+    .timer-value {
+        font-size: 14px;
+    }
+
+    .timer-card {
+        min-width: 40px;
+        padding: 5px 7px;
+    }
+
+    .timer-value-inline {
+        font-size: 12px;
+    }
+
+    .timer-card-inline {
+        min-width: 34px;
+        padding: 3px 5px;
+        border-radius: 6px;
+    }
+
+    .timer-label-inline {
+        font-size: 8px;
     }
 }
 
-// Responsive
-@media (max-width: 768px) {
-    .user-info {
-        padding: 8px 20px;
-
-        span, button {
-            font-size: 13px;
-        }
+@media (max-width: 680px) {
+    :root {
+        --promo-height: 48px;
     }
+
+    .promo-inner {
+        gap: 4px;
+    }
+
+    .timer-value {
+        font-size: 12px;
+    }
+
+    .timer-card {
+        min-width: 36px;
+        padding: 4px 6px;
+    }
+
+    .promo-title {
+        font-size: 11px;
+    }
+
+    .header-container {
+        grid-template-columns: 1fr auto;
+        padding: 6px 10px;
+    }
+
+    .auth-menu {
+        display: none;
+    }
+
+    .timer-value-inline {
+        font-size: 11px;
+    }
+
+    .timer-card-inline {
+        min-width: 30px;
+        padding: 3px 4px;
+    }
+}
+
+.timer-debug {
+  font-size: 12px;
+  color: rgba(0,0,0,0.65);
+  min-width: 22px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+}
+/* ===== עדכון עיצוב הטיימר: דחיפה פנימה ו‑tight spacing ===== */
+
+/* וודא שהעמודה השמאלית לא דוחפת את הטיימר החוצה */
+.header-container {
+  padding-top: 6px;    /* פחות מרווח עליון */
+  padding-bottom: 6px; /* פחות מרווח תחתון */
+  align-items: center; /* ליישור אנכי אחיד */
+  overflow: visible;
+}
+
+/* שורה שמכילה select + inline timer */
+.left-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* הקטנת הרווח בין הכותרת לשורת המספרים */
+.inline-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;       /* קטן יותר */
+  margin-top: 0;  /* אין מרווח מיותר מעל */
+  padding-left: 4px;
+}
+
+/* כותרת קטנה מעל הטיימר - קרובה יותר לכרטיסים */
+.timer-title.small {
+  font-size: 12px;
+  color: rgba(0,0,0,0.65);
+  font-weight: 700;
+  margin-bottom: 2px; /* צמוד יותר למספרים */
+  line-height: 1;
+}
+
+/* שורת כרטיסים אופקית דחוסה */
+.timer-cards-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* צמוד אך לא הדוק מדי */
+}
+
+/* כרטיס יחיד - ריבועי ומקובע כדי שלא יצא מה‑HEADER */
+.timer-card-inline {
+  width: 36px;
+  height: 36px;
+  padding: 3px 0;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  box-sizing: border-box;
+}
+
+/* המספר עצמו - קריא אך קטן יחסית */
+.timer-value-inline {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* תווית מתחת למספר - קטנה מאוד */
+.timer-label-inline {
+  font-size: 8px;
+  color: rgba(255,255,255,0.95);
+  margin-top: 1px;
+  opacity: 0.95;
+  line-height: 1;
+}
+
+/* רספונסיבי: במכשירים קטנים נקטין עוד טיפה ונסתיר תוויות כדי לחסוך מקום */
+@media (max-width: 480px) {
+  .timer-card-inline { width: 32px; height: 32px; padding: 2px 0; }
+  .timer-value-inline { font-size: 12px; }
+  .timer-label-inline { display: none; }
+  .inline-timer { gap: 1px; }
 }

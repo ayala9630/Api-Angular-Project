@@ -69,7 +69,7 @@ export class Donor {
 
   constructor(
     private donorService: DonorService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private modal: NzModalService,
     private router: Router,
     private route: ActivatedRoute,
