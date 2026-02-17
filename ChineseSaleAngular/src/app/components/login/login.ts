@@ -10,6 +10,7 @@ import { LoginRequest } from '../../models';
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { GlobalService } from '../../services/global/global.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class Login {
     private cookieService: CookieService,
     private router: Router,
     private msg : NzMessageService,
+    private global: GlobalService
   ) { }
 
   private fb = inject(NonNullableFormBuilder);
@@ -40,8 +42,10 @@ export class Login {
         next: (user) => {
           this.time=40000;
           console.log('User logged in successfully:', user);
-          this.cookieService.set('auth_token', user.token);
-          this.cookieService.set('user', JSON.stringify(user.user));
+          // this.cookieService.set('auth_token', user.token);
+          // this.cookieService.set('user', JSON.stringify(user.user));
+          // this.global.user.set(user.user);
+          this.global.login(user);
           this.msg.create('success', 'התחברת בהצלחה');
           this.router.navigate(['/home']);
         },

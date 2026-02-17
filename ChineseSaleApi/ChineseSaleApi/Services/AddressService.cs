@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -11,11 +12,13 @@ namespace ChineseSaleApi.Services
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<AddressService> _logger;
 
-        public AddressService(IAddressRepository repository, ILogger<AddressService> logger)
+        public AddressService(IAddressRepository repository, IMapper mapper, ILogger<AddressService> logger)
         {
             _repository = repository;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -26,13 +29,7 @@ namespace ChineseSaleApi.Services
 
             try
             {
-                Address addrress2 = new Address
-                {
-                    City = address.City,
-                    Street = address.Street,
-                    Number = address.Number,
-                    ZipCode = address.ZipCode
-                };
+                Address addrress2 = _mapper.Map<Address>(address);
 
                 return await _repository.AddAddress(addrress2);
             }
@@ -54,13 +51,7 @@ namespace ChineseSaleApi.Services
 
             try
             {
-                Address addrress2 = new Address
-                {
-                    City = address.City,
-                    Street = address.Street,
-                    Number = address.Number,
-                    ZipCode = address.ZipCode
-                };
+                Address addrress2 = _mapper.Map<Address>(address);
 
                 return await _repository.AddAddress(addrress2);
             }
@@ -89,14 +80,7 @@ namespace ChineseSaleApi.Services
                     return null;
                 }
 
-                return new AddressDto
-                {
-                    Id = address.Id,
-                    City = address.City,
-                    Street = address.Street,
-                    Number = address.Number,
-                    ZipCode = address.ZipCode
-                };
+                return _mapper.Map<AddressDto>(address);
             }
             catch (Exception ex)
             {
@@ -115,10 +99,7 @@ namespace ChineseSaleApi.Services
                 var address = await _repository.GetAddress(addressDto.Id);
                 if (address != null)
                 {
-                    address.City = addressDto.City ?? address.City;
-                    address.Street = addressDto.Street ?? address.Street;
-                    address.Number = addressDto.Number ?? address.Number;
-                    address.ZipCode = addressDto.ZipCode ?? address.ZipCode;
+                    _mapper.Map(addressDto, address);
                     await _repository.UpdateAddress(address);
                     return true;
                 }

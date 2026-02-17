@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -12,11 +13,13 @@ namespace ChineseSaleApi.Services
     public class PackageCartService : IPackageCartService
     {
         private readonly IPackageCartRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<PackageCartService> _logger;
 
-        public PackageCartService(IPackageCartRepository repository, ILogger<PackageCartService> logger)
+        public PackageCartService(IPackageCartRepository repository, IMapper mapper, ILogger<PackageCartService> logger)
         {
             _repository = repository;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -25,12 +28,7 @@ namespace ChineseSaleApi.Services
         {
             try
             {
-                PackageCart packageCart = new PackageCart
-                {
-                    Quantity = packageCartDto.Quantity,
-                    UserId = packageCartDto.UserId,
-                    PackageId = packageCartDto.PackageId
-                };
+                PackageCart packageCart = _mapper.Map<PackageCart>(packageCartDto);
                 return await _repository.AddPackageCart(packageCart);
             }
             catch (ArgumentNullException ex)
@@ -51,13 +49,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var packageCarts = await _repository.GetPackagesByUserId(userId);
-                return packageCarts.Select(pc => new PackageCartDto
-                {
-                    Id = pc.Id,
-                    Quantity = pc.Quantity,
-                    UserId = pc.UserId,
-                    PackageId = pc.PackageId
-                });
+                return packageCarts.Select(pc => _mapper.Map<PackageCartDto>(pc));
             }
             catch (Exception ex)
             {

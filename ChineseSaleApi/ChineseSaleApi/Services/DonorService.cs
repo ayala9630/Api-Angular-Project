@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -16,14 +17,16 @@ namespace ChineseSaleApi.Services
         private readonly IAddressService _addressService;
         private readonly ICardRepository _cardRepository;
         private readonly ICardService _cardService;
+        private readonly IMapper _mapper;
         private readonly ILogger<DonorService> _logger;
 
-        public DonorService(IDonorRepository repository, IAddressService addressService, ICardRepository cardRepository, ICardService cardService, ILogger<DonorService> logger)
+        public DonorService(IDonorRepository repository, IAddressService addressService, ICardRepository cardRepository, ICardService cardService, IMapper mapper, ILogger<DonorService> logger)
         {
             _repository = repository;
             _addressService = addressService;
             _cardRepository = cardRepository;
             _cardService = cardService;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -37,16 +40,8 @@ namespace ChineseSaleApi.Services
             try
             {
                 var idAddress = await _addressService.AddAddressForDonor(donorDto.CompanyAddress);
-                Donor donor = new Donor
-                {
-                    FirstName = donorDto.FirstName,
-                    LastName = donorDto.LastName,
-                    CompanyName = donorDto.CompanyName,
-                    CompanyEmail = donorDto.CompanyEmail,
-                    CompanyPhone = donorDto.CompanyPhone,
-                    CompanyIcon = donorDto.CompanyIcon,
-                    CompanyAddressId = idAddress,
-                };
+                Donor donor = _mapper.Map<Donor>(donorDto);
+                donor.CompanyAddressId = idAddress;
                 return await _repository.AddDonor(donor);
             }
             catch (ArgumentNullException ex)
@@ -92,15 +87,9 @@ namespace ChineseSaleApi.Services
                     dict[gift.Name ?? string.Empty] = count;
                 }
 
-                return new SingelDonorDto
-                {
-                    Id = donor.Id,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName,
-                    CompanyName = donor.CompanyName,
-                    CompanyIcon = donor.CompanyIcon,
-                    Gifts = dict
-                };
+                var dto = _mapper.Map<SingelDonorDto>(donor);
+                dto.Gifts = dict;
+                return dto;
             }
             catch (ArgumentException ex)
             {
@@ -125,17 +114,7 @@ namespace ChineseSaleApi.Services
                 {
                     return null;
                 }
-                return new DonorDto
-                {
-                    Id = donor.Id,
-                    CompanyAddressId = donor.CompanyAddressId,
-                    CompanyEmail = donor.CompanyEmail,
-                    CompanyIcon = donor.CompanyIcon,
-                    CompanyName = donor.CompanyName,
-                    CompanyPhone = donor.CompanyPhone,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName
-                };
+                return _mapper.Map<DonorDto>(donor);
 
             }
             catch (ArgumentException ex)
@@ -169,17 +148,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var donors = await _repository.GetDonorByLotteryId(lottery);
-                return donors.Select(donor => new DonorDto
-                {
-                    Id = donor.Id,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName,
-                    CompanyName = donor.CompanyName,
-                    CompanyEmail = donor.CompanyEmail,
-                    CompanyPhone = donor.CompanyPhone,
-                    CompanyIcon = donor.CompanyIcon,
-                    CompanyAddressId = donor.CompanyAddressId
-                });
+                return donors.Select(donor => _mapper.Map<DonorDto>(donor));
             }
             catch (ArgumentException ex)
             {
@@ -212,17 +181,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var donors = await _repository.GetAllDonors();
-                return donors.Select(donor => new DonorDto
-                {
-                    Id = donor.Id,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName,
-                    CompanyName = donor.CompanyName,
-                    CompanyEmail = donor.CompanyEmail,
-                    CompanyPhone = donor.CompanyPhone,
-                    CompanyIcon = donor.CompanyIcon,
-                    CompanyAddressId = donor.CompanyAddressId
-                });
+                return donors.Select(donor => _mapper.Map<DonorDto>(donor));
             }
             catch (Exception ex)
             {
@@ -240,17 +199,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var (donors, totalCount) = await _repository.GetDonorsWithPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize);
-                var donorDtos = donors.Select(donor => new DonorDto
-                {
-                    Id = donor.Id,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName,
-                    CompanyName = donor.CompanyName,
-                    CompanyEmail = donor.CompanyEmail,
-                    CompanyPhone = donor.CompanyPhone,
-                    CompanyIcon = donor.CompanyIcon,
-                    CompanyAddressId = donor.CompanyAddressId
-                });
+                var donorDtos = donors.Select(donor => _mapper.Map<DonorDto>(donor));
                 return new PaginatedResultDto<DonorDto>
                 {
                     Items = donorDtos,
@@ -279,17 +228,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var (donors, totalCount) = await _repository.GetDonorsNameSearchedPagination(lottery, paginationParams.PageNumber, paginationParams.PageSize, textSearch);
-                var donorDtos = donors.Select(donor => new DonorDto
-                {
-                    Id = donor.Id,
-                    FirstName = donor.FirstName,
-                    LastName = donor.LastName,
-                    CompanyName = donor.CompanyName,
-                    CompanyEmail = donor.CompanyEmail,
-                    CompanyPhone = donor.CompanyPhone,
-                    CompanyIcon = donor.CompanyIcon,
-                    CompanyAddressId = donor.CompanyAddressId
-                });
+                var donorDtos = donors.Select(donor => _mapper.Map<DonorDto>(donor));
                 return new PaginatedResultDto<DonorDto>
                 {
                     Items = donorDtos,
@@ -361,13 +300,7 @@ namespace ChineseSaleApi.Services
                 {
                     return null;
                 }
-                donor1.CompanyPhone = donor.CompanyPhone ?? donor1.CompanyPhone;
-                donor1.CompanyEmail = donor.CompanyEmail ?? donor1.CompanyEmail;
-                donor1.CompanyIcon = donor.CompanyIcon ?? donor1.CompanyIcon;
-                donor1.CompanyName = donor.CompanyName ?? donor1.CompanyName;
-                donor1.CompanyAddressId = donor.CompanyAddressId ?? donor1.CompanyAddressId;
-                donor1.FirstName = donor.FirstName ?? donor1.FirstName;
-                donor1.LastName = donor.LastName ?? donor1.LastName;
+                _mapper.Map(donor, donor1);
                 await _repository.UpdateDonor(donor1);
                 return true;
             }

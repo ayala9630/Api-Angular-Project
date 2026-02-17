@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -15,6 +16,7 @@ namespace ChineseSaleApi.Services
         private readonly ICardRepository _cardRepository;
         private readonly IUserRepository _userRepository;
         private readonly IGiftRepository _giftRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<LotteryService> _logger;
 
         public LotteryService
@@ -23,6 +25,7 @@ namespace ChineseSaleApi.Services
             ICardRepository cardRepository,
             IUserRepository userRepository,
             IGiftRepository giftRepository,
+            IMapper mapper,
             ILogger<LotteryService> logger
             )
         {
@@ -30,6 +33,7 @@ namespace ChineseSaleApi.Services
             _cardRepository = cardRepository;
             _userRepository = userRepository;
             _giftRepository = giftRepository;
+            _mapper = mapper;
             _logger = logger;
         }
         //create
@@ -51,12 +55,7 @@ namespace ChineseSaleApi.Services
                         throw new ArgumentException("New lottery's start date must be after the previous lottery's end date.", nameof(lotteryDto.StartDate));
                     }
                 }
-                Lottery lottery = new Lottery
-                {
-                    Name = lotteryDto.Name,
-                    StartDate = lotteryDto.StartDate,
-                    EndDate = lotteryDto.EndDate
-                };
+                Lottery lottery = _mapper.Map<Lottery>(lotteryDto);
                 await _repository.AddLottery(lottery);
             }
             catch (ArgumentException ex)
@@ -76,16 +75,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var lotteries = await _repository.GetAllLotteries();
-                return lotteries.Select(lottery => new LotteryDto
-                {
-                    Id = lottery.Id,
-                    Name = lottery.Name,
-                    StartDate = lottery.StartDate,
-                    EndDate = lottery.EndDate,
-                    TotalCards = lottery.TotalCards,
-                    TotalSum = lottery.TotalSum,
-                    IsDone = lottery.IsDone
-                }).ToList();
+                return lotteries.Select(lottery => _mapper.Map<LotteryDto>(lottery)).ToList();
             }
             catch (Exception ex)
             {
@@ -104,16 +94,7 @@ namespace ChineseSaleApi.Services
                 {
                     return null;
                 }
-                return new LotteryDto
-                {
-                    Id = lottery.Id,
-                    Name = lottery.Name,
-                    StartDate = lottery.StartDate,
-                    EndDate = lottery.EndDate,
-                    TotalCards = lottery.TotalCards,
-                    TotalSum = lottery.TotalSum,
-                    IsDone = lottery.IsDone
-                };
+                return _mapper.Map<LotteryDto>(lottery);
             }
             catch (ArgumentException ex)
             {
@@ -159,15 +140,7 @@ namespace ChineseSaleApi.Services
                             : null,
                         CategoryName = gift.Category?.Name,
                         TotalTicketsSold = ticketsSold,
-                        Winner = winningCard?.User != null ? new WinnerUserDto
-                        {
-                            UserId = winningCard.User.Id,
-                            UserName = winningCard.User.UserName,
-                            FirstName = winningCard.User.FirstName,
-                            LastName = winningCard.User.LastName,
-                            Email = winningCard.User.Email,
-                            Phone = winningCard.User.Phone
-                        } : null
+                        Winner = winningCard?.User != null ? _mapper.Map<WinnerUserDto>(winningCard.User) : null
                     };
 
                     giftWinners.Add(giftWinner);
@@ -211,12 +184,7 @@ namespace ChineseSaleApi.Services
                     throw new ArgumentException("Cannot update a lottery that already started.", nameof(lotteryDto.Id));
                 }
 
-                lottery.Name = lotteryDto.Name ?? lottery.Name;
-                lottery.StartDate = lotteryDto.StartDate ?? lottery.StartDate;
-                lottery.EndDate = lotteryDto.EndDate ?? lottery.EndDate;
-                lottery.TotalCards = lotteryDto.TotalCards ?? lottery.TotalCards;
-                lottery.TotalSum = lotteryDto.TotalSum ?? lottery.TotalSum;
-                lottery.IsDone = lotteryDto.IsDone ?? lottery.IsDone;
+                _mapper.Map(lotteryDto, lottery);
                 await _repository.UpdateLottery(lottery);
                 return true;
             }
@@ -300,15 +268,7 @@ namespace ChineseSaleApi.Services
                     throw new KeyNotFoundException("Winner user not found.");
                 }
                 await UpdateWin(cardsList[winnerCardNumber - 1]);
-                return new UserDto
-                {
-                    Id = winnerUser.Id,
-                    Username = winnerUser.UserName,
-                    FirstName = winnerUser.FirstName,
-                    LastName = winnerUser.LastName,
-                    Phone = winnerUser.Phone,
-                    Email = winnerUser.Email
-                };
+                return _mapper.Map<UserDto>(winnerUser);
             }
             catch (KeyNotFoundException ex)
             {

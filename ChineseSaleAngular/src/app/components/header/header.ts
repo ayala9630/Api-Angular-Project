@@ -112,6 +112,7 @@ export class Header implements OnDestroy {
   logout(): void {
     this.cookieService.delete('auth_token');
     this.cookieService.delete('user');
+    this.global.user.set(null);
     this.global.setConnected(false);
     this.conected = this.global.isConnected();
     this.user = null;

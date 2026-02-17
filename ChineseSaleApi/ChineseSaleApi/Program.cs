@@ -1,3 +1,4 @@
+using AutoMapper;
 using ChineseSaleApi.Repositories;
 using ChineseSaleApi.RepositoryInterfaces;
 using ChineseSaleApi.ServiceInterfaces;
@@ -20,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // Configure Serilog
@@ -156,7 +158,7 @@ var app = builder.Build();
 // Use custom error handling middleware
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// äôòìú CORS
+// ï¿½ï¿½ï¿½ï¿½ï¿½ CORS
 app.UseCors("AllowAllOrigins");
 
     // Configure the HTTP request pipeline.

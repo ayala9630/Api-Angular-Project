@@ -51,7 +51,7 @@
         @if (conected) {
         <span class="connected-status">שלום, {{user?.firstName}} {{user?.lastName}}</span>
         <li nz-menu-item>
-            <a routerLink="home" (click)="logout()">יציאה</a>
+            <a routerLink="home" (click)="global.logout()">יציאה</a>
         </li>
         } @else {
         <li nz-menu-item>

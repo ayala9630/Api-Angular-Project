@@ -4,6 +4,10 @@ export interface CardCart {
   userId: number;
   giftId: number;
 }
+export interface Cart {
+  userId:number
+  userCart:CardCart
+}
 
 export interface CardCarts {
   giftId: number;

@@ -1,6 +1,6 @@
 import { Injectable, NgZone, signal, computed, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Lottery } from '../../models';
+import { LoginResponse, Lottery, User } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
@@ -8,11 +8,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   providedIn: 'root'
 })
 export class GlobalService {
-  msg:NzMessageService = inject(NzMessageService);        
+  msg: NzMessageService = inject(NzMessageService);
   currentLottery = signal<Lottery | null>(null);
   currentLotteryId = computed(() => this.currentLottery()?.id || 0);
   lotteryStarted = computed(() => (new Date(this.currentLottery()?.startDate || new Date())).getTime() <= new Date().getTime())
   lotteryFinished = computed(() => (new Date(this.currentLottery()?.endDate || new Date())).getTime() <= new Date().getTime())
+  user = signal<User | null>(null);
 
   private connectedSubject = new BehaviorSubject<boolean>(false);
   public connected$ = this.connectedSubject.asObservable();
@@ -58,4 +59,25 @@ export class GlobalService {
       this.cookieWatcherId = null;
     }
   }
+  public logout() {
+    // 1. נקה את העוגיה של auth_token
+    this.cookieService.delete('auth_token');
+
+    // 2. עדכן את מצב החיבור ל- false
+    this.setConnected(false);
+
+    // 3. עצור את מעקב העוגיות אם הוא פעיל
+    this.stopCookieWatcher();
+  }
+
+  public login(response: LoginResponse) {
+    // 1. שמור את ה-token בעוגיה
+    this.cookieService.set('auth_token', response.token);
+    this.cookieService.set('user', JSON.stringify(response.user));
+    this.user.set(response.user);
+    // 2. עדכן את מצב החיבור ל- true
+    this.setConnected(true);
+    // 3. (אופציונלי) אם יש צורך, תוכל להפעיל מחדש את מעקב העוגיות
+    // this.startCookieWatcher();
+}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -19,6 +20,7 @@ namespace ChineseSaleApi.Services
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
 
         public UserService(
@@ -27,6 +29,7 @@ namespace ChineseSaleApi.Services
             IAddressService addressService,
             ITokenService tokenService,
             IConfiguration configuration,
+            IMapper mapper,
             ILogger<UserService> logger
         )
         {
@@ -35,6 +38,7 @@ namespace ChineseSaleApi.Services
             _addressService = addressService;
             _repository = repository;
             _emailService = emailService;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -49,16 +53,9 @@ namespace ChineseSaleApi.Services
                 }
 
                 int idAddress = await _addressService.AddAddressForUser(createUserDto.Address);
-                User user = new User
-                {
-                    UserName = createUserDto.Username,
-                    Password = HashPassword(createUserDto.Password),
-                    FirstName = createUserDto.FirstName,
-                    LastName = createUserDto.LastName,
-                    Phone = createUserDto.Phone,
-                    Email = createUserDto.Email,
-                    AddressId = idAddress
-                };
+                User user = _mapper.Map<User>(createUserDto);
+                user.Password = HashPassword(createUserDto.Password);
+                user.AddressId = idAddress;
 
                 //send welcome email(synchronous method in your EmailService)
                    _emailService.SendEmail(new EmailRequestDto()
@@ -93,23 +90,7 @@ namespace ChineseSaleApi.Services
                     return null;
                 }
 
-                return new UserDto
-                {
-                    Id = user.Id,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                    Email = user.Email,
-                    Address = user.Address != null ? new AddressDto
-                    {
-                        Id = user.Address.Id,
-                        City = user.Address.City,
-                        Street = user.Address.Street,
-                        Number = user.Address.Number,
-                        ZipCode = user.Address.ZipCode
-                    } : null
-                };
+                return _mapper.Map<UserDto>(user);
             }
             catch (Exception ex)
             {
@@ -124,23 +105,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var users = await _repository.GetAllUsers();
-                return users.Select(user => new UserDto
-                {
-                    Id = user.Id,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                    Email = user.Email,
-                    Address = user.Address != null ? new AddressDto
-                    {
-                        Id = user.Address.Id,
-                        City = user.Address.City,
-                        Street = user.Address.Street,
-                        Number = user.Address.Number,
-                        ZipCode = user.Address.ZipCode
-                    } : null
-                }).ToList();
+                return users.Select(user => _mapper.Map<UserDto>(user)).ToList();
             }
             catch (Exception ex)
             {
@@ -180,23 +145,7 @@ namespace ChineseSaleApi.Services
             {
                 var (items, totalCount) = await _repository.GetUsersWithPagination(paginationParams.PageNumber, paginationParams.PageSize);
 
-                List<UserDto> userDtos = items.Select(user => new UserDto
-                {
-                    Id = user.Id,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                    Email = user.Email,
-                    Address = user.Address != null ? new AddressDto
-                    {
-                        Id = user.Address.Id,
-                        City = user.Address.City,
-                        Street = user.Address.Street,
-                        Number = user.Address.Number,
-                        ZipCode = user.Address.ZipCode
-                    } : null
-                }).ToList();
+                List<UserDto> userDtos = items.Select(user => _mapper.Map<UserDto>(user)).ToList();
 
                 return new PaginatedResultDto<UserDto>
                 {
@@ -238,10 +187,7 @@ namespace ChineseSaleApi.Services
                     }
                 }
 
-                user.FirstName = userDto.FirstName ?? user.FirstName;
-                user.LastName = userDto.LastName ?? user.LastName;
-                user.Phone = userDto.Phone ?? user.Phone;
-                user.Email = userDto.Email ?? user.Email;
+                _mapper.Map(userDto, user);
 
                 await _repository.UpdateUser(user);
                 return true;
@@ -290,26 +236,10 @@ namespace ChineseSaleApi.Services
 
                 return new LoginResponseDto
                 {
-                    Token = token,
-                    TokenType = "Bearer",
-                    ExpiresIn = expiryMinutes * 60,
-                    User = new UserDto
-                    {
-                        Id = user.Id,
-                        Username = user.UserName,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        Phone = user.Phone,
-                        Email = user.Email,
-                        Address = user.Address != null ? new AddressDto
-                        {
-                            Id = user.Address.Id,
-                            City = user.Address.City,
-                            Street = user.Address.Street,
-                            Number = user.Address.Number,
-                            ZipCode = user.Address.ZipCode
-                        } : null
-                    }
+                  Token = token,
+                  TokenType = "Bearer",
+                  ExpiresIn = expiryMinutes * 60,
+                  User = _mapper.Map<UserDto>(user)
                 };
             }
             catch (Exception ex)

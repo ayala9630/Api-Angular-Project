@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ChineseSaleApi.Dto;
 using ChineseSaleApi.Models;
 using ChineseSaleApi.RepositoryInterfaces;
@@ -12,11 +13,13 @@ namespace ChineseSaleApi.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(ICategoryRepository repository, ILogger<CategoryService> logger)
+        public CategoryService(ICategoryRepository repository, IMapper mapper, ILogger<CategoryService> logger)
         {
             _repository = repository;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -25,10 +28,7 @@ namespace ChineseSaleApi.Services
         {
             try
             {
-                Category category = new Category
-                {
-                    Name = categoryDto.Name
-                };
+                Category category = _mapper.Map<Category>(categoryDto);
                 await _repository.AddCategory(category);
             }
             catch (ArgumentNullException ex)
@@ -53,11 +53,7 @@ namespace ChineseSaleApi.Services
                 {
                     return null;
                 }
-                return new CategoryDto
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                };
+                return _mapper.Map<CategoryDto>(category);
             }
             catch (Exception ex)
             {
@@ -71,11 +67,7 @@ namespace ChineseSaleApi.Services
             try
             {
                 var categories = await _repository.GetAllCategories();
-                return categories.Select(category => new CategoryDto
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                }).ToList();
+                return categories.Select(category => _mapper.Map<CategoryDto>(category)).ToList();
             }
             catch (Exception ex)
             {
