@@ -249,7 +249,7 @@ namespace ChineseSaleApi.Services
                 throw;
             }
         }
-
+        
         public async Task<UserDto?> Lottery(int giftId)
         {
             if (giftId <= 0) throw new ArgumentException("GiftId must be greater than zero.", nameof(giftId));

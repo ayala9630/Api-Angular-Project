@@ -50,4 +50,5 @@ export interface GiftWithOldPurchase {
   oldPurchaseCount: number;
   categoryName?: string;
   winner?: string;
+  countCards?: number;
 }

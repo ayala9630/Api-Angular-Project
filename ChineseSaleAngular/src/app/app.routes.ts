@@ -15,6 +15,7 @@ import { Purchase } from './components/purchasesComponent/purchase/purchase';
 import { SingleGiftPurchases } from './components/purchasesComponent/single-gift-purchases/single-gift-purchases';
 import { PostPackage } from './components/packageComponents/post-package/post-package';
 import { PostLottery } from './components/lotteryComponents/post-lottery/post-lottery';
+import { Lotttery } from './components/lotteryComponents/lotttery/lotttery';
 
 
 export const routes: Routes = [
@@ -35,6 +36,7 @@ export const routes: Routes = [
         {path:'donors/:id', component: SingleDonor},
         {path:'purchases', component: Purchase},
         {path:'purchases/purchase/:id', component: SingleGiftPurchases},
+        {path:'lottery', component: Lotttery},
         {path:'lottery/add', component: PostLottery},
         {path:'lottery/edit/:id', component: PostLottery},
 
