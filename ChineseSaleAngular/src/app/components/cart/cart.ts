@@ -15,13 +15,15 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { GlobalService } from '../../services/global/global.service';
 import { CardCartService } from '../../services/card-cart/card-cart.service';
 import { GiftService } from '../../services/gift/gift.service';
-import { CardCart } from '../../models';
+import { CardCart, CreateCard, CreateCardCart, PackageCart } from '../../models';
 import { PackageService } from '../../services/package/package.service';
 import { CartService } from '../../services/cart/cart.service';
+import { CardService } from '../../services/card/card.service';
 
 @Component({
   selector: 'app-cart',
@@ -50,12 +52,13 @@ export class Cart implements OnInit, OnDestroy {
   cardCart = computed(() => this.giftService.userCart()); activeTab: 'packages' | 'gifts' = 'packages'; packageCart = computed(() => this.packageService.userCart());
 
   constructor(
-    private cardCartService: CardCartService,
+    private cardService: CardService,
     public global: GlobalService,
     public giftService: GiftService,
     public packageService: PackageService,
     private router: Router,
-    public cartService: CartService
+    public cartService: CartService,
+    private modal: NzModalService,
   ) { }
 
 
@@ -65,7 +68,7 @@ export class Cart implements OnInit, OnDestroy {
       this.giftService.userId.set(this.giftService.getUserId());
     });
 
-    
+
     const userId = this.global.user()?.id || null;
     if (userId) {
       this.initLoading = true;
@@ -98,6 +101,83 @@ export class Cart implements OnInit, OnDestroy {
     const total = this.getTotalTickets();
     return Math.min((total / this.cartService.availableCards) * 100, 100);
   }
+  updateCardQuantity(item: CardCart, change: number): void {
+    if (change <= 0 && !item.isPackageAble) {
+      this.giftService.updateCardQuantity(item, change);
+      return;
+    }
+    else if (this.cartService.availableCards <= 0) {
+      this.global.msg.error('הוסף חבילה לפני רכישת כרטיסים');
+      return;
+    }
+    else if (this.cartService.availableCards < this.getTotalTickets() + change) {
+      this.global.msg.error('לא ניתן להוסיף כרטיסים נוספים, כמות הכרטיסים הזמינה נגמרה');
+      return;
+    }
+    this.giftService.updateCardQuantity(item, change);
+    this.getProgressPercent();
+  }
+  updatePackageQuantity(card: PackageCart, qty: number): void {
+    console.log(card.numberOfCards);
+    
+    if(qty===-1 && card.quantity > 1) {
+      this.cartService.availableCards = this.cartService.availableCards - card.numberOfCards/2;
+    }
+    else if (qty <= 0) {
+      this.cartService.availableCards -= (card.numberOfCards * (card.quantity - 1));
+    }
+    this.cartService.availableCards += (card.numberOfCards * qty);
+    this.packageService.updatePackageQuantity(card, qty);
+  }
 
+  // פונקציה לפתיחת מודל תשלום
+  openPaymentModal(): void {
+    const total = this.getTotal();
+    this.modal.create({
+      nzTitle: 'סיכום תשלום',
+      nzContent: `
+        <div style="text-align:center;">
+          <h2>הסכום לתשלום: ₪${total}</h2>
+          <button nz-button nzType="primary" id="payBtn">תשלום</button>
+        </div>
+      `,
+      nzFooter: null,
+      nzBodyStyle: { 'text-align': 'center' },
+      nzOnOk: () => {}
+    });
 
+    // מאזין לכפתור תשלום (כי nzContent הוא HTML)
+    setTimeout(() => {
+      const btn = document.getElementById('payBtn');
+      if (btn) {
+        btn.onclick = () => {
+          this.pay();
+          this.modal.closeAll();
+        };
+      }
+    }, 100);
+  }
+
+  // פונקציית תשלום
+  pay(): void {
+    // כאן תבצע את ההזמנה בפונקציה שמזמינה את הכרטיסים ב-card
+    for(let card of this.cardCart()) {
+    const cart: CreateCard={
+      userId: this.global.user()?.id || 0,
+      giftId: card.giftId,
+    }
+      this.cardService.createCard(cart).subscribe({
+        next: () => {
+          // this.global.msg.success('הכרטיסים נקנו בהצלחה!')
+          this.global.msg.success('התשלום בוצע בהצלחה!');
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('Failed to create card cart', err);
+          this.global.msg.error('שגיאה ביצירת הכרטיסים');
+        }
+      });
+      // אפשר להוסיף הודעה/הפניה
+    }
+  }
 }

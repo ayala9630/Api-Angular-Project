@@ -57,7 +57,7 @@
                     nzSize="small"
                     nzDanger
                     class="delete-btn"
-                    (click)="packageService.updatePackageQuantity(cartItem, -cartItem.quantity)">
+                    (click)="updatePackageQuantity(cartItem, -cartItem.quantity)">
                     <span nz-icon nzType="delete" nzTheme="outline"></span>
                   </button>
                 </div>
@@ -76,7 +76,7 @@
                         nzType="default" 
                         nzSize="small"
                         nzShape="circle"
-                        (click)="packageService.updatePackageQuantity(cartItem, -1)"
+                        (click)="updatePackageQuantity(cartItem, -1)"
                         [disabled]="cartItem.quantity <= 1">
                         <span nz-icon nzType="minus"></span>
                       </button>
@@ -86,7 +86,7 @@
                         nzType="default" 
                         nzSize="small"
                         nzShape="circle"
-                        (click)="packageService.updatePackageQuantity(cartItem, 1)">
+                        (click)="updatePackageQuantity(cartItem, 1)">
                         <span nz-icon nzType="plus"></span>
                       </button>
                     </div>
@@ -149,7 +149,7 @@
                         nzType="default" 
                         nzSize="small"
                         nzShape="circle"
-                        (click)="giftService.updateCardQuantity(cartItem, -1)"
+                        (click)="updateCardQuantity(cartItem, -1)"
                         [disabled]="cartItem.quantity <= 1">
                         <span nz-icon nzType="minus"></span>
                       </button>
@@ -159,7 +159,7 @@
                         nzType="default" 
                         nzSize="small"
                         nzShape="circle"
-                        (click)="giftService.updateCardQuantity(cartItem, 1)">
+                        (click)="updateCardQuantity(cartItem, 1)">
                         <span nz-icon nzType="plus"></span>
                       </button>
                     </div>
@@ -208,7 +208,8 @@
         nzType="primary" 
         nzSize="large" 
         nzBlock 
-        class="next-btn">
+        class="next-btn"
+        (click)="openPaymentModal()">
         <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
         לשלב הבא
       </button>
