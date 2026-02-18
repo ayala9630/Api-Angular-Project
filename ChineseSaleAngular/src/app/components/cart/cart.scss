@@ -8,7 +8,7 @@ body {
   flex-direction: column;
   height: 100%;
   direction: rtl;
-  background: #fafafa;
+  background: var(--brand-surface-soft);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
 }
 
@@ -44,13 +44,13 @@ body {
     margin: 0;
     font-size: 22px;
     font-weight: 700;
-    color: #262626;
+    color: var(--brand-text-primary);
   }
 }
 
 .header-icon {
   font-size: 28px;
-  color: #c87941;
+  color: var(--brand-magenta);
 }
 
 .cart-summary {
@@ -65,7 +65,7 @@ body {
 
   ::ng-deep .ant-statistic-title {
     font-size: 12px;
-    color: #8c8c8c;
+    color: var(--brand-text-secondary);
   }
 
   ::ng-deep .ant-statistic-content {
@@ -78,11 +78,11 @@ body {
 .tabs-wrapper {
   padding: 8px 16px;
   background: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--brand-border);
 
   ::ng-deep .ant-segmented {
     width: 100%;
-    background: #fafafa;
+    background: var(--brand-surface-soft);
   }
 }
 
@@ -100,11 +100,11 @@ body {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d9d9d9;
+    background: var(--brand-border-strong);
     border-radius: 3px;
 
     &:hover {
-      background: #bfbfbf;
+      background: var(--brand-border-strong);
     }
   }
 }
@@ -118,12 +118,12 @@ body {
 // ─ Cart Item Card ─
 .cart-item-card {
   border-radius: 8px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--brand-border);
   transition: all 0.3s ease;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: #c87941;
+    border-color: var(--brand-magenta);
   }
 
   ::ng-deep .ant-card-body {
@@ -189,14 +189,14 @@ body {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
   line-height: 1.4;
 }
 
 .item-price-tag {
   font-size: 14px;
   font-weight: 700;
-  color: #c87941;
+  color: var(--brand-magenta);
 }
 
 .quantity-section {
@@ -207,7 +207,7 @@ body {
 
 .qty-label {
   font-size: 12px;
-  color: #8c8c8c;
+  color: var(--brand-text-secondary);
   font-weight: 500;
 }
 
@@ -224,12 +224,12 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    border-color: #d9d9d9;
-    color: #262626;
+    border-color: var(--brand-border-strong);
+    color: var(--brand-text-primary);
 
     &:hover:not([disabled]) {
-      border-color: #c87941;
-      color: #c87941;
+      border-color: var(--brand-magenta);
+      color: var(--brand-magenta);
     }
 
     &:disabled {
@@ -248,12 +248,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--brand-border);
   border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
-  background: #fafafa;
-  color: #262626;
+  background: var(--brand-surface-soft);
+  color: var(--brand-text-primary);
 }
 
 .item-total {
@@ -262,19 +262,19 @@ body {
   align-items: flex-end;
   gap: 2px;
   padding-left: 8px;
-  border-left: 1px solid #f0f0f0;
+  border-left: 1px solid var(--brand-border);
 }
 
 .total-label {
   font-size: 11px;
-  color: #8c8c8c;
+  color: var(--brand-text-secondary);
   font-weight: 500;
 }
 
 .total-value {
   font-size: 16px;
   font-weight: 700;
-  color: #e74c3c;
+  color: var(--brand-magenta);
 }
 
 // ─ Empty State ─
@@ -283,14 +283,14 @@ body {
 
   ::ng-deep .ant-empty-description {
     font-size: 14px;
-    color: #8c8c8c;
+    color: var(--brand-text-secondary);
   }
 }
 
 // ─ Footer ─
 .cart-footer {
   background: #fff;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--brand-border);
   padding: 16px;
   flex-shrink: 0;
 
@@ -313,12 +313,12 @@ body {
 .progress-label {
   font-size: 13px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
 }
 
 .progress-count {
   font-size: 13px;
-  color: #8c8c8c;
+  color: var(--brand-text-secondary);
   font-weight: 500;
 }
 
@@ -327,12 +327,12 @@ body {
   font-size: 16px;
   font-weight: 700;
   border-radius: 8px;
-  background: #e74c3c;
-  border-color: #e74c3c;
+  background: var(--brand-magenta);
+  border-color: var(--brand-magenta);
 
   &:hover {
-    background: #c0392b;
-    border-color: #c0392b;
+    background: #b10079;
+    border-color: #b10079;
   }
 
   ::ng-deep .anticon {
@@ -447,7 +447,7 @@ body {
       align-items: center;
       padding: 8px 0;
       border-left: none;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid var(--brand-border);
       padding-top: 8px;
     }
   }

@@ -1,6 +1,6 @@
 .single-gift-container {
     min-height: calc(100vh - 64px);
-    background: #f5f5f5;
+    background: var(--brand-surface-soft);
     padding: 20px;
     direction: rtl;
 
@@ -32,12 +32,12 @@
             .ant-card-meta-title {
                 font-size: 28px;
                 font-weight: 700;
-                color: #262626;
+                color: var(--brand-text-primary);
             }
 
             .ant-card-meta-description {
                 font-size: 16px;
-                color: #595959;
+                color: var(--brand-text-secondary);
                 margin-top: 12px;
             }
         }
@@ -47,17 +47,17 @@
 
             .ant-descriptions-item-label {
                 font-weight: 600;
-                color: #262626;
-                background: #fafafa;
+                color: var(--brand-text-primary);
+                background: var(--brand-surface-soft);
             }
 
             .ant-descriptions-item-content {
-                color: #595959;
+                color: var(--brand-text-secondary);
             }
         }
 
         ::ng-deep .ant-card-actions {
-            background: #fafafa;
+            background: var(--brand-surface-soft);
             
             button {
                 height: 45px;

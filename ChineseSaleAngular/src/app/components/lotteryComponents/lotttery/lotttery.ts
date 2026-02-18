@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, effect } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -70,7 +70,10 @@ export class Lotttery implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.clearCountdown();
   }
-
+  private lotteryEffect = effect(() => {
+    this.loadGifts();
+  });
+  
   loadGifts(): void {
     const lotteryId = this.global.currentLotteryId();
     if (!lotteryId) return;
