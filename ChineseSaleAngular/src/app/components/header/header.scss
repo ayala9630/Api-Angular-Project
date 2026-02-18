@@ -85,8 +85,8 @@ nz-select {
 
 
 // /* צבע הרקע של הפס לפי מצב */
-// .promo-bar.started { background: #c62b2b; }       /* אדום */
-// .promo-bar.not-started { background: #0b8a5a; }   /* ירוק */
+// .promo-bar.started { background: var(--brand-magenta); }       /* אדום */
+// .promo-bar.not-started { background: var(--brand-green-strong); }   /* ירוק */
 
 
 /* Inner */
@@ -132,16 +132,16 @@ nz-select {
 
 /* צבע כרטיס ועיצוב לפי מצב (כעת צבע הכרטיס מלא והתווים לבנים) */
 .promo-bar.started .timer-card {
-    background: #c62b2b;
+    background: var(--brand-magenta);
     color: #fff;
-    box-shadow: 0 6px 18px rgba(198, 43, 43, 0.12);
+    box-shadow: 0 6px 18px rgba(209, 0, 143, 0.12);
 }
 
 
 .promo-bar.not-started .timer-card {
-    background: #0b8a5a;
+    background: var(--brand-green-strong);
     color: #fff;
-    box-shadow: 0 6px 18px rgba(11, 138, 90, 0.12);
+    box-shadow: 0 6px 18px rgba(127, 199, 75, 0.12);
 }
 
 
@@ -191,6 +191,31 @@ nz-select {
     grid-column: 1;
 }
 
+.lottery-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lottery-logo-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--brand-surface-soft);
+    border: 1px solid var(--brand-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.lottery-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
 
 /* Inline timer - קטן, ללא רקע כולל */
 .inline-timer {
@@ -237,13 +262,13 @@ nz-select {
 
 
 .inline-timer.started .timer-card-inline {
-    background: #c62b2b;
+    background: var(--brand-magenta);
     color: #fff;
 }
 
 
 .inline-timer.not-started .timer-card-inline {
-    background: #0b8a5a;
+    background: var(--brand-green-strong);
     color: #fff;
 }
 
@@ -300,20 +325,20 @@ nz-select {
 
 .connected-status {
     margin-right: 10px;
-    color: #454545;
+    color: var(--brand-text-secondary);
 }
 
 
 /* שינוי צבעים פחות גלוי במצב started כשנדרשת נראות אחרת */
 .header-container.started .timer-title.small,
 .inline-timer.started .timer-title.small {
-    color: rgba(198, 43, 43, 0.95);
+    color: rgba(209, 0, 143, 0.95);
 }
 
 
 .header-container.not-started .timer-title.small,
 .inline-timer.not-started .timer-title.small {
-    color: rgba(11, 138, 90, 0.95);
+    color: rgba(127, 199, 75, 0.95);
 }
 
 
@@ -344,7 +369,7 @@ nz-select {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0f9d58;
+    background: var(--brand-green-strong);
     /* צבע רקע ירוק — שנה אם צריך */
     color: #ffffff;
     /* לבן חזק להניגודיות והנראות של המספר */
@@ -572,6 +597,16 @@ h1.header-title {
 
 /* רספונסיבי: במכשירים קטנים נקטין עוד טיפה ונסתיר תוויות כדי לחסוך מקום */
 @media (max-width: 480px) {
+    .lottery-logo-link {
+        width: 34px;
+        height: 34px;
+    }
+
+    .lottery-logo {
+        width: 24px;
+        height: 24px;
+    }
+
   .timer-card-inline { width: 32px; height: 32px; padding: 2px 0; }
   .timer-value-inline { font-size: 12px; }
   .timer-label-inline { display: none; }
@@ -599,20 +634,20 @@ h1.header-title {
 }
 
 .lottery-action {
-    color: #8c8c8c;
+    color: var(--brand-text-secondary);
     cursor: pointer;
     font-size: 14px;
     transition: color 0.2s ease;
 
     &:hover {
-        color: #1890ff;
+        color: var(--brand-green-strong);
     }
 
     &.delete {
-        color: #d4380d;
+        color: #b10079;
 
         &:hover {
-            color: #cf1322;
+            color: var(--brand-magenta);
         }
     }
 }

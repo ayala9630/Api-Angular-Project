@@ -53,7 +53,7 @@
                     @if (imageSelected && imagePreview) {
                     <div class="image-preview" style="display:flex; gap:8px; align-items:center;">
                         <img [src]="imagePreview" alt="preview"
-                            style="width:96px; height:64px; object-fit:cover; border-radius:6px; border:1px solid #e8e8e8;" />
+                            style="width:96px; height:64px; object-fit:cover; border-radius:6px; border:1px solid var(--brand-border);" />
                         <button nz-button nzType="default" (click)="removeImage()" title="הסר תמונה">
                             <nz-icon nzType="delete"></nz-icon>
                         </button>

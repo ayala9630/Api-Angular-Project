@@ -3,10 +3,10 @@
     text-align: center;
     font-size: 28px;
     font-weight: 600;
-    color: #262626;
+    color: var(--brand-text-primary);
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--brand-border);
 }
 
 button {
@@ -32,7 +32,7 @@ button {
     flex-shrink: 0 !important;
     width: 180px !important;
     font-weight: 500;
-    color: #262626;
+    color: var(--brand-text-primary);
 }
 
 ::ng-deep .ant-col.ant-form-item-control {
@@ -85,27 +85,27 @@ input {
 }
 
 ::ng-deep .ant-btn-primary {
-    background: #1890ff;
-    border-color: #1890ff;
-    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+    background: var(--brand-green-strong);
+    border-color: var(--brand-green-strong);
+    box-shadow: 0 2px 4px rgba(127, 199, 75, 0.2);
 }
 
 ::ng-deep .ant-btn-primary:hover {
-    background: #40a9ff;
-    border-color: #40a9ff;
-    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+    background: var(--brand-green);
+    border-color: var(--brand-green);
+    box-shadow: 0 4px 8px rgba(127, 199, 75, 0.3);
 
 }
 
 ::ng-deep .ant-btn-default {
     background: white;
-    border-color: #d9d9d9;
-    color: #595959;
+    border-color: var(--brand-border-strong);
+    color: var(--brand-text-secondary);
 }
 
 ::ng-deep .ant-btn-default:hover {
-    border-color: #40a9ff;
-    color: #40a9ff;
+    border-color: var(--brand-green);
+    color: var(--brand-green);
 }
 
 // כפתורי איפוס - הצמדה לצד ללא מרווחים

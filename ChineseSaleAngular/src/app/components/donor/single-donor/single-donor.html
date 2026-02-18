@@ -1,7 +1,7 @@
 <nz-page-header nzTitle="פרטי תורם" nzBackIcon (nzOnBack)="goBack()"></nz-page-header>
 
 @if (viewLoading) {
-<div style="text-align:center;color:#8c8c8c;padding:24px 0;">טוען...</div>
+<div style="text-align:center;color:var(--brand-text-secondary);padding:24px 0;">טוען...</div>
 } @else if (currentDonor) {
 <nz-row nzGutter="24">
     <nz-col nzSpan="14">
@@ -14,7 +14,7 @@
         <nz-space nzDirection="vertical" nzSize="middle" style="width:100%;">
             <div>
                 <h2 nz-typography>{{ currentDonor.firstName }} {{ currentDonor.lastName }}</h2>
-                <div style="color:#8c8c8c;">{{ currentDonor.companyName }}</div>
+                <div style="color:var(--brand-text-secondary);">{{ currentDonor.companyName }}</div>
             </div>
             <nz-descriptions style="text-align: center; width: 100%;" >
                 <nz-descriptions-item>{{ currentDonor.companyName }}  מנהל חברת : </nz-descriptions-item>                                   
@@ -32,14 +32,14 @@
         @for (gift of giftEntries(); track gift.name) {
         <nz-list-item>
             <span>{{ gift.name }}</span>
-            <span style="font-weight:600;color:#1677ff;">x{{ gift.count }}</span>
+            <span style="font-weight:600;color:var(--brand-green-strong);">x{{ gift.count }}</span>
         </nz-list-item>
         }
     </nz-list>
     } @else {
-    <div style="text-align:center;color:#8c8c8c;">אין מתנות</div>
+    <div style="text-align:center;color:var(--brand-text-secondary);">אין מתנות</div>
     }
 </div>
 } @else {
-<div style="text-align:center;color:#8c8c8c;padding:24px 0;">לא נמצאו נתונים</div>
+<div style="text-align:center;color:var(--brand-text-secondary);padding:24px 0;">לא נמצאו נתונים</div>
 }

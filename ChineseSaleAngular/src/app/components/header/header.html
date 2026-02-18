@@ -9,6 +9,10 @@
 
 <div class="header-container" [class.started]="lotteryStart" [class.not-started]="!lotteryStart">
     <div class="left-block">
+        <div class="lottery-picker">
+            <a routerLink="home" class="lottery-logo-link" aria-label="זכרון מנחם">
+                <img [src]="logoUrl" (error)="onLogoError($event)" alt="זכרון מנחם" class="lottery-logo" />
+            </a>
         <!-- <nz-select [(ngModel)]="selectedLottery" (ngModelChange)="lotteryChange($event)">
             @for (p of lotteryData; track p.id) {
             <nz-option [nzValue]="p" [nzLabel]="p.name"></nz-option>
@@ -31,6 +35,7 @@
             </nz-option>
             }
         </nz-select>
+        </div>
          <!-- <a routerLink="lottery/add">+הוסף הגרלה</a> -->
         <!-- טיימר דק ושקוף ליד הבחירה
         <div class="inline-timer" [class.started]="lotteryStart" [class.not-started]="!lotteryStart"

@@ -9,7 +9,7 @@
 .hero-section {
   text-align: center;
   padding: 80px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #9bd66a 0%, #d1008f 100%);
   border-radius: 20px;
   margin-bottom: 60px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
@@ -65,14 +65,14 @@
 
     .ant-statistic-title {
       font-size: 16px;
-      color: #595959;
+      color: var(--brand-text-secondary);
       margin-bottom: 8px;
     }
 
     .ant-statistic-content {
       font-size: 36px;
       font-weight: 600;
-      color: #1890ff;
+      color: var(--brand-green-strong);
     }
   }
 }
@@ -85,7 +85,7 @@
     text-align: center;
     font-size: 36px;
     font-weight: 600;
-    color: #262626;
+    color: var(--brand-text-primary);
     margin-bottom: 40px;
   }
 
@@ -94,7 +94,7 @@
     border-radius: 12px;
     transition: all 0.3s ease;
     height: 100%;
-    border: 1px solid #f0f0f0;
+    border: 1px solid var(--brand-border);
 
     &:hover {
       transform: translateY(-8px);
@@ -103,7 +103,7 @@
 
     .feature-icon {
       font-size: 48px;
-      color: #1890ff;
+      color: var(--brand-green-strong);
       margin-bottom: 20px;
 
       span {
@@ -114,13 +114,13 @@
     h3 {
       font-size: 20px;
       font-weight: 600;
-      color: #262626;
+      color: var(--brand-text-primary);
       margin-bottom: 12px;
     }
 
     p {
       font-size: 14px;
-      color: #595959;
+      color: var(--brand-text-secondary);
       line-height: 1.6;
     }
   }
@@ -131,7 +131,7 @@
   .cta-card {
     text-align: center;
     padding: 60px 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, var(--brand-magenta-soft) 0%, var(--brand-magenta) 100%);
     border-radius: 16px;
     border: none;
 
@@ -161,7 +161,7 @@
       font-size: 16px;
       border-radius: 8px;
       background: white;
-      color: #f5576c;
+      color: var(--brand-magenta);
       border: none;
 
       &:hover {

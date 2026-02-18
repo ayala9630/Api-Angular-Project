@@ -11,7 +11,7 @@
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 24px;
-  color: #1a1a1a;
+  color: var(--brand-text-primary);
 }
 
 /* ===== Gifts Grid ===== */
@@ -40,7 +40,7 @@
   &.won {
     opacity: 0.85;
     .gift-card {
-      border: 2px solid #faad14;
+      border: 2px solid var(--brand-magenta);
     }
   }
 
@@ -65,7 +65,7 @@
   width: 100%;
   height: 180px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: var(--brand-surface-soft);
 
   img {
     width: 100%;
@@ -114,18 +114,18 @@
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 8px;
-  color: #1a1a1a;
+  color: var(--brand-text-primary);
 }
 
 .confirm-tickets {
   font-size: 16px;
-  color: #555;
+  color: var(--brand-text-secondary);
   margin-bottom: 16px;
 }
 
 .confirm-question {
   font-size: 15px;
-  color: #888;
+  color: var(--brand-text-secondary);
 }
 
 /* ===== Countdown Modal ===== */
@@ -142,20 +142,20 @@
 .countdown-number {
   font-size: 96px;
   font-weight: 900;
-  color: #1890ff;
+  color: var(--brand-green-strong);
   line-height: 1;
   animation: countdownPulse 1s ease-in-out infinite;
 }
 
 .countdown-label {
   font-size: 18px;
-  color: #888;
+  color: var(--brand-text-secondary);
   margin-top: 12px;
 }
 
 .countdown-gift-name {
   font-size: 16px;
-  color: #555;
+  color: var(--brand-text-secondary);
   margin-top: 8px;
   font-weight: 600;
 }
@@ -182,20 +182,20 @@
 .winner-title {
   font-size: 26px;
   font-weight: 800;
-  color: #faad14;
+  color: var(--brand-magenta);
   margin-bottom: 12px;
 }
 
 .winner-gift {
   font-size: 18px;
-  color: #555;
+  color: var(--brand-text-secondary);
   margin-bottom: 8px;
 }
 
 .winner-name {
   font-size: 32px;
   font-weight: 900;
-  color: #52c41a;
+  color: var(--brand-green-strong);
   margin-bottom: 12px;
   animation: winnerGlow 1.5s ease-in-out infinite alternate;
 }
@@ -211,8 +211,8 @@
 }
 
 @keyframes winnerGlow {
-  from { text-shadow: 0 0 8px rgba(82, 196, 26, 0.3); }
-  to   { text-shadow: 0 0 24px rgba(82, 196, 26, 0.6), 0 0 48px rgba(82, 196, 26, 0.3); }
+  from { text-shadow: 0 0 8px rgba(127, 199, 75, 0.3); }
+  to   { text-shadow: 0 0 24px rgba(127, 199, 75, 0.6), 0 0 48px rgba(127, 199, 75, 0.3); }
 }
 
 /* ===== Responsive ===== */
@@ -275,22 +275,22 @@
   align-items: center;
   gap: 8px;
   border-radius: 0 !important;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--brand-border-strong);
   border-left: none; /* Remove left border for all */
 
   &:last-child {
-    border-left: 1px solid #d9d9d9; /* Add it back for the last button */
+    border-left: 1px solid var(--brand-border-strong); /* Add it back for the last button */
   }
   
   &:hover:not(:disabled) {
     z-index: 1;
-    color: #1890ff;
-    border-color: #1890ff;
+    color: var(--brand-green-strong);
+    border-color: var(--brand-green-strong);
   }
 
-  &.pdf { color: #f5222d; }
-  &.csv { color: #52c41a; }
-  &.json { color: #faad14; }
+  &.pdf { color: var(--brand-magenta); }
+  &.csv { color: var(--brand-green-strong); }
+  &.json { color: var(--brand-magenta); }
 
   [nz-icon] {
     font-size: 16px;

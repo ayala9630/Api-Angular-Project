@@ -19,10 +19,10 @@
   text-align: center;
   font-size: 28px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--brand-border);
 }
 
 // הסבר מתחת לכותרת
@@ -30,12 +30,12 @@
   grid-column: 1 / -1;
   text-align: center;
   font-size: 16px;
-  color: #595959;
-  background: #f5f5f5;
+  color: var(--brand-text-secondary);
+  background: var(--brand-surface-soft);
   padding: 12px 20px;
   border-radius: 6px;
   margin-bottom: 10px;
-  border-right: 4px solid #1890ff;
+  border-right: 4px solid var(--brand-green-strong);
 }
 
 // רשת הכרטיסים
@@ -67,18 +67,18 @@
 ::ng-deep .ant-card-meta-title {
   font-size: 18px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
 }
 
 ::ng-deep .ant-card-meta-description {
-  color: #1890ff;
+  color: var(--brand-green-strong);
   font-size: 16px;
   font-weight: 500;
 }
 
 ::ng-deep .ant-card-actions {
-  background: #fafafa;
-  border-top: 1px solid #f0f0f0;
+  background: var(--brand-surface-soft);
+  border-top: 1px solid var(--brand-border);
 }
 
 ::ng-deep .ant-card-actions > li {
@@ -87,11 +87,11 @@
 
 ::ng-deep .ant-card-actions .anticon {
   font-size: 18px;
-  color: #595959;
+  color: var(--brand-text-secondary);
   transition: all 0.3s ease;
 
   &:hover {
-    color: #1890ff;
+    color: var(--brand-green-strong);
     transform: scale(1.2);
   }
 }
@@ -104,17 +104,17 @@ button[nz-button] {
   font-size: 16px;
   margin: 20px auto;
   display: block;
-  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(127, 199, 75, 0.2);
   transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(127, 199, 75, 0.3);
     transform: translateY(-2px);
   }
 }
 
 ::ng-deep .ant-modal-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #9bd66a 0%, #d1008f 100%);
   color: white;
   border-radius: 8px 8px 0 0;
 }
@@ -151,7 +151,7 @@ button[nz-button] {
   flex-shrink: 0 !important;
   width: 120px !important;
   font-weight: 500;
-  color: #262626;
+  color: var(--brand-text-primary);
 }
 
 ::ng-deep .ant-col.ant-form-item-control {
@@ -174,25 +174,25 @@ input[nz-input] {
 }
 
 ::ng-deep .ant-btn-primary {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: var(--brand-green-strong);
+  border-color: var(--brand-green-strong);
   min-width: 100px;
 
   &:hover {
-    background: #40a9ff;
-    border-color: #40a9ff;
+    background: var(--brand-green);
+    border-color: var(--brand-green);
   }
 }
 
 ::ng-deep .ant-btn-default {
   background: white;
-  border-color: #d9d9d9;
-  color: #595959;
+  border-color: var(--brand-border-strong);
+  color: var(--brand-text-secondary);
   min-width: 100px;
 
   &:hover {
-    border-color: #40a9ff;
-    color: #40a9ff;
+    border-color: var(--brand-green);
+    color: var(--brand-green);
   }
 }
 
@@ -292,7 +292,7 @@ input[nz-input] {
   font-weight: normal;
   background: transparent !important;
   border: none !important;
-  color: #1890ff;
+  color: var(--brand-green-strong);
   transition: all 0.2s ease;
   opacity: 0.7;
   box-shadow: none;

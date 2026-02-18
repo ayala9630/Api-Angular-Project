@@ -18,10 +18,10 @@
   text-align: center;
   font-size: 28px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--brand-border);
 }
 
 // הסבר מתחת לכותרת
@@ -29,12 +29,12 @@
   grid-column: 1 / -1;
   text-align: center;
   font-size: 16px;
-  color: #595959;
-  background: #f5f5f5;
+  color: var(--brand-text-secondary);
+  background: var(--brand-surface-soft);
   padding: 12px 20px;
   border-radius: 6px;
   margin-bottom: 10px;
-  border-right: 4px solid #1890ff;
+  border-right: 4px solid var(--brand-green-strong);
 }
 
 // רשת הכרטיסים
@@ -72,19 +72,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f2f5;
+  background: var(--brand-bg);
   font-size: medium;
-  color: #bfbfbf;
+  color: var(--brand-border-strong);
 }
 
 ::ng-deep .ant-card-meta-title {
   font-size: 18px;
   font-weight: 600;
-  color: #262626;
+  color: var(--brand-text-primary);
 }
 
 ::ng-deep .ant-card-meta-description {
-  color: #1890ff;
+  color: var(--brand-green-strong);
   font-size: 16px;
   font-weight: 500;
 }
@@ -92,21 +92,21 @@
 .donor-details {
   margin-top: 12px;
   font-size: 14px;
-  color: #595959;
+  color: var(--brand-text-secondary);
   
   div {
     margin-bottom: 6px;
   }
 
   strong {
-    color: #262626;
+    color: var(--brand-text-primary);
     margin-left: 4px;
   }
 }
 
 ::ng-deep .ant-card-actions {
-  background: #fafafa;
-  border-top: 1px solid #f0f0f0;
+  background: var(--brand-surface-soft);
+  border-top: 1px solid var(--brand-border);
 }
 
 ::ng-deep .ant-card-actions > li {
@@ -115,12 +115,12 @@
 
 ::ng-deep .ant-card-actions .anticon {
   font-size: 18px;
-  color: #595959;
+  color: var(--brand-text-secondary);
   transition: all 0.3s ease;
   cursor: pointer;
   
   &:hover {
-    color: #1890ff;
+    color: var(--brand-green-strong);
     transform: scale(1.2);
   }
 }
@@ -134,11 +134,11 @@
   height: auto;
   padding: 12px 24px;
   border-radius: 8px;
-  background-color: #1890ff;
+  background-color: var(--brand-green-strong);
   color: white;
   font-size: 16px;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(127, 199, 75, 0.4);
   transition: all 0.3s ease;
   z-index: 100;
   display: flex;
@@ -146,8 +146,8 @@
   gap: 8px;
 
   &:hover {
-    background-color: #40a9ff;
-    box-shadow: 0 6px 16px rgba(24, 144, 255, 0.5);
+    background-color: var(--brand-green);
+    box-shadow: 0 6px 16px rgba(127, 199, 75, 0.5);
     transform: translateY(-2px);
   }
 
@@ -161,7 +161,7 @@
   grid-column: 1 / -1;
   text-align: center;
   font-size: 16px;
-  color: #8c8c8c;
+  color: var(--brand-text-secondary);
 }
 
 /* Sticky pagination - bottom center */

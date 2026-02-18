@@ -10,6 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { environment } from '../../enviroment';
 
 @Component({
   selector: 'app-header',
@@ -31,6 +32,7 @@ export class Header implements OnInit, OnDestroy {
   ) { }
 
   lotteryData: Lottery[] = [];
+  logoUrl: string = `${environment.baseImageUrl}/logo.jpg`;
   selectedLottery: Lottery | undefined;
   user: User | null = null;
   conected: boolean = false;
@@ -216,6 +218,13 @@ export class Header implements OnInit, OnDestroy {
     this.conected = this.global.isConnected();
     this.user = null;
     this.router.navigate(['/login']);
+  }
+
+  onLogoError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target && !target.src.includes('assets/images/logo.svg')) {
+      target.src = 'assets/images/logo.svg';
+    }
   }
 
   ngOnDestroy(): void {

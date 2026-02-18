@@ -3,21 +3,22 @@
     <nz-collapse nzAccordion>
         <nz-collapse-panel nzHeader="פרטי התורם" nzActive="true" nzShowArrow="true">
             <nz-form-item>
+                <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback>
                     <input nz-input formControlName="firstName" placeholder="שם פרטי" />
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7">שם פרטי</nz-form-label>
             </nz-form-item>
             <nz-form-item>
+                <nz-form-label [nzSpan]="7">שם משפחה</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback>
                     <input nz-input formControlName="lastName" placeholder="שם משפחה" />
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7">שם משפחה</nz-form-label>
             </nz-form-item>
         </nz-collapse-panel>
 
         <nz-collapse-panel nzHeader="פרטי החברה" nzShowArrow="true">
             <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>שם החברה</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyNameErrorTpl">
                     <input nz-input formControlName="companyName" placeholder="שם חברה" />
                     <ng-template #companyNameErrorTpl let-control>
@@ -26,10 +27,10 @@
                         }
                     </ng-template>
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7" nzRequired>שם החברה</nz-form-label>
             </nz-form-item>
 
             <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>טלפון חברה</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyPhoneErrorTpl">
                     <input nz-input formControlName="companyPhone" placeholder="טלפון חברה" />
                     <ng-template #companyPhoneErrorTpl let-control>
@@ -38,17 +39,17 @@
                         }
                     </ng-template>
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7" nzRequired>טלפון חברה</nz-form-label>
             </nz-form-item>
             
             <nz-form-item>
+                <nz-form-label [nzSpan]="7">אייקון חברה</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback>
                     <input nz-input formControlName="companyIcon" placeholder="קישור לאייקון החברה" />
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7">אייקון חברה</nz-form-label>
             </nz-form-item>
 
             <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>אימייל חברה</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="companyEmailErrorTpl">
                     <input nz-input formControlName="companyEmail" placeholder="אימייל חברה" type="email" />
                     <ng-template #companyEmailErrorTpl let-control>
@@ -60,7 +61,6 @@
                         }
                     </ng-template>
                 </nz-form-control>
-                <nz-form-label [nzSpan]="7" nzRequired>אימייל חברה</nz-form-label>
             </nz-form-item>
         </nz-collapse-panel>
 

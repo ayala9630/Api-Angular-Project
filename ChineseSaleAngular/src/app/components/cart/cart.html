@@ -10,14 +10,14 @@
         <nz-statistic 
           [nzValue]="getTotalTickets()" 
           nzTitle="סך הכרטיסים"
-          [nzValueStyle]="{ 'color': '#c87941' }">
+          [nzValueStyle]="{ 'color': 'var(--brand-green-strong)' }">
         </nz-statistic>
         <nz-divider nzType="vertical"></nz-divider>
         <nz-statistic 
           [nzValue]="getTotal()" 
           nzTitle="סה״כ"
           nzSuffix="₪"
-          [nzValueStyle]="{ 'color': '#e74c3c' }">
+          [nzValueStyle]="{ 'color': 'var(--brand-magenta)' }">
         </nz-statistic>
       </div>
     </div>
@@ -198,7 +198,7 @@
         <nz-progress 
           [nzPercent]="getProgressPercent()" 
           [nzShowInfo]="false"
-          nzStrokeColor="#c87941"
+          [nzStrokeColor]="'var(--brand-green-strong)'"
           [nzStrokeWidth]="6">
         </nz-progress>
       </div>

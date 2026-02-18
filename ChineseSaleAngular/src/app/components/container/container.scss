@@ -28,7 +28,7 @@ nz-sider {
   text-align: center;
   color: #fff;
   line-height: 120px;
-  background: #f8f4f0;
+  background: var(--brand-bg);
   overflow-y: auto;
   height: calc(100vh - 64px);
   position: sticky;
@@ -45,7 +45,7 @@ app-package {
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: #f0f2f5;
+  background: var(--brand-bg);
 }
 
 app-gift {
@@ -54,7 +54,7 @@ app-gift {
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: #f0f2f5;
+  background: var(--brand-bg);
 }
 
 app-donor {
@@ -98,7 +98,7 @@ nz-footer {
   height: 48px;
   line-height: 48px;
   text-align: center;
-  background: #f0f2f5;
+  background: var(--brand-bg);
   padding: 24px 50px;
 }
 
@@ -112,17 +112,17 @@ app-donor {
 }
 
 nz-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--brand-surface-soft);
   border-radius: 10px;
 }
 
 nz-content::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--brand-text-secondary);
   border-radius: 10px;
 }
 
 nz-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--brand-text-secondary);
 }
 @media (max-width: 768px) {
   nz-sider {
