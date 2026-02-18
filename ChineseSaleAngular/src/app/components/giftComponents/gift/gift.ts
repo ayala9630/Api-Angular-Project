@@ -21,6 +21,7 @@ import { NzMessageComponent, NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../../services/category/category.service';
 import { CartService } from '../../../services/cart/cart.service';
+import { Cart } from '../../cart/cart';
 
 
 @Component({
@@ -41,6 +42,7 @@ import { CartService } from '../../../services/cart/cart.service';
     NzPaginationModule,
     NzSwitchComponent
   ],
+  providers:[Cart],
   templateUrl: './gift.html',
   styleUrl: './gift.scss',
 })
@@ -53,7 +55,8 @@ export class Gift {
     private msg: NzMessageService,
     private router: Router,
     private categoryService: CategoryService,
-    private cartService: CartService
+    private cartService: CartService,
+    private cartComponent: Cart
   ) { }
 
   paginatedGifts: PaginatedResult<GiftWithOldPurchase[]> | null = null;
@@ -188,6 +191,7 @@ export class Gift {
     this.uploadData();
   }
   updateQuantity(gift: GiftWithOldPurchase, change: number): void {
+    
     if (!this.global.lotteryStarted() || this.global.lotteryFinished()) {
       return;
     }
@@ -202,8 +206,21 @@ export class Gift {
       price: gift.price,
       isPackageAble: gift.isPackageAble
     };
-    this.cartService.availableCards += (gift.isPackageAble ? -change : 0);
-    this.giftService.updateCardQuantity(item, change);
+    if (change <= 0 && !gift.isPackageAble) {
+      this.giftService.updateCardQuantity(item, change);
+      return;
+    }
+    else if (this.cartService.availableCards <= 0) {
+      this.msg.error('הוסף חבילה לפני רכישת כרטיסים');
+      return;
+    }
+    else if(this.cartService.availableCards < this.cartComponent.getTotalTickets() + change) {
+      this.msg.error('לא ניתן להוסיף כרטיסים נוספים, כמות הכרטיסים הזמינה נגמרה');
+      return;
+    }
+      this.giftService.updateCardQuantity(item, change);
+      this.cartComponent.getProgressPercent();
+      return;
   }
 }
 

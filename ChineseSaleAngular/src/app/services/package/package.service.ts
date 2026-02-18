@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Package, CreatePackage, UpdatePackage, PackageCarts, CardCartGroup, PackageCart, PackageCartGroup } from '../../models';
 import { CookieService } from 'ngx-cookie-service';
 import { GlobalService } from '../global/global.service';
+import { CartService } from '../cart/cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class PackageService {
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
-    private global: GlobalService
+    private global: GlobalService,
   ) {
     this.cart.set(this.readCartFromCookie());
     this.userId.set(this.getUserId());
@@ -89,7 +90,6 @@ export class PackageService {
         userGroup = { userId, userCart: [] };
         updatedCart.push(userGroup);
       }
-  
       const existingItem = userGroup.userCart.find(item => item.packageId === card.packageId);
       if (existingItem) {
         existingItem.quantity += qty;

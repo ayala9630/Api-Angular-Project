@@ -10,7 +10,7 @@ import { PackageService } from '../package/package.service';
 })
 export class CartService {
   public availableCards: number = 0;
-
+  totalPrice: number = 0;
   constructor(
     private packageService: PackageService,
     private giftService: GiftService,
